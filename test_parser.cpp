@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   test_parser.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cmorel-a <cmorel-a@student.42.fr>          +#+  +:+       +#+        */
+/*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/15 12:28:46 by cmorel-a          #+#    #+#             */
-/*   Updated: 2022/09/15 12:38:22 by cmorel-a         ###   ########.fr       */
+/*   Updated: 2022/09/15 14:25:42 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "utils.hpp"
+#include "includes/utils.hpp"
 # include <iostream>
 
 int main(int ac, char **av)
@@ -23,9 +23,7 @@ int main(int ac, char **av)
 	std::vector<std::string> out;
 	split_args(av[1], av[2], out);
 
-	std::vector<std::string>::iterator it = out.begin();
-	std::vector<std::string>::iterator ite = out.end();
-	for (; it != ite; it++)
-		std::cout << *it << std::endl;
+	for (int i = 0; i < out.size(); i++)
+		std::cout << out[i] << std::endl;
 
 }
