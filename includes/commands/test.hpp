@@ -3,4 +3,6 @@
 
 #include <iostream>
 
+void	print_to_test();
+
 #endif
