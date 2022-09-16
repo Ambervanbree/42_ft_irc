@@ -11,7 +11,6 @@ int main(int ac, char **av)
 	std::vector<std::string> out;
 	split_args(av[1], av[2], out);
 
-	for (int i = 0; i < out.size(); i++)
+	for (unsigned int i = 0; i < out.size(); i++)
 		std::cout << out[i] << std::endl;
-
 }
