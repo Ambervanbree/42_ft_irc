@@ -15,9 +15,9 @@ OBJS		=	$(addprefix $(OBJ_DIR), $(OBJ_FILES))
 # ***************************************************************************** #
 
 OBJ_FILES	=	$(SRC_FILES:.cpp=.o)
-SRC_FILES	=	main.cpp $(SERVER) $(COMMANDS)
+SRC_FILES	=	main.cpp $(SERVER) $(COMMANDS) utils.cpp
 SERVER		=	$(addprefix server/, server.cpp)
-COMMANDS	=	$(addprefix commands/, test.cpp test2.cpp)
+COMMANDS	=	$(addprefix commands/, test.cpp test2.cpp commands.cpp parser.cpp)
 
 # ***************************************************************************** #
 # commands and flags          	   		                                        #
@@ -31,7 +31,7 @@ CFLAGS		=	-Wall -Wextra -Werror -std=c++98 -g
 # includes																		#
 # ***************************************************************************** #
 
-INCL		=	-Iincludes/server/ -Iincludes/commands/
+INCL		=	-Iincludes/server/ -Iincludes/commands/ -Iincludes/
 
 # ***************************************************************************** #
 # rules																			#
