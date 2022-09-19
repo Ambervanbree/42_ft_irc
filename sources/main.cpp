@@ -1,4 +1,5 @@
 #include "server.hpp"
+#include "parser.hpp"
 //#include "user.hpp"
 
 static int check_arg(int argc, char **argv)
