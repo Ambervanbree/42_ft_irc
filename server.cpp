@@ -1,7 +1,8 @@
 #include "server.hpp"
 
 // maximum length of the queue of pending connections
-#define MAX_CONNECTS 5
+#define MAX_CONNECTS    5
+#define MAX_BUFFER      512
 
 /* ************************************************************************** */
 /*                        CONSTRUCTORS / DESTRUCTORS                          */
@@ -204,7 +205,7 @@ void    Server::listeningSocketAcceptConnections(bool *end_server) {
 
 bool    Server::clientSocketRecieveOrSend(int i, bool *end_server) {
     bool    close_conn;
-    char    buffer[80];
+    char    buffer[MAX_BUFFER];
     int     ret;
     int     len;
     bool    compress_array = false;
@@ -263,6 +264,10 @@ void    Server::decrementFileDescriptors(){
     }
 }
 
+/******************************************************************************/
+/*  closeConnections()
+    Close sockets        
+/******************************************************************************/
 void    Server::closeConnections(void) {
     int i;
     for (i = 0; i < _nfds; i++){
