@@ -5,8 +5,19 @@
 # include <iostream>
 
 /*Place holders, need to be completed later*/
-class User {};
-class Channel {};
+class User
+{
+	public:
+	User() {};
+	~User() {};
+};
+
+class Channel
+{
+	public:
+	Channel() {};
+	~Channel() {};
+};
 
 /*Server commands*/
 

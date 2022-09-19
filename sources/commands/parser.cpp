@@ -1,13 +1,20 @@
 #include "parser.hpp"
 #include "utils.hpp"
 
-void _setCommands()
+Parser::Parser()
+{
+	_setCommands();
+}
+
+Parser::~Parser() {}
+
+void Parser::_setCommands()
 {
 	_commands["PASS"] = PASS;
 	_commands["NICK"] = NICK;
 	_commands["PING"] = PING;
 	_commands["PONG"] = PONG;
-	/*_commands["ERROR"] = ERROR;
+	_commands["ERROR"] = ERROR;
 	_commands["WALLOPS"] = WALLOPS;
 	_commands["QUIT"] = QUIT;
 	_commands["SQUIT"] = SQUIT;
@@ -36,30 +43,34 @@ void _setCommands()
 	_commands["CONNECT"] = CONNECT;
 	_commands["KILL"] = KILL;
 	_commands["DIE"] = DIE;
-	_commands["RESTART"] = RESTART;*/
+	_commands["RESTART"] = RESTART;
 }
 
-std::vector<std::string> _splitMessage(std::string message)
+std::vector<std::string> Parser::_splitMessage(std::string message)
 {
 	std::vector<std::string> out;
 	char delimiter[] = " ";
 	split_args(message, delimiter, out);
-	if (out.size() != 0 && out[0].size() != 0 && out[0][1] == ':')
+	if (out.size() != 0 && out[0].size() != 0 && out[0][0] == ':')
 		out.erase(out.begin());
+	std::cout << "split message ended\n";
 	return out;
 }
 
-void _launchCommand(std::vector<std::string> commande, User user, Channel channel)
+void Parser::_launchCommand(std::vector<std::string> commande, User user, Channel channel)
 {
 	if (commande.size() == 0)
 		return ;
+	std::cout << commande.size() << std::endl;
 	std::map<std::string, command>::iterator it;
-	it = _commands.find(commande[1]);
+	it = _commands.find(commande[0]);
+	std::cout << "search command\n";
 	if (it != _commands.end())
 		it->second(commande, user, channel);
 }
 
-void interpretCommand(std::string message, User user, Channel channel)
+void Parser::interpretCommand(std::string message, User user, Channel channel)
 {
 	_launchCommand(_splitMessage(message), user, channel);
-}	
+}
+
