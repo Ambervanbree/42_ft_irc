@@ -32,8 +32,7 @@ int main(int argc, char *argv[])
 	
 	parser.interpretCommand(argv[2], user, channel);
 	
-	
-	//Server s(port, std::string(argv[2]));
+	Server s(port, std::string(argv[2]));
     
 	return 0;
 }

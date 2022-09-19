@@ -1,11 +1,4 @@
-#ifndef COMMANDS_HPP
-# define COMMANDS_HPP
-# include <vector>
-# include <string>
-# include <iostream>
-
-class User {};
-class Channel {};
+#include "commands.hpp"
 
 /*Server commands*/
 
@@ -415,5 +408,3 @@ void RESTART(std::vector<std::string> Command, User user, Channel channel)
 	(void)channel; 
 	std::cout << "RESTART" << std::endl;
 }
-
-#endif
