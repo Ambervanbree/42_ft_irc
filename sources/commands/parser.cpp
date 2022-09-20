@@ -56,7 +56,7 @@ std::vector<std::string> Parser::_splitMessage(std::string message)
 	return out;
 }
 
-void Parser::_launchCommand(std::vector<std::string> commande, User &user, Channel &channel)
+void Parser::_launchCommand(std::vector<std::string> commande, User &user)
 {
 	if (commande.size() == 0)
 		return ;
@@ -65,11 +65,11 @@ void Parser::_launchCommand(std::vector<std::string> commande, User &user, Chann
 	it = _commands.find(commande[0]);
 	std::cout << "search command\n";
 	if (it != _commands.end())
-		it->second(commande, user, channel);
+		it->second(commande, user);
 }
 
-void Parser::interpretCommand(std::string message, User &user, Channel &channel)
+void Parser::interpretCommand(std::string message, User &user)
 {
-	_launchCommand(_splitMessage(message), user, channel);
+	_launchCommand(_splitMessage(message), user);
 }
 
