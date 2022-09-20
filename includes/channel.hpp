@@ -3,16 +3,26 @@
 
 # include <iostream>
 # include <vector>
+# include <map>
+
+class User{
+	std::string	_name;
+	char		_mode;
+}
+
 
 class Channel{
 	private:
-		std::string			_name; 
+		std::string					_name; 
 		//max 200 char, beginning with & or #, 
 		//may not contain spaces, a control G, or a comma
-		std::string			_topic;
-		std::vector<int>	_users;
-		int					_mode;
-		User				*_chop; // channel operator
+		std::string					_topic;
+		std::string					_password;
+		std::vector<int>			_users;
+		std::map<char, std::string>	_channelModes; // should be on server
+		std::vector<char>			_modes;
+		std::vector<User>			_channelUsers;
+		User						*_chop; // channel operator
 		// maybe a user history
 
 	public:
@@ -27,6 +37,18 @@ class Channel{
         //   3.  the correct key (password) must be given if it is set.
 		// user receives a notice about the commands in the channel
 		// MODE, KICK, PART, QUIT and of course PRIVMSG/NOTICE
+
+		void 			setModes();
+		std::string 	getTopic();
+		void 			setTopic(std::string topic);
+		// MODE;
+		// TOPIC;
+        //    ERR_NEEDMOREPARAMS              ERR_NOTONCHANNEL
+        //    RPL_NOTOPIC                     RPL_TOPIC
+        //    ERR_CHANOPRIVSNEEDED
+
+
+		// NAMES;
 
 };
 
