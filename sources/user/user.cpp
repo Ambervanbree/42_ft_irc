@@ -1,9 +1,12 @@
 #include "user.hpp"
 
-User::User(const std::string &user, const std::string &nick)
-	: _userName(user), _nickName(nick) {
-		std::cout << "User created\n";
-	}
+User::User(const int &socket, const struct sockaddr_in &addr, const std::string &user,
+	const std::string &nick)
+	: _clientSocket(socket), _clientAddr(addr)  , _userName(user), _nickName(nick)
+{
+	_setHost();
+	_setPort();
+}
 
 User::~User() {};
 
@@ -20,11 +23,23 @@ User::User(const User &other)
 	}
 }
 
+/*Public member functions*/
+
+/*Getters*/
 std::string			User::getUsername()	const { return _userName; }
-void				User::setUsername(const std::string &name) { _userName = name; }
 std::string 		User::getNickname() const { return _nickName; }
+struct sockaddr_in	User::getAddr() const { return _clientAddr; }
+int					User::getSocket() const { return _clientSocket; }
+std::string			User::getHost() const { return _hostName; }
+
+/*Setters*/
+void				User::setUsername(const std::string &name) { _userName = name; }
 void				User::setNickname(const std::string &user) { _nickName = user; }
 void				User::setAddr(const struct sockaddr_in &addr) { _clientAddr = addr; }
-struct sockaddr_in	User::getAddr() const { return _clientAddr; }
 void				User::setSocket(const int &socket) { _clientSocket = socket; }
-int					User::getSocket() const { return _clientSocket; }
+
+
+/*Private member functions*/
+
+void				User::_setHost() { _hostName = inet_ntoa(_clientAddr.sin_addr); }
+void				User::_setPort() { _port = ntohs(_clientAddr.sin_port); }

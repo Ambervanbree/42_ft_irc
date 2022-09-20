@@ -2,6 +2,7 @@
 # define USER_HPP
 # include <string>
 # include <netinet/in.h>
+# include <arpa/inet.h>
 # include <iostream>
 
 class User
@@ -9,25 +10,36 @@ class User
 	public:
 		User();
 		//User(const User &other);
-		User(const std::string &user, const std::string &nick);
+		User(const int &socket, const struct sockaddr_in &addr, 
+			const std::string &user, const std::string &nick);
 		~User();
 
 		void		setUsername(const std::string &user);
-		std::string	getUsername() const;
 		void		setNickname(const std::string &nick);
-		std::string	getNickname() const;
 		void		setAddr(const struct sockaddr_in &addr);
-		struct sockaddr_in	getAddr() const;
 		void		setSocket(const int &socket);
-		int			getSocket() const;
+
+		std::string			getUsername() const;
+		std::string			getNickname() const;
+		struct sockaddr_in	getAddr() const;
+		int					getSocket() const;
+		std::string			getHost() const;
+		int					getPort() const;
 
 	private:
 		User &operator=(const User &other);
 		User(const User &other);
+
 		int					_clientSocket;
 		struct sockaddr_in	_clientAddr;
 		std::string			_userName;
 		std::string			_nickName;
+		std::string			_hostName;
+		int					_port;
+
+		void		_setHost();
+		void		_setPort();
+
 };
 
 #endif
