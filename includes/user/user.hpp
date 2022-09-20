@@ -2,10 +2,13 @@
 # define USER_HPP
 # include <string>
 # include <netinet/in.h>
+# include <iostream>
 
 class User
 {
 	public:
+		User();
+		//User(const User &other);
 		User(const std::string &user, const std::string &nick);
 		~User();
 
@@ -19,10 +22,8 @@ class User
 		int			getSocket() const;
 
 	private:
-		User();
-		User(const User &other);
 		User &operator=(const User &other);
-
+		User(const User &other);
 		int					_clientSocket;
 		struct sockaddr_in	_clientAddr;
 		std::string			_userName;

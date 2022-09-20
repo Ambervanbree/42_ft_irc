@@ -6,7 +6,7 @@
 # include <vector>
 # include "commands.hpp"
 
-typedef void (*command)(std::vector<std::string> command, User user, Channel channel);
+typedef void (*command)(std::vector<std::string> command, User &user, Channel &channel);
 
 
 /*Things to add to the server*/
@@ -16,7 +16,7 @@ class Parser
 		void _setCommands();
 		
 		std::vector<std::string> _splitMessage(std::string message);
-		void _launchCommand(std::vector<std::string> commande, User user, Channel channel);
+		void _launchCommand(std::vector<std::string> commande, User &user, Channel &channel);
 
 		std::map<std::string, command> _commands;
 
@@ -25,7 +25,7 @@ class Parser
 	public:
 		Parser();
 		~Parser();
-		void interpretCommand(std::string message, User user, Channel channel);
+		void interpretCommand(std::string message, User &user, Channel &channel);
 };
 
 #endif
