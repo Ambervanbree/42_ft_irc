@@ -19,6 +19,16 @@
 # include <poll.h>
 # include <vector>
 
+// maximum length of the queue of pending connections
+# define MAX_CONNECTS   5
+// maximum number of connections
+# define MAX_FDS        1024
+// maximum command size
+# define MAX_BUFFER     512
+// timeout of 3 minutes (3 * 60 * 1000) miliseconds
+# define TIME_OUT       180000
+
+
 class Server {
 
 /* ************************************************************************** */
@@ -29,10 +39,10 @@ public:
     Server(int port, std::string password);
     ~Server(void);
 
-// private:
-    // Server(void);
-    // Server(const Server &rhs);
-    // Server &operator= (const Server &rhs);
+private:
+    Server(void);
+    Server(const Server &rhs);
+    Server &operator= (const Server &rhs);
 
 /* ************************************************************************** */
 /*                              MEMBER VARIABLES                              */
@@ -46,7 +56,7 @@ private:
     std::vector<int>    _channels;
     int                 _timeout;
     int                 _nfds;
-    struct  pollfd      _fds[200];
+    struct  pollfd      _fds[MAX_FDS];
     
 /* ************************************************************************** */
 /*                              MEMBER FUNCTIONS                              */
