@@ -10,9 +10,9 @@ void split_args(std::string in, char *delimiter, std::vector<std::string> &out)
 	}
 }
 
-std::vector<std::string> split_on_string(std::string message, std::string delim)
+std::deque<std::string> split_on_string(std::string message, std::string delim)
 {
-	std::vector<std::string> out;
+	std::deque<std::string> out;
     std::string::size_type start = 0U;
     std::string::size_type end = message.find(delim);
     while (end != std::string::npos)
