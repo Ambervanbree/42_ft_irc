@@ -44,7 +44,6 @@ void    Server::handleConnections(void){
 *******************************************************************************/
 void    Server::makeServerSocket(void){
     int ret;
-    int flags;
     int on = 1;
 
     _serverSocket = socket(AF_INET, SOCK_STREAM, 0);
@@ -58,10 +57,7 @@ void    Server::makeServerSocket(void){
         close(_serverSocket);
         exit(-1);
     }
-    flags = fcntl(_serverSocket, F_GETFL, 0);
-    if (flags == -1)
-        flags = 0;
-    ret = fcntl(_serverSocket, F_SETFL, flags | O_NONBLOCK);
+    ret = fcntl(_serverSocket, F_SETFL, O_NONBLOCK);
     if (ret < 0){
         perror("fcntl() failed");
         close(_serverSocket);
