@@ -27,7 +27,7 @@ int main(int argc, char *argv[])
 	User user;
 	Channel channel;
 	Parser parser;
-	parser.interpretCommand(argv[2], user, channel);
+	parser.interpretCommand(argv[2], user);
 	
 	Server s(port, std::string(argv[2]));
     
