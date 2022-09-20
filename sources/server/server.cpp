@@ -67,10 +67,12 @@ void    Server::makeServerSocket(void){
 
 /******************************************************************************/
 /*  binding()
+    - initializes the sockaddr_in structure (_serverAddr) with memset
     - binds the socket
 *******************************************************************************/
 void    Server::binding(void){
     int ret;
+
     memset(&_serverAddr, 0, sizeof(_serverAddr));
     _serverAddr.sin_family = AF_INET;
     memcpy(&_serverAddr.sin_addr, &in6addr_any, sizeof(in6addr_any));
@@ -101,13 +103,19 @@ void    Server::listening(void){
 /******************************************************************************/
 /*  initConnections()
     - Initializes the pollfd structure _fds
-    - Sets up the initial listening socket _fds[0] (= server socket)
+    - Sets up the initial listening socket 
+    - _fds[0].fd = server/listening socket
+    - _fds[0].events = events we are interested in managing
+            POLLIN event = There is data to read
+            POLLOUT event = Writing is now possible
+
+    !!! We might have to add other events !!!
 *******************************************************************************/
 void    Server::initConnections(void){
     _nfds = 0;
     memset(_fds, _nfds , sizeof(_fds));
     _fds[_nfds].fd = _serverSocket;
-    _fds[_nfds].events = POLLIN;
+    _fds[_nfds].events = POLLIN | POLLOUT;
     _nfds++;
 }
 
@@ -147,7 +155,6 @@ void   Server::handleIncomingConnections(void){
     - Loop through to find the descriptors that returned POLLIN and 
     determine whether it's the listening or the active connection.
 *******************************************************************************/
-
 bool    Server::handleEvents(bool *end_server){       
     int     i;
     int     current_size = 0;
