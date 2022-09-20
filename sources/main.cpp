@@ -1,4 +1,5 @@
 #include "server.hpp"
+#include "parser.hpp"
 //#include "user.hpp"
 
 static int check_arg(int argc, char **argv)
@@ -15,13 +16,23 @@ static int check_arg(int argc, char **argv)
 		return -1;
 	}
 	return port;
-} 
+}
+
+std::map<std::string, command> _commands;
 
 int main(int argc, char *argv[]) 
 {
 	int port = check_arg(argc, argv);
 	if (port == -1)
 		return 1;
-    Server s(port, std::string(argv[2]));
-    return 0;
+	    
+	User user;
+	Channel channel;
+	Parser parser;
+	
+	parser.interpretCommand(argv[2], user, channel);
+	
+	Server s(port, std::string(argv[2]));
+    
+	return 0;
 }
