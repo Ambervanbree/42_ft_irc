@@ -18,8 +18,6 @@ static int check_arg(int argc, char **argv)
 	return port;
 }
 
-std::map<std::string, command> _commands;
-
 int main(int argc, char *argv[]) 
 {
 	int port = check_arg(argc, argv);
@@ -29,12 +27,11 @@ int main(int argc, char *argv[])
 	User user;
 	Channel channel;
 	Parser parser;
-	
 	parser.interpretCommand(argv[2], user, channel);
 	
 	Server s(port, std::string(argv[2]));
     
-    s.start();
+	s.start();
     s.handleConnections();
     
 	return 0;

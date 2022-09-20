@@ -1,5 +1,4 @@
 #include "parser.hpp"
-#include "utils.hpp"
 
 Parser::Parser()
 {
@@ -57,7 +56,7 @@ std::vector<std::string> Parser::_splitMessage(std::string message)
 	return out;
 }
 
-void Parser::_launchCommand(std::vector<std::string> commande, User user, Channel channel)
+void Parser::_launchCommand(std::vector<std::string> commande, User &user, Channel &channel)
 {
 	if (commande.size() == 0)
 		return ;
@@ -69,7 +68,7 @@ void Parser::_launchCommand(std::vector<std::string> commande, User user, Channe
 		it->second(commande, user, channel);
 }
 
-void Parser::interpretCommand(std::string message, User user, Channel channel)
+void Parser::interpretCommand(std::string message, User &user, Channel &channel)
 {
 	_launchCommand(_splitMessage(message), user, channel);
 }
