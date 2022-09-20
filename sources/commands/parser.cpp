@@ -50,9 +50,6 @@ std::vector<std::string> Parser::_splitMessage(std::string message)
 	std::vector<std::string> out;
 	char delimiter[] = " ";
 	split_args(message, delimiter, out);
-	if (out.size() != 0 && out[0].size() != 0 && out[0][0] == ':')
-		out.erase(out.begin());
-	std::cout << "split message ended\n";
 	return out;
 }
 
@@ -60,12 +57,15 @@ void Parser::_launchCommand(std::vector<std::string> commande, User &user)
 {
 	if (commande.size() == 0)
 		return ;
-	std::cout << commande.size() << std::endl;
+	int index = 0;
+	if (commande[0].size() != 0 && commande[0][0] == ':')
+		index = 1;
 	std::map<std::string, command>::iterator it;
-	it = _commands.find(commande[0]);
-	std::cout << "search command\n";
+	it = _commands.find(commande[index]);
 	if (it != _commands.end())
 		it->second(commande, user);
+	else
+		std::cerr << "No command found\n";
 }
 
 void Parser::interpretCommand(std::string message, User &user)
