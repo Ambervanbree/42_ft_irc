@@ -19,6 +19,9 @@
 # include <string>
 # include <map>
 # include "commands.hpp"
+# include <list>
+
+# include "channel.hpp"
 
 // maximum length of the queue of pending connections
 # define MAX_CONNECTS   5
@@ -67,7 +70,7 @@ private:
 /*                              MEMBER FUNCTIONS                              */
 /* ************************************************************************** */
 
-private:
+private:   
     void makeServerSocket(void);
     void binding(void);
     void listening(void);

@@ -4,12 +4,7 @@
 # include <iostream>
 # include <vector>
 # include <map>
-
-class User{
-	std::string	_name;
-	char		_mode;
-}
-
+# include "user.hpp"
 
 class Channel{
 	private:
@@ -19,7 +14,6 @@ class Channel{
 		std::string					_topic;
 		std::string					_password;
 		std::vector<int>			_users;
-		std::map<char, std::string>	_channelModes; // should be on server
 		std::vector<char>			_modes;
 		std::vector<User>			_channelUsers;
 		User						*_chop; // channel operator
@@ -38,7 +32,7 @@ class Channel{
 		// user receives a notice about the commands in the channel
 		// MODE, KICK, PART, QUIT and of course PRIVMSG/NOTICE
 
-		void 			setModes();
+		void 			setMode();
 		std::string 	getTopic();
 		void 			setTopic(std::string topic);
 		// MODE;

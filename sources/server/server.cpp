@@ -5,12 +5,12 @@
 /* ************************************************************************** */
 
 Server::Server(int port, std::string password)
-: _port(port), _password(password), _nfds(0)  {}
+: _port(port), _password(password), _nfds(0)  {
+}
 
 Server::~Server(void) {
     closeConnections();
 }
-
 
 
 /* ************************************************************************** */

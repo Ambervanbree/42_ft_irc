@@ -19,6 +19,7 @@ SRC_FILES	=	main.cpp $(SERVER) $(COMMANDS) $(USER) utils.cpp
 SERVER		=	$(addprefix server/, server.cpp server_commands.cpp)
 COMMANDS	=	$(addprefix commands/, test.cpp test2.cpp commands.cpp)
 USER		=	$(addprefix user/, user.cpp)
+CHANNEL		=	$(addprefix channel/, channel.cpp)
 
 # ***************************************************************************** #
 # commands and flags          	   		                                        #
