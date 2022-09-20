@@ -66,11 +66,13 @@ private:
     void makeServerSocket(void);
     void binding(void);
     void listening(void);
+
     void initConnections(void);
     void handleIncomingConnections(void);
     bool handleEvents(bool *end_server);
     void listeningSocketAcceptConnections(bool *end_server);
     bool clientSocketRecieveOrSend(int i, bool *end_server);
+    
     void decrementFileDescriptors(void);
     void closeConnections(void);
 

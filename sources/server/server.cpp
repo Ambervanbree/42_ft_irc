@@ -178,7 +178,7 @@ bool    Server::handleEvents(bool *end_server){
 void    Server::listeningSocketAcceptConnections(bool *end_server) {
     int new_fd = 0;
 
-    std::cout << "Listening socket is readable" << std::endl;
+    std::cout << "[+] Listening socket is readable" << std::endl;
     while (new_fd != -1) {
         new_fd = accept(_serverSocket, NULL, NULL);
         if (new_fd < 0){
@@ -188,7 +188,7 @@ void    Server::listeningSocketAcceptConnections(bool *end_server) {
             }
             break;
         }
-        std::cout << "  New incoming connection - " << new_fd << std::endl;
+        std::cout << "[+] New incoming connection - " << new_fd << std::endl;
         _fds[_nfds].fd = new_fd;
         _fds[_nfds].events = POLLIN;
         _nfds++;
@@ -219,10 +219,11 @@ bool    Server::clientSocketRecieveOrSend(int i, bool *end_server) {
             break;
         }
         len = ret;
-        std::cout << len << " bytes received" << std::endl;
+        std::cout << "[+] " << len << " bytes received" << std::endl;
+        std::cout <<"[+] message : " << buffer << std::endl;
         ret = send(_fds[i].fd, buffer, len, 0);
         if (ret < 0){
-            perror("  send() failed");
+            perror("send() failed");
             close_conn = true;
             break;
         }
@@ -247,7 +248,6 @@ void    Server::decrementFileDescriptors(){
     int j;
 
     for (i = 0; i < _nfds; i++){
-        std::cout << "passing in decrement fd" << std::endl;
         if (_fds[i].fd == -1){
             for(j = i; j < _nfds; j++)
                 _fds[j].fd = _fds[j+1].fd;
@@ -264,7 +264,6 @@ void    Server::decrementFileDescriptors(){
 void    Server::closeConnections(void) {
     int i;
     for (i = 0; i < _nfds; i++){
-        std::cout << "passing in close" << std::endl;
         if(_fds[i].fd >= 0)
             close(_fds[i].fd);
     }
