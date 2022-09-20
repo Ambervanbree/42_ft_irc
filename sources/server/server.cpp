@@ -153,8 +153,7 @@ void   Server::handleIncomingConnections(void){
 *******************************************************************************/
 
 bool    Server::handleEvents(bool *end_server){       
-    int     ret;
-    int     i, j;
+    int     i;
     int     current_size = 0;
     bool    compress_array = false;
 
@@ -170,7 +169,7 @@ bool    Server::handleEvents(bool *end_server){
         if (_fds[i].fd == _serverSocket)
             listeningSocketAcceptConnections(end_server);
         else
-            compress_array = clientSocketRecieveOrSend(i, end_server);
+            compress_array = clientSocketRecieveOrSend(i);
     }
     return compress_array;
 }
@@ -195,7 +194,7 @@ void    Server::listeningSocketAcceptConnections(bool *end_server) {
     }
 }
 
-bool    Server::clientSocketRecieveOrSend(int i, bool *end_server) {
+bool    Server::clientSocketRecieveOrSend(int i) {
     bool    close_conn;
     char    buffer[MAX_BUFFER];
     int     ret;
