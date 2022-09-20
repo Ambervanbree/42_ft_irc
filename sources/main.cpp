@@ -34,5 +34,8 @@ int main(int argc, char *argv[])
 	
 	Server s(port, std::string(argv[2]));
     
+    s.start();
+    s.handleConnections();
+    
 	return 0;
 }
