@@ -1,9 +1,5 @@
 #include "server.hpp"
 
-// maximum length of the queue of pending connections
-#define MAX_CONNECTS    5
-#define MAX_BUFFER      512
-
 /* ************************************************************************** */
 /*                        CONSTRUCTORS / DESTRUCTORS                          */
 /* ************************************************************************** */
@@ -37,17 +33,18 @@ void    Server::handleConnections(void){
 /*                         PRIVATE MEMBER FUNCTIONS                           */
 /* ************************************************************************** */
 
-/*******************************************************************************
-    /*makeServerSocket()
-    socket() function creates the server socket that will recieve incoming
+/******************************************************************************/
+/*  makeServerSocket()
+    - socket() function creates the server socket that will recieve incoming
     connections
-    setsockopt() function allows the server socket to be reusable
-    fcntl() function sets the server socket to be nonblocking. 
+    - setsockopt() function allows the server socket to be reusable
+    - fcntl() function sets the server socket to be nonblocking. 
     All of the sockets for the incoming connections will also be nonblocking 
     since they will inherit that state from the listening server socket.
 *******************************************************************************/
 void    Server::makeServerSocket(void){
     int ret;
+    int flags;
     int on = 1;
 
     _serverSocket = socket(AF_INET, SOCK_STREAM, 0);
@@ -61,12 +58,10 @@ void    Server::makeServerSocket(void){
         close(_serverSocket);
         exit(-1);
     }
-    ret = ioctl(_serverSocket, FIONBIO, (char *)&on);
-    // int flags;
-    // flags = fcntl(_serverSocket, F_GETFL, 0);
-    // if (flags == -1)
-        // flags = 0;
-    // ret = fcntl(_serverSocket, F_SETFL, flags | O_NONBLOCK);
+    flags = fcntl(_serverSocket, F_GETFL, 0);
+    if (flags == -1)
+        flags = 0;
+    ret = fcntl(_serverSocket, F_SETFL, flags | O_NONBLOCK);
     if (ret < 0){
         perror("fcntl() failed");
         close(_serverSocket);
@@ -76,7 +71,7 @@ void    Server::makeServerSocket(void){
 
 /******************************************************************************/
 /*  binding()
-    binds the socket
+    - binds the socket
 *******************************************************************************/
 void    Server::binding(void){
     int ret;
@@ -96,7 +91,7 @@ void    Server::binding(void){
 
 /******************************************************************************/
 /*  listening()
-    make the server listen
+    - make the server listen
 *******************************************************************************/
 void    Server::listening(void){
     int ret;
@@ -109,26 +104,24 @@ void    Server::listening(void){
 
 /******************************************************************************/
 /*  initConnections()
-    Initializes the pollfd structure _fds
-    Sets up the initial listening socket _fds[0] (= server socket)
-    Initializes timeout to 3 minutes. If no activity after 3 minutes 
-    program will end.
+    - Initializes the pollfd structure _fds
+    - Sets up the initial listening socket _fds[0] (= server socket)
 *******************************************************************************/
 void    Server::initConnections(void){
     _nfds = 0;
     memset(_fds, _nfds , sizeof(_fds));
     _fds[_nfds].fd = _serverSocket;
     _fds[_nfds].events = POLLIN;
-    _timeout = (3 * 60 * 1000);
+    _nfds++;
 }
 
 /******************************************************************************/
 /*  handleIncomingConnections()
-    Loop waiting for incoming connects or for incoming data
-    on any of the connected sockets.
-    Call poll() and wait 3 minutes for it to complete.
-    Check to see if the poll call failed.
-    Check to see if the 3 minute time out expired.
+    - Loop waiting for incoming connects (for server socket) or for incoming 
+    data on any of the connected sockets.
+    - Call poll() and wait TIME_OUT for it to complete.
+    - Check to see if the poll call failed.
+    - Check to see if the TIME_OUT expired.
 
 *******************************************************************************/
 void   Server::handleIncomingConnections(void){
@@ -136,14 +129,13 @@ void   Server::handleIncomingConnections(void){
     bool    end_server = false;
     bool    compress_array = false;
 
-    _nfds = 1;
     while (end_server == false) {
-        std::cout << "[+] Waiting on poll()...\n" << std::endl;
-        ret = poll(_fds, _nfds, _timeout);
+        std::cout << "[+] Waiting on poll()..." << std::endl;
+        ret = poll(_fds, _nfds, TIME_OUT);
         if (ret < 0)
             perror("poll() failed");
         if (ret == 0)
-            std::cout << "[-] poll() timed out.  End program.\n" << std::endl;
+            std::cout << "[-] poll() timed out." << std::endl;
         if ((ret < 0) || (ret == 0))
             break;
         compress_array = handleEvents(&end_server);
@@ -156,9 +148,9 @@ void   Server::handleIncomingConnections(void){
 
 /******************************************************************************/
 /*  handleEvents()
-    Loop through to find the descriptors that returned POLLIN and 
+    - Loop through to find the descriptors that returned POLLIN and 
     determine whether it's the listening or the active connection.
-/******************************************************************************/
+*******************************************************************************/
 
 bool    Server::handleEvents(bool *end_server){       
     int     ret;
@@ -222,12 +214,12 @@ bool    Server::clientSocketRecieveOrSend(int i, bool *end_server) {
             break;
         }
         if (ret == 0){
-            std::cout << "  Connection closed\n" << std::endl;
+            std::cout << "  Connection closed" << std::endl;
             close_conn = true;
             break;
         }
         len = ret;
-        std::cout << len << " bytes received\n" << std::endl;
+        std::cout << len << " bytes received" << std::endl;
         ret = send(_fds[i].fd, buffer, len, 0);
         if (ret < 0){
             perror("  send() failed");
@@ -249,12 +241,13 @@ bool    Server::clientSocketRecieveOrSend(int i, bool *end_server) {
     the array and decrement the number of file descriptors. We do not need
     to move back the events and revents fields because the events will always
     be POLLIN in this case, and revents is output.          
-/******************************************************************************/
+*******************************************************************************/
 void    Server::decrementFileDescriptors(){
     int i;
     int j;
 
     for (i = 0; i < _nfds; i++){
+        std::cout << "passing in decrement fd" << std::endl;
         if (_fds[i].fd == -1){
             for(j = i; j < _nfds; j++)
                 _fds[j].fd = _fds[j+1].fd;
@@ -267,10 +260,11 @@ void    Server::decrementFileDescriptors(){
 /******************************************************************************/
 /*  closeConnections()
     Close sockets        
-/******************************************************************************/
+*******************************************************************************/
 void    Server::closeConnections(void) {
     int i;
     for (i = 0; i < _nfds; i++){
+        std::cout << "passing in close" << std::endl;
         if(_fds[i].fd >= 0)
             close(_fds[i].fd);
     }
