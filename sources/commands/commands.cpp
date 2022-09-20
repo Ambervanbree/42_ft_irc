@@ -74,13 +74,12 @@ void SQUIT(std::deque<std::string> Command, User &User)
 	std::cout << "SQUIT" << std::endl;
 }
 
-//JOIN <channel>
-//-> Check if a client is allowed to join a channel.
-// void JOIN(std::vector<std::string> Command, User User, Channel channel)
+// // JOIN <channel>
+// // -> Check if a client is allowed to join a channel.
+// void JOIN(std::vector<std::string> Command, User &User)
 // {
 // 	(void)Command;
 // 	(void)User;
-// 	(void)channel; 
 // 	std::cout << "JOIN" << std::endl;
 // }
 

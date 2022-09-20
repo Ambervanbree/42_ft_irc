@@ -1,5 +1,8 @@
 #include "server.hpp"
 //#include "user.hpp"
+#include "parser.hpp"
+#include "channel.hpp"
+#include "user.hpp"
 
 static int check_arg(int argc, char **argv)
 {
@@ -30,6 +33,13 @@ int main(int argc, char *argv[])
 	s.start();
     s.interpretCommand(message, user);
     s.handleConnections();
+	Parser parser;
+	Server s(port, std::string(argv[2]));
+	std::list<Channel>	_channels;
+
+	parser.interpretCommand(argv[2], user);
+	// s.start();
+    // s.handleConnections();
     
 	return 0;
 }

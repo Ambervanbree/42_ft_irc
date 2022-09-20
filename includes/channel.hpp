@@ -12,11 +12,11 @@ class Channel{
 		//max 200 char, beginning with & or #, 
 		//may not contain spaces, a control G, or a comma
 		std::string					_topic;
-		std::string					_password;
-		std::vector<int>			_users;
-		std::vector<char>			_modes;
-		std::vector<User>			_channelUsers;
-		User						*_chop; // channel operator
+		std::string					_key;
+		std::vector<User>			_users;
+		size_t						_size;
+		std::map<char, bool>		_modes;
+		User *						_chop; // channel operator
 		// maybe a user history
 
 	public:
@@ -32,7 +32,9 @@ class Channel{
 		// user receives a notice about the commands in the channel
 		// MODE, KICK, PART, QUIT and of course PRIVMSG/NOTICE
 
+		void			initModes();
 		void 			setMode();
+		void			addUser(User &user);
 		std::string 	getTopic();
 		void 			setTopic(std::string topic);
 		// MODE;
