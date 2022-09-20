@@ -1,6 +1,8 @@
 #ifndef USER_HPP
 # define USER_HPP
 # include <string>
+# include <vector>
+# include <algorithm>
 # include <netinet/in.h>
 # include <arpa/inet.h>
 # include <iostream>
@@ -26,6 +28,9 @@ class User
 		std::string			getHost() const;
 		int					getPort() const;
 
+		void						addChannel(const std::string &channel);
+		std::vector<std::string>	getChannelsList();
+
 	private:
 		User &operator=(const User &other);
 		User(const User &other);
@@ -36,6 +41,8 @@ class User
 		std::string			_nickName;
 		std::string			_hostName;
 		int					_port;
+
+		std::vector<std::string> _channels;
 
 		void		_setHost();
 		void		_setPort();

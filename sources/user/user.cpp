@@ -2,7 +2,7 @@
 
 User::User(const int &socket, const struct sockaddr_in &addr, const std::string &user,
 	const std::string &nick)
-	: _clientSocket(socket), _clientAddr(addr)  , _userName(user), _nickName(nick)
+	: _clientSocket(socket), _clientAddr(addr)  , _userName(user), _nickName(nick), _channels(0)
 {
 	_setHost();
 	_setPort();
@@ -10,7 +10,7 @@ User::User(const int &socket, const struct sockaddr_in &addr, const std::string 
 
 User::~User() {};
 
-User::User() {};
+User::User() { std::cout << "An user is born\n"; }
 
 User::User(const User &other)
 {
@@ -38,6 +38,14 @@ void				User::setNickname(const std::string &user) { _nickName = user; }
 void				User::setAddr(const struct sockaddr_in &addr) { _clientAddr = addr; }
 void				User::setSocket(const int &socket) { _clientSocket = socket; }
 
+void				User::addChannel(const std::string &channel)
+{
+	if (find(_channels.begin(), _channels.end(), channel) == _channels.end())
+		_channels.push_back(channel); 
+}
+
+
+std::vector<std::string>	User::getChannelsList() { return _channels; }
 
 /*Private member functions*/
 

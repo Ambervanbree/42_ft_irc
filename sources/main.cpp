@@ -25,7 +25,6 @@ int main(int argc, char *argv[])
 		return 1;
 	    
 	User user;
-	Channel channel;
 	Parser parser;
 	parser.interpretCommand(argv[2], user);
 	
