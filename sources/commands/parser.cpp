@@ -45,15 +45,15 @@ void Parser::_setCommands()
 	_commands["RESTART"] = RESTART;
 }
 
-std::vector<std::string> Parser::_splitMessage(std::string message)
+std::deque<std::string> Parser::_splitMessage(std::string message)
 {
-	std::vector<std::string> out;
+	std::deque<std::string> out;
 	char delimiter[] = " ";
 	split_args(message, delimiter, out);
 	return out;
 }
 
-void Parser::_launchCommand(std::vector<std::string> commande, User &user)
+void Parser::_launchCommand(std::deque<std::string> commande, User &user)
 {
 	if (commande.size() == 0)
 		return ;
