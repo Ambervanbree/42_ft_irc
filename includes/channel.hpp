@@ -20,8 +20,10 @@ class Channel{
 		// maybe a user history
 
 	public:
-		Channel(std::string name, std::string topic);
+		Channel(std::string name, User &user);
 		~Channel();
+
+		// void			operator =(Channel &rhs);
 
 		// void join (<channel>{,<channel>} [<key>{,<key>}])
 		// server checks if a client is allowed
@@ -34,7 +36,8 @@ class Channel{
 
 		void			initModes();
 		void 			setMode();
-		void			addUser(User &user);
+		void			addUser(std::string key, User &user);
+		std::string		getName();
 		std::string 	getTopic();
 		void 			setTopic(std::string topic);
 		// MODE;

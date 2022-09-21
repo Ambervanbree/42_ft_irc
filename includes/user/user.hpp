@@ -31,7 +31,6 @@ class User
 		void						addChannel(const std::string &channel);
 		std::vector<std::string>	getChannelsList();
 
-	private:
 		User &operator=(const User &other);
 		User(const User &other);
 

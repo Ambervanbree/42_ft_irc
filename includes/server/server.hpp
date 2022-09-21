@@ -18,9 +18,8 @@
 # include <vector>
 # include <string>
 # include <map>
-# include "commands.hpp"
 # include <list>
-
+# include "commands.hpp"
 # include "channel.hpp"
 
 // maximum length of the queue of pending connections
@@ -31,8 +30,6 @@
 # define MAX_BUFFER     512
 // timeout of 3 minutes (3 * 60 * 1000) miliseconds
 # define TIME_OUT       180000
-
-
 
 class Server {
 
@@ -54,16 +51,17 @@ private:
 /* ************************************************************************** */
 
 private:
-    int                 _port;
-    std::string         _password;
-    int                 _serverSocket;
-    struct sockaddr_in  _serverAddr;
-    std::vector<int>    _channels;
-    int                 _timeout;
-    int                 _nfds;
-    struct  pollfd      _fds[MAX_FDS];
+    int								_port;
+    std::string						_password;
+    int								_serverSocket;
+    struct sockaddr_in				_serverAddr;
+    int								_timeout;
+    int								_nfds;
+    struct  pollfd					_fds[MAX_FDS];
+	std::map<std::string, command>	_commands;
 	
-	std::map<std::string, command> _commands;
+public:	
+    std::list<Channel>				_channels;
 	
     
 /* ************************************************************************** */

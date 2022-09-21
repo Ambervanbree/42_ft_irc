@@ -5,10 +5,11 @@
 // any client can reference an existing channel using its name
 
 Channel::Channel(std::string name, User &user) : _name(name) {
-	_chop = user;
+	std::cout << "channel " << name << " created by " << user._nickName << std::endl;
+	initModes();
+	_chop = &user;
 	_users.push_back(user);
 	_size++;
-	initModes();
 };
 
 Channel::~Channel() {};
@@ -18,6 +19,8 @@ void 			Channel::setMode(){
 }
 
 std::string 	Channel::getTopic() {return _topic; }
+
+std::string		Channel::getName() {return _name; }
 
 void 			Channel::setTopic(std::string new_topic) {
 	_topic = new_topic;
@@ -37,9 +40,19 @@ void			Channel::initModes(){
 	_modes['k'] = false; // set a channel key (password)
 }
 
-void			Channel::addUser(User &user){
-	*(_users.end()) = user;
+void			Channel::addUser(std::string key, User &user){
+	// check for active bans
+	if (!_key.empty()){
+		if (key != _key){
+			std::cout << "ERR_BADCHANNELKEY (475)" << std::endl;
+			return ;
+		}
+	}
+	std::cout << "user " << user._nickName << " is added to " << _name << std::endl;
+	_users.push_back(user);
 	_size++;
+	// send join message
+	return ;
 }
 
 
