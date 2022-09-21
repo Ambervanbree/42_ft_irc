@@ -28,11 +28,16 @@ void split_on_string(std::string &message, std::string delim, std::deque<std::st
 {
     std::string::size_type start = 0;
     std::string::size_type end = message.find(delim);
+	std::string to_add;
     while (end != std::string::npos)
     {
-        out.push_back(message.substr(start, end - start));
+		to_add = message.substr(start, end - start);
+		if (to_add.size())
+        	out.push_back(to_add);
         start = end + delim.length();
         end = message.find(delim, start);
     }
-    out.push_back(message.substr(start, end));
+	to_add = message.substr(start, end);
+	if (to_add.size())
+    	out.push_back(to_add);
 }

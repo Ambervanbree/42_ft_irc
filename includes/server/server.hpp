@@ -4,7 +4,7 @@
 # include <iostream>
 # include <iomanip>
 # include <cstdlib>
-# include <string.h>
+# include <cstring>
 # include <sys/types.h>
 # include <sys/socket.h>
 # include <sys/ioctl.h>
@@ -60,8 +60,8 @@ private:
     int                 _nfds;
     struct  pollfd      _fds[MAX_FDS];
 	
-	std::map<std::string, command> _commands;
-	
+	std::map<std::string, command>	_commands;
+	std::deque<std::string>	_bufferCommand;
     
 /* ************************************************************************** */
 /*                              MEMBER FUNCTIONS                              */
@@ -81,14 +81,17 @@ private:
     void decrementFileDescriptors(void);
     void closeConnections(void);
 
+	/*Functions to set command list and launch commands*/
 	void _setCommands();
 	std::deque<std::string> _splitMessage(std::string message);
 	void _launchCommand(std::deque<std::string> command, User &user);
+	void _splitBuffer(char *buffer);
+	void _handleBuffer(char *buffer, int clientSocket);
 
 public:
     void start(void);
     void handleConnections(void);
-	void interpretCommand(std::string &message, User &user);
+	void interpretCommand(std::string &message, User &user); /*Change to Private at the end of project*/
 };
 
 #endif
