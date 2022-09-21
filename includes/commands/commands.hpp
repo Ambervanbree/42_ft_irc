@@ -6,13 +6,7 @@
 # include "user.hpp"
 # include "utils.hpp"
 
-/*Placeholder to channel class*/
-class Channel
-{
-	public:
-		Channel() {};
-		~Channel() {};
-};
+typedef void (*command)(std::deque<std::string> command, User &user);
 
 /*Server commands*/
 

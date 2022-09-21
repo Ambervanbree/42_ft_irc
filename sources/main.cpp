@@ -1,5 +1,4 @@
 #include "server.hpp"
-#include "parser.hpp"
 //#include "user.hpp"
 
 static int check_arg(int argc, char **argv)
@@ -25,12 +24,11 @@ int main(int argc, char *argv[])
 		return 1;
 	    
 	User user;
-	Parser parser;
-	parser.interpretCommand(argv[2], user);
+	std::string message = argv[2];
 
 	Server s(port, std::string(argv[2]));
-    
 	s.start();
+    s.interpretCommand(message, user);
     s.handleConnections();
     
 	return 0;

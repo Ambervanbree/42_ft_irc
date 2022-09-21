@@ -16,6 +16,9 @@
 # include <unistd.h>
 # include <poll.h>
 # include <vector>
+# include <string>
+# include <map>
+# include "commands.hpp"
 
 // maximum length of the queue of pending connections
 # define MAX_CONNECTS   5
@@ -25,6 +28,7 @@
 # define MAX_BUFFER     512
 // timeout of 3 minutes (3 * 60 * 1000) miliseconds
 # define TIME_OUT       180000
+
 
 
 class Server {
@@ -55,6 +59,9 @@ private:
     int                 _timeout;
     int                 _nfds;
     struct  pollfd      _fds[MAX_FDS];
+	
+	std::map<std::string, command> _commands;
+	
     
 /* ************************************************************************** */
 /*                              MEMBER FUNCTIONS                              */
@@ -74,10 +81,14 @@ private:
     void decrementFileDescriptors(void);
     void closeConnections(void);
 
+	void _setCommands();
+	std::deque<std::string> _splitMessage(std::string message);
+	void _launchCommand(std::deque<std::string> command, User &user);
+
 public:
     void start(void);
     void handleConnections(void);
-
+	void interpretCommand(std::string &message, User &user);
 };
 
 #endif

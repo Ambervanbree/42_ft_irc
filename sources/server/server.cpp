@@ -18,6 +18,7 @@ Server::~Server(void) {
 /* ************************************************************************** */
 
 void    Server::start(void){
+	_setCommands();
     makeServerSocket();
     binding();
     listening();
