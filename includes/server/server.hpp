@@ -60,7 +60,7 @@ private:
     int                 _nfds;
     struct  pollfd      _fds[MAX_FDS];
 	
-	std::map<std::string, command>			_commands;
+	std::map<std::string, command>	_commands;
 	std::deque<std::string>	_bufferCommand;
     
 /* ************************************************************************** */
@@ -91,7 +91,7 @@ private:
 public:
     void start(void);
     void handleConnections(void);
-	void interpretCommand(std::string &message, User &user);
+	void interpretCommand(std::string &message, User &user); /*Change to Private at the end of project*/
 };
 
 #endif
