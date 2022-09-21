@@ -1,13 +1,6 @@
-#include "parser.hpp"
+#include "server.hpp"
 
-Parser::Parser()
-{
-	_setCommands();
-}
-
-Parser::~Parser() {}
-
-void Parser::_setCommands()
+void Server::_setCommands()
 {
 	_commands["PASS"] = PASS;
 	_commands["NICK"] = NICK;
@@ -45,7 +38,7 @@ void Parser::_setCommands()
 	_commands["RESTART"] = RESTART;
 }
 
-std::deque<std::string> Parser::_splitMessage(std::string message)
+std::deque<std::string> Server::_splitMessage(std::string message)
 {
 	std::deque<std::string> out;
 	char delimiter[] = " ";
@@ -53,7 +46,7 @@ std::deque<std::string> Parser::_splitMessage(std::string message)
 	return out;
 }
 
-void Parser::_launchCommand(std::deque<std::string> commande, User &user)
+void Server::_launchCommand(std::deque<std::string> commande, User &user)
 {
 	if (commande.size() == 0)
 		return ;
@@ -68,7 +61,7 @@ void Parser::_launchCommand(std::deque<std::string> commande, User &user)
 		std::cerr << "No command found\n";
 }
 
-void Parser::interpretCommand(std::string message, User &user)
+void Server::interpretCommand(std::string &message, User &user)
 {
 	_launchCommand(_splitMessage(message), user);
 }
