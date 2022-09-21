@@ -1,13 +1,6 @@
-#include "parser.hpp"
+#include "server.hpp"
 
-Parser::Parser()
-{
-	_setCommands();
-}
-
-Parser::~Parser() {}
-
-void Parser::_setCommands()
+void Server::_setCommands()
 {
 	_commands["PASS"] = PASS;
 	_commands["NICK"] = NICK;
@@ -45,30 +38,30 @@ void Parser::_setCommands()
 	_commands["RESTART"] = RESTART;
 }
 
-std::vector<std::string> Parser::_splitMessage(std::string message)
+std::deque<std::string> Server::_splitMessage(std::string message)
 {
-	std::vector<std::string> out;
+	std::deque<std::string> out;
 	char delimiter[] = " ";
 	split_args(message, delimiter, out);
-	if (out.size() != 0 && out[0].size() != 0 && out[0][0] == ':')
-		out.erase(out.begin());
-	std::cout << "split message ended\n";
 	return out;
 }
 
-void Parser::_launchCommand(std::vector<std::string> commande, User &user)
+void Server::_launchCommand(std::deque<std::string> commande, User &user)
 {
 	if (commande.size() == 0)
 		return ;
-	std::cout << commande.size() << std::endl;
+	int index = 0;
+	if (commande[0].size() != 0 && commande[0][0] == ':')
+		index = 1;
 	std::map<std::string, command>::iterator it;
-	it = _commands.find(commande[0]);
-	std::cout << "search command\n";
+	it = _commands.find(commande[index]);
 	if (it != _commands.end())
 		it->second(commande, user);
+	else
+		std::cerr << "No command found\n";
 }
 
-void Parser::interpretCommand(std::string message, User &user)
+void Server::interpretCommand(std::string &message, User &user)
 {
 	_launchCommand(_splitMessage(message), user);
 }

@@ -4,7 +4,7 @@
 
 // PASS <password> <version> <flags>
 // set a connection pas
-void PASS(std::vector<std::string> Command, User &User)
+void PASS(std::deque<std::string> Command, User &User)
 {
 	(void)Command;
 	(void)User;
@@ -13,7 +13,7 @@ void PASS(std::vector<std::string> Command, User &User)
 
 // NICK <nickname> <hopcount> <username> <host> <servertoken> <umode> <realname>
 // -> Combination of NICK (the user version), USER and MODE.
-void NICK(std::vector<std::string> Command, User &User)
+void NICK(std::deque<std::string> Command, User &User)
 {
 	(void)Command;
 	(void)User;
@@ -22,7 +22,7 @@ void NICK(std::vector<std::string> Command, User &User)
 
 //PING <server1> [ <server2> ]
 //-> Test the presence of an acive client or server.
-void PING(std::vector<std::string> Command, User &User)
+void PING(std::deque<std::string> Command, User &User)
 {
 	(void)Command;
 	(void)User;
@@ -31,7 +31,7 @@ void PING(std::vector<std::string> Command, User &User)
 
 //PONG <server> [ <server2> ]
 //-> Reply to a ping message.
-void PONG(std::vector<std::string> Command, User &User)
+void PONG(std::deque<std::string> Command, User &User)
 {
 	(void)Command;
 	(void)User;
@@ -40,7 +40,7 @@ void PONG(std::vector<std::string> Command, User &User)
 
 //ERROR <error message>
 //-> Report a serious or fatal error to server's peers.
-void ERROR(std::vector<std::string> Command, User &User)
+void ERROR(std::deque<std::string> Command, User &User)
 {
 	(void)Command;
 	(void)User;
@@ -49,7 +49,7 @@ void ERROR(std::vector<std::string> Command, User &User)
 
 //WALLOPS <Text to be sent>
 //-> Send a message to all users that have set 'w' mode.
-void WALLOPS(std::vector<std::string> Command, User &User)
+void WALLOPS(std::deque<std::string> Command, User &User)
 {
 	(void)Command;
 	(void)User;
@@ -58,7 +58,7 @@ void WALLOPS(std::vector<std::string> Command, User &User)
 
 //QUIT [<Quit Message>]
 //-> Close the connection of a client and send quit message.
-void QUIT(std::vector<std::string> Command, User &User)
+void QUIT(std::deque<std::string> Command, User &User)
 {
 	(void)Command;
 	(void)User;
@@ -67,7 +67,7 @@ void QUIT(std::vector<std::string> Command, User &User)
 
 //SQUIT <server> <comment>
 //-> Break remote server link. 
-void SQUIT(std::vector<std::string> Command, User &User)
+void SQUIT(std::deque<std::string> Command, User &User)
 {
 	(void)Command;
 	(void)User;
@@ -76,7 +76,7 @@ void SQUIT(std::vector<std::string> Command, User &User)
 
 //JOIN <channel>
 //-> Check if a client is allowed to join a channel.
-void JOIN(std::vector<std::string> Command, User &User)
+void JOIN(std::deque<std::string> Command, User &User)
 {
 	(void)Command;
 	(void)User;
@@ -87,7 +87,7 @@ void JOIN(std::vector<std::string> Command, User &User)
 
 //PASS <password>
 //-> Set a connection password.
-/*void PASS(std::vector<std::string> Command, User &User)
+/*void PASS(std::deque<std::string> Command, User &User)
 {
 	(void)Command;
 	(void)User;
@@ -96,7 +96,7 @@ void JOIN(std::vector<std::string> Command, User &User)
 
 //NICK <nickname>
 //-> Give user a nickname or change the existing one.
-/*void NICK(std::vector<std::string> Command, User &User)
+/*void NICK(std::deque<std::string> Command, User &User)
 {
 	(void)Command;
 	(void)User;
@@ -106,7 +106,7 @@ void JOIN(std::vector<std::string> Command, User &User)
 //USER <user> <mode> <unused> <realname>
 //-> Specify the username, hostname and realname of 
 //   a new user at the beginning of connection
-void USER(std::vector<std::string> Command, User &User)
+void USER(std::deque<std::string> Command, User &User)
 {
 	(void)Command;
 	(void)User;
@@ -115,7 +115,7 @@ void USER(std::vector<std::string> Command, User &User)
 
 //OPER <name> <password>
 //-> Obtain operator priviliges.
-void OPER(std::vector<std::string> Command, User &User)
+void OPER(std::deque<std::string> Command, User &User)
 {
 	(void)Command;
 	(void)User;
@@ -124,7 +124,7 @@ void OPER(std::vector<std::string> Command, User &User)
 
 //MODE <nickname>
 //-> Change status.
-void MODE(std::vector<std::string> Command, User &User)
+void MODE(std::deque<std::string> Command, User &User)
 {
 	(void)Command;
 	(void)User;
@@ -133,7 +133,7 @@ void MODE(std::vector<std::string> Command, User &User)
 
 //SERVICE <nickname> <reserved> <distribution> <type> <reserved> <info>
 //-> Register a new service
-void SERVICE(std::vector<std::string> Command, User &User)
+void SERVICE(std::deque<std::string> Command, User &User)
 {
 	(void)Command;
 	(void)User;
@@ -142,7 +142,7 @@ void SERVICE(std::vector<std::string> Command, User &User)
 
 //QUIT [ <Quit Message> ]
 //-> Client session is terminated.
-/*void QUIT(std::vector<std::string> Command, User &User)
+/*void QUIT(std::deque<std::string> Command, User &User)
 {
 	(void)Command;
 	(void)User;
@@ -151,7 +151,7 @@ void SERVICE(std::vector<std::string> Command, User &User)
 
 //PRIVMSG <msgtarget> <text to be sent>
 //-> Send a private message to another user or to a channel.
-void PRIVMSG(std::vector<std::string> Command, User &User)
+void PRIVMSG(std::deque<std::string> Command, User &User)
 {
 	(void)Command;
 	(void)User;
@@ -160,7 +160,7 @@ void PRIVMSG(std::vector<std::string> Command, User &User)
 
 //NOTICE <msgtarget> <text>
 //-> Same as PRIVMSG, but no automatic replies will be sent in response.
-void NOTICE(std::vector<std::string> Command, User &User)
+void NOTICE(std::deque<std::string> Command, User &User)
 {
 	(void)Command;
 	(void)User;
@@ -169,7 +169,7 @@ void NOTICE(std::vector<std::string> Command, User &User)
 
 //MOTD [ <target> ]
 //-> Message of the day from a server.
-void MOTD(std::vector<std::string> Command, User &User)
+void MOTD(std::deque<std::string> Command, User &User)
 {
 	(void)Command;
 	(void)User;
@@ -178,7 +178,7 @@ void MOTD(std::vector<std::string> Command, User &User)
 
 //LUSERS [ <mask> [ <target> ] ]
 //-> Get statistics on the size of the IRC network. 
-void LUSERS(std::vector<std::string> Command, User &User)
+void LUSERS(std::deque<std::string> Command, User &User)
 {
 	(void)Command;
 	(void)User;
@@ -187,7 +187,7 @@ void LUSERS(std::vector<std::string> Command, User &User)
 
 //VERSION [ <target> ]
 //-> Query version of the server program.
-void VERSION(std::vector<std::string> Command, User &User)
+void VERSION(std::deque<std::string> Command, User &User)
 {
 	(void)Command;
 	(void)User;
@@ -196,7 +196,7 @@ void VERSION(std::vector<std::string> Command, User &User)
 
 //STATS [ <query> [ <target> ] ]
 //-> Query statistics of the server.
-void STATS(std::vector<std::string> Command, User &User)
+void STATS(std::deque<std::string> Command, User &User)
 {
 	(void)Command;
 	(void)User;
@@ -205,7 +205,7 @@ void STATS(std::vector<std::string> Command, User &User)
 
 //TIME [ <target> ]
 //-> Query local time from (specified) server.
-void TIME(std::vector<std::string> Command, User &User)
+void TIME(std::deque<std::string> Command, User &User)
 {
 	(void)Command;
 	(void)User;
@@ -214,7 +214,7 @@ void TIME(std::vector<std::string> Command, User &User)
 
 //INFO [ <target> ]
 //-> Information describing the server.
-void INFO(std::vector<std::string> Command, User &User)
+void INFO(std::deque<std::string> Command, User &User)
 {
 	(void)Command;
 	(void)User;
@@ -223,7 +223,7 @@ void INFO(std::vector<std::string> Command, User &User)
 
 //WHO [ <mask> [ "o" ] ]
 //-> Generate a query that returns a list of information to match the mask.
-void WHO(std::vector<std::string> Command, User &User)
+void WHO(std::deque<std::string> Command, User &User)
 {
 	(void)Command;
 	(void)User;
@@ -232,7 +232,7 @@ void WHO(std::vector<std::string> Command, User &User)
 
 //WHOIS [ <target> ] <mask>
 //-> Query info about a particular user.
-void WHOIS(std::vector<std::string> Command, User &User)
+void WHOIS(std::deque<std::string> Command, User &User)
 {
 	(void)Command;
 	(void)User;
@@ -241,7 +241,7 @@ void WHOIS(std::vector<std::string> Command, User &User)
 
 //WHOWAS <nickname> [ <count> [ <target> ] ]
 //-> Ask for info about a nickname that no longer exists. 
-void WHOWAS(std::vector<std::string> Command, User &User)
+void WHOWAS(std::deque<std::string> Command, User &User)
 {
 	(void)Command;
 	(void)User;
@@ -252,7 +252,7 @@ void WHOWAS(std::vector<std::string> Command, User &User)
 
 //JOIN <channel>
 //-> Start listening a specific channel.
-/*void JOIN(std::vector<std::string> Command, User &User)
+/*void JOIN(std::deque<std::string> Command, User &User)
 {
 	(void)Command;
 	(void)User;
@@ -261,7 +261,7 @@ void WHOWAS(std::vector<std::string> Command, User &User)
 
 //PART <channel>
 //-> User is removed from active members list.
-void PART(std::vector<std::string> Command, User &User)
+void PART(std::deque<std::string> Command, User &User)
 {
 	(void)Command;
 	(void)User;
@@ -270,7 +270,7 @@ void PART(std::vector<std::string> Command, User &User)
 
 //MODE <channel>
 //-> Change characteristics of a channel.
-/*void MODE(std::vector<std::string> Command, User &User)
+/*void MODE(std::deque<std::string> Command, User &User)
 {
 	(void)Command;
 	(void)User;
@@ -279,7 +279,7 @@ void PART(std::vector<std::string> Command, User &User)
 
 //TOPIC <channel> [ <topic> ]
 //-> Change or view the topic of a channel.
-void TOPIC(std::vector<std::string> Command, User &User)
+void TOPIC(std::deque<std::string> Command, User &User)
 {
 	(void)Command;
 	(void)User;
@@ -288,7 +288,7 @@ void TOPIC(std::vector<std::string> Command, User &User)
 
 //NAMES [ <channel> ]
 //-> List all nicknames visible to the client. 
-void NAMES(std::vector<std::string> Command, User &User)
+void NAMES(std::deque<std::string> Command, User &User)
 {
 	(void)Command;
 	(void)User;
@@ -297,7 +297,7 @@ void NAMES(std::vector<std::string> Command, User &User)
 
 //LIST [ <channel> ]
 //-> List channels and their topics.
-void LIST(std::vector<std::string> Command, User &user)
+void LIST(std::deque<std::string> Command, User &user)
 {
 	(void)Command;
 	(void)user;
@@ -306,7 +306,7 @@ void LIST(std::vector<std::string> Command, User &user)
 
 //INVITE <nickname> <channel>
 //-> Invite a user to a channel.
-void INVITE(std::vector<std::string> Command, User &user)
+void INVITE(std::deque<std::string> Command, User &user)
 {
 	(void)Command;
 	(void)user;
@@ -315,7 +315,7 @@ void INVITE(std::vector<std::string> Command, User &user)
 
 //KICK <channel> <user> [<comment>]
 //-> Request forced removal of a user from a channel.
-void KICK(std::vector<std::string> Command, User &user)
+void KICK(std::deque<std::string> Command, User &user)
 {
 	(void)Command;
 	(void)user;
@@ -326,7 +326,7 @@ void KICK(std::vector<std::string> Command, User &user)
 
 //SQUIT <server> <comment>
 //-> Disconnect server links.
-/*void SQUIT(std::vector<std::string> Command, User &user)
+/*void SQUIT(std::deque<std::string> Command, User &user)
 {
 	(void)Command;
 	(void)user;
@@ -335,7 +335,7 @@ void KICK(std::vector<std::string> Command, User &user)
 
 //CONNECT <target server> <port> [ <remote server> ]
 //-> Connect to another server.
-void CONNECT(std::vector<std::string> Command, User &user)
+void CONNECT(std::deque<std::string> Command, User &user)
 {
 	(void)Command;
 	(void)user;
@@ -344,7 +344,7 @@ void CONNECT(std::vector<std::string> Command, User &user)
 
 //KILL <nickname> <comment>
 //-> Cause a client-server connection to be closed by the server.
-void KILL(std::vector<std::string> Command, User &user)
+void KILL(std::deque<std::string> Command, User &user)
 {
 	(void)Command;
 	(void)user;
@@ -353,7 +353,7 @@ void KILL(std::vector<std::string> Command, User &user)
 
 //DIE (optional)
 //-> Shut down the server.
-void DIE(std::vector<std::string> Command, User &user)
+void DIE(std::deque<std::string> Command, User &user)
 {
 	(void)Command;
 	(void)user;
@@ -362,7 +362,7 @@ void DIE(std::vector<std::string> Command, User &user)
 
 //RESTART
 //-> Force the server to restart itself.
-void RESTART(std::vector<std::string> Command, User &user)
+void RESTART(std::deque<std::string> Command, User &user)
 {
 	(void)Command;
 	(void)user;
