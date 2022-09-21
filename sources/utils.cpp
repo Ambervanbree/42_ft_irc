@@ -34,5 +34,5 @@ void split_on_string(std::string &message, std::string delim, std::deque<std::st
         start = end + delim.length();
         end = message.find(delim, start);
     }
-    out.push_back(message.substr(start, end));
+    //out.push_back(message.substr(start, end));
 }

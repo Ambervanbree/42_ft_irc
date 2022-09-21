@@ -221,6 +221,7 @@ bool    Server::clientSocketRecieveOrSend(int i) {
         len = ret;
         std::cout << "[+] " << len << " bytes received" << std::endl;
         std::cout <<"[+] message : " << buffer << std::endl;
+		_handleBuffer(buffer, _fds[i].fd);
         ret = send(_fds[i].fd, buffer, len, 0);
         if (ret < 0){
             perror("send() failed");
