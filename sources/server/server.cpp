@@ -204,6 +204,7 @@ bool    Server::clientSocketRecieveOrSend(int i) {
     
     std::cout << "[+] Descriptor " << _fds[i].fd << " is readable" << std::endl;
     close_conn = false;
+	memset(buffer, '\0', MAX_BUFFER);
     while (true) {
         ret = recv(_fds[i].fd, buffer, sizeof(buffer), 0);
         if (ret < 0){
@@ -228,6 +229,7 @@ bool    Server::clientSocketRecieveOrSend(int i) {
             close_conn = true;
             break;
         }
+		memset(buffer, '\0', MAX_BUFFER);
     }
     if (close_conn){
         close(_fds[i].fd);
