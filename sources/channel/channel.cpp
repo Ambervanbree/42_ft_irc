@@ -1,7 +1,7 @@
 #include "channel.hpp"
 
 Channel::Channel(std::string name, User &user) : _name(name) {
-	std::cout << "channel " << name << " created by " << user._nickName << std::endl;
+	std::cout << "channel " << name << " created by " << user.getNickname() << std::endl;
 	initModes();
 	_chop = &user;
 	_users.push_back(user);
@@ -48,7 +48,7 @@ void			Channel::addUser(std::string key, User &user){
 		}
 	}
 	// TODO --> send standard channel reply message
-	std::cout << "user " << user._nickName << " is added to " << _name << std::endl;
+	std::cout << "user " << user.getNickname() << " is added to " << _name << std::endl;
 	_users.push_back(user);
 	_size++;
 	return ;

@@ -11,7 +11,8 @@ class User
 {
 	public:
 		User();
-		//User(const User &other);
+
+		User(const User &other);
 		User(const int &socket, const struct sockaddr_in &addr, 
 			const std::string &user, const std::string &nick);
 		~User();
@@ -33,7 +34,6 @@ class User
 
 	private:
 		User &operator=(const User &other);
-		User(const User &other);
 
 		int					_clientSocket;
 		struct sockaddr_in	_clientAddr;

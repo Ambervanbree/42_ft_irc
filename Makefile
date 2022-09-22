@@ -16,12 +16,11 @@ OBJS		=	$(addprefix $(OBJ_DIR), $(OBJ_FILES))
 # ***************************************************************************** #
 
 OBJ_FILES	=	$(SRC_FILES:.cpp=.o)
-SRC_FILES	=	main.cpp $(SERVER) $(COMMANDS) $(USER) utils.cpp
-SERVER		=	$(addprefix server/, server.cpp server_commands.cpp)
 SRC_FILES	=	main.cpp $(SERVER) $(COMMANDS) $(USER) $(CHANNEL) utils.cpp
 COMMANDS	=	$(addprefix commands/, commands.cpp join.cpp)
 USER		=	$(addprefix user/, user.cpp)
 CHANNEL		=	$(addprefix channel/, channel.cpp)
+SERVER		=	$(addprefix server/, server.cpp server_commands.cpp)
 
 
 # ***************************************************************************** #

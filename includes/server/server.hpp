@@ -57,7 +57,6 @@ private:
     std::string         _password;
     int                 _serverSocket;
     struct sockaddr_in  _serverAddr;
-    std::vector<int>    _channels;
     int                 _timeout;
     int                 _nfds;
     struct  pollfd      _fds[MAX_FDS];
