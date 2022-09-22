@@ -61,11 +61,12 @@ private:
     int                 _nfds;
     struct  pollfd      _fds[MAX_FDS];
 	
-	  std::map<std::string, command>	_commands;
-	  std::deque<std::string>	_bufferCommand;
+	std::map<std::string, command>	_commands;
+	std::deque<std::string>	_bufferCommand;
   
   public:
-    std::list<Channel>				_channels;
+    std::list<Channel>	_channels;
+	std::list<User>		users;
     
 /* ************************************************************************** */
 /*                              MEMBER FUNCTIONS                              */
@@ -97,6 +98,14 @@ public:
     void handleConnections(void);
 
 	void interpretCommand(std::string &message, User &user); /*Change to Private at the end of project*/
+};
+
+struct Command
+{
+	std::string				prefix;
+	std::string 			cmd_name;
+	std::deque<std::string>	args;
+	std::string				trailer;
 };
 
 #endif
