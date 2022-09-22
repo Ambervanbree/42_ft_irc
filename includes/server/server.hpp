@@ -18,7 +18,10 @@
 # include <vector>
 # include <string>
 # include <map>
+# include <list>
 # include "commands.hpp"
+# include "channel.hpp"
+
 
 // maximum length of the queue of pending connections
 # define MAX_CONNECTS   5
@@ -28,8 +31,6 @@
 # define MAX_BUFFER     512
 // timeout of 3 minutes (3 * 60 * 1000) miliseconds
 # define TIME_OUT       180000
-
-
 
 class Server {
 
@@ -46,6 +47,7 @@ private:
     Server(const Server &rhs);
     Server &operator= (const Server &rhs);
 
+
 /* ************************************************************************** */
 /*                              MEMBER VARIABLES                              */
 /* ************************************************************************** */
@@ -60,8 +62,11 @@ private:
     int                 _nfds;
     struct  pollfd      _fds[MAX_FDS];
 	
-	std::map<std::string, command>	_commands;
-	std::deque<std::string>	_bufferCommand;
+	  std::map<std::string, command>	_commands;
+	  std::deque<std::string>	_bufferCommand;
+  
+  public:
+    std::list<Channel>				_channels;
     
 /* ************************************************************************** */
 /*                              MEMBER FUNCTIONS                              */
@@ -91,6 +96,7 @@ private:
 public:
     void start(void);
     void handleConnections(void);
+
 	void interpretCommand(std::string &message, User &user); /*Change to Private at the end of project*/
 };
 

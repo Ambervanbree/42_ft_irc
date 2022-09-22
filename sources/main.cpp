@@ -1,5 +1,6 @@
 #include "server.hpp"
-//#include "user.hpp"
+#include "channel.hpp"
+#include "user.hpp"
 
 static int check_arg(int argc, char **argv)
 {

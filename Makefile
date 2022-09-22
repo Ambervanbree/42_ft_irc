@@ -5,7 +5,8 @@
 NAME		=	ircserv
 SRC_DIR		=	sources/
 OBJ_DIR		=	objects/
-SUB_DIRS	=	server/ commands/ user/
+SUB_DIRS	=	server/ commands/ user/ channel/
+
 DIR			=	$(addprefix $(OBJ_DIR), $(SUB_DIRS))
 SRCS		=	$(addprefix $(SRC_DIR), $(SRC_FILES))
 OBJS		=	$(addprefix $(OBJ_DIR), $(OBJ_FILES))
@@ -17,8 +18,11 @@ OBJS		=	$(addprefix $(OBJ_DIR), $(OBJ_FILES))
 OBJ_FILES	=	$(SRC_FILES:.cpp=.o)
 SRC_FILES	=	main.cpp $(SERVER) $(COMMANDS) $(USER) utils.cpp
 SERVER		=	$(addprefix server/, server.cpp server_commands.cpp)
-COMMANDS	=	$(addprefix commands/, test.cpp test2.cpp commands.cpp)
+SRC_FILES	=	main.cpp $(SERVER) $(COMMANDS) $(USER) $(CHANNEL) utils.cpp
+COMMANDS	=	$(addprefix commands/, commands.cpp join.cpp)
 USER		=	$(addprefix user/, user.cpp)
+CHANNEL		=	$(addprefix channel/, channel.cpp)
+
 
 # ***************************************************************************** #
 # commands and flags          	   		                                        #
@@ -32,7 +36,7 @@ CFLAGS		=	-Wall -Wextra -Werror -std=c++98 -g
 # includes																		#
 # ***************************************************************************** #
 
-INCL		=	-Iincludes/server/ -Iincludes/commands/ -Iincludes/
+INCL		=	-Iincludes/server/ -Iincludes/commands/ -Iincludes/user/ -Iincludes/
 INCL		+=	-Iincludes/user
 
 # ***************************************************************************** #

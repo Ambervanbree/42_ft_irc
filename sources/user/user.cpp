@@ -10,7 +10,8 @@ User::User(const int &socket, const struct sockaddr_in &addr, const std::string 
 
 User::~User() {};
 
-User::User() { std::cout << "An user is born\n"; }
+User::User() : _nickName("default user") { std::cout << "A user is born\n"; }
+
 
 User::User(const User &other)
 {
