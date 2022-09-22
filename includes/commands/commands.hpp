@@ -15,13 +15,13 @@ typedef void (*command)(std::deque<std::string> command, User &user, Server &ser
 
 /*Server commands*/
 
-void PASS(std::deque<std::string> Command, User &User);
-void NICK(std::deque<std::string> Command, User &User);
-void PING(std::deque<std::string> Command, User &User);
-void PONG(std::deque<std::string> Command, User &User);
+// void PASS(std::deque<std::string> Command, User &User);
+// void NICK(std::deque<std::string> Command, User &User);
+// void PING(std::deque<std::string> Command, User &User);
+// void PONG(std::deque<std::string> Command, User &User);
 // void ERROR(std::deque<std::string> Command, User &User);
 // void WALLOPS(std::deque<std::string> Command, User &User);
-void QUIT(std::deque<std::string> Command, User &User);
+// void QUIT(std::deque<std::string> Command, User &User);
 // void SQUIT(std::deque<std::string> Command, User &User);
 // void JOIN(std::deque<std::string> Command, User &User);
 

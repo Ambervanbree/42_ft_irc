@@ -12,7 +12,7 @@
 
 
 Channel*	channelExists(std::string channelName, Server &server){
-	std::list<Channel>::iterator	it = server._channels.begin();
+	std::list<Channel>::iterator	it 	= server._channels.begin();
 	std::list<Channel>::iterator	ite = server._channels.end();
 
 	for (; it != ite; it++){
@@ -23,23 +23,20 @@ Channel*	channelExists(std::string channelName, Server &server){
 }
 
 void		createChannel(std::string name, User &user, Server &server){
-	// checkChannelName(name);
 	if (name.size() > 20){
 		std::cerr << "ERR_BADCHANMASK (476)" << std::endl;
-		std::cerr << "<channel> :Bad Channel Mask" << std::endl;
+		// ERR: "<channel> :Bad Channel Mask"
+		// TODO --> grammar check
 		return ;
 	}
 	if (name[0] != '#')
 		name.insert(0, 1, '#');
 	server._channels.push_back(Channel(name, user));
-	// send RPL_TOPIC, RPL_NAMREPLY
+	/* TODO --> add possible error replies: 
+		ERR_TOOMANYCHANNELS (405)
+	*/
 }
 
-// void		checkChannelName(std::string &name){
-// }
-
-// JOIN <channel>
-// -> Check if a client is allowed to join a channel.
 void JOIN(std::deque<std::string> command, User &user, Server &server)
 {
 	std::deque<std::string>	channels;
@@ -48,7 +45,12 @@ void JOIN(std::deque<std::string> command, User &user, Server &server)
 	
 	split_args(CHANNELS, delimiter, channels);
 	split_args(KEYS, delimiter, keys);
-
+	
+	if (!channels.size()){
+		std::cerr << "ERR_NEEDMOREPARAMS (461)" << std::endl;
+		// ERR: "<client> <command> :Not enough parameters"
+		return ;
+	}
 	for (size_t i = 0; i < channels.size(); i++){
 		Channel	*chan = channelExists(channels[i], server);
 		if (chan != NULL)
@@ -56,4 +58,15 @@ void JOIN(std::deque<std::string> command, User &user, Server &server)
 		else
 			createChannel(channels[i], user, server);
 	}
+	/* TODO --> add channel replies: 
+		RPL_TOPIC (332)
+		RPL_TOPICWHOTIME (333)
+		RPL_NAMREPLY (353)
+		RPL_ENDOFNAMES (366)
+
+	   And error cases:
+		ERR_TOOMANYCHANNELS (405)
+		ERR_NOSUCHCHANNEL (403) --> not sure in what situation, 
+			since if there's no such channel, it will be created
+	*/
 }
