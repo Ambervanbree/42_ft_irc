@@ -31,11 +31,6 @@ int main(int argc, char *argv[])
 	s.start();
     s.interpretCommand(message, user);
     s.handleConnections();
-	std::list<Channel>	_channels;
-
-	// parser.interpretCommand(argv[2], user);
-	// s.start();
-    // s.handleConnections();
     
 	return 0;
 }

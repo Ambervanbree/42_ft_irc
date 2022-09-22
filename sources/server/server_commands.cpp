@@ -66,3 +66,27 @@ void Server::interpretCommand(std::string &message, User &user)
 	_launchCommand(_splitMessage(message), user);
 }
 
+void Server::_splitBuffer(char *buffer)
+{
+	std::cerr << "-> Receive from client: " << buffer << std::endl;
+	std::string buf = buffer;
+	split_on_string(buf, "\r\n", _bufferCommand);
+	for (unsigned int i = 0; i < _bufferCommand.size(); i++)
+	{
+		std::cerr << "splitted buffer [" << i << "] " << _bufferCommand[i];
+		std::cerr << " - len: " << _bufferCommand[i].size() << std::endl;
+	}
+}
+
+void Server::_handleBuffer(char *buffer, int clientSocket)
+{
+	/*Placeholder of User who will be search by his socketId*/
+	User user;
+	(void)clientSocket;
+	_splitBuffer(buffer);
+	while (_bufferCommand.size())
+	{
+		interpretCommand(_bufferCommand[0], user);
+		_bufferCommand.pop_front();
+	}
+}

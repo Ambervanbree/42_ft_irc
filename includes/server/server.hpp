@@ -4,7 +4,7 @@
 # include <iostream>
 # include <iomanip>
 # include <cstdlib>
-# include <string.h>
+# include <cstring>
 # include <sys/types.h>
 # include <sys/socket.h>
 # include <sys/ioctl.h>
@@ -21,6 +21,7 @@
 # include <list>
 # include "commands.hpp"
 # include "channel.hpp"
+
 
 // maximum length of the queue of pending connections
 # define MAX_CONNECTS   5
@@ -46,29 +47,32 @@ private:
     Server(const Server &rhs);
     Server &operator= (const Server &rhs);
 
+
 /* ************************************************************************** */
 /*                              MEMBER VARIABLES                              */
 /* ************************************************************************** */
 
 private:
-    int								_port;
-    std::string						_password;
-    int								_serverSocket;
-    struct sockaddr_in				_serverAddr;
-    int								_timeout;
-    int								_nfds;
-    struct  pollfd					_fds[MAX_FDS];
-	std::map<std::string, command>	_commands;
+    int                 _port;
+    std::string         _password;
+    int                 _serverSocket;
+    struct sockaddr_in  _serverAddr;
+    std::vector<int>    _channels;
+    int                 _timeout;
+    int                 _nfds;
+    struct  pollfd      _fds[MAX_FDS];
 	
-public:	
+	  std::map<std::string, command>	_commands;
+	  std::deque<std::string>	_bufferCommand;
+  
+  public:
     std::list<Channel>				_channels;
-	
     
 /* ************************************************************************** */
 /*                              MEMBER FUNCTIONS                              */
 /* ************************************************************************** */
 
-private:   
+private:
     void makeServerSocket(void);
     void binding(void);
     void listening(void);
@@ -82,14 +86,18 @@ private:
     void decrementFileDescriptors(void);
     void closeConnections(void);
 
+	/*Functions to set command list and launch commands*/
 	void _setCommands();
 	std::deque<std::string> _splitMessage(std::string message);
 	void _launchCommand(std::deque<std::string> command, User &user);
+	void _splitBuffer(char *buffer);
+	void _handleBuffer(char *buffer, int clientSocket);
 
 public:
     void start(void);
     void handleConnections(void);
-	void interpretCommand(std::string &message, User &user);
+
+	void interpretCommand(std::string &message, User &user); /*Change to Private at the end of project*/
 };
 
 #endif

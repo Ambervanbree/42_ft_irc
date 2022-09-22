@@ -5,13 +5,12 @@
 /* ************************************************************************** */
 
 Server::Server(int port, std::string password)
-: _port(port), _password(password), _nfds(0)  {
-}
+
+: _port(port), _password(password), _nfds(0)  {}
 
 Server::~Server(void) {
     closeConnections();
 }
-
 
 /* ************************************************************************** */
 /*                         PUBLIC MEMBER FUNCTIONS                            */
@@ -28,7 +27,6 @@ void    Server::handleConnections(void){
     initConnections();
     handleIncomingConnections();
 }
-
 
 /* ************************************************************************** */
 /*                         PRIVATE MEMBER FUNCTIONS                           */
@@ -204,6 +202,8 @@ bool    Server::clientSocketRecieveOrSend(int i) {
     
     std::cout << "[+] Descriptor " << _fds[i].fd << " is readable" << std::endl;
     close_conn = false;
+
+    memset(buffer, '\0', MAX_BUFFER);
     while (true) {
         ret = recv(_fds[i].fd, buffer, sizeof(buffer), 0);
         if (ret < 0){
@@ -221,12 +221,14 @@ bool    Server::clientSocketRecieveOrSend(int i) {
         len = ret;
         std::cout << "[+] " << len << " bytes received" << std::endl;
         std::cout <<"[+] message : " << buffer << std::endl;
+	  	_handleBuffer(buffer, _fds[i].fd);
         ret = send(_fds[i].fd, buffer, len, 0);
         if (ret < 0){
             perror("send() failed");
             close_conn = true;
             break;
         }
+		  memset(buffer, '\0', MAX_BUFFER);
     }
     if (close_conn){
         close(_fds[i].fd);
