@@ -28,9 +28,7 @@ class User
 		int					getSocket() const;
 		std::string			getHost() const;
 		int					getPort() const;
-
-		void						addChannel(const std::string &channel);
-		std::vector<std::string>	getChannelsList();
+		std::string			getPrefix() const;
 
 	private:
 		User &operator=(const User &other);
@@ -42,11 +40,8 @@ class User
 		std::string			_hostName;
 		int					_port;
 
-		std::vector<std::string> _channels;
-
 		void		_setHost();
 		void		_setPort();
-
 };
 
 #endif

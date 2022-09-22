@@ -2,7 +2,7 @@
 
 User::User(const int &socket, const struct sockaddr_in &addr, const std::string &user,
 	const std::string &nick)
-	: _clientSocket(socket), _clientAddr(addr)  , _userName(user), _nickName(nick), _channels(0)
+	: _clientSocket(socket), _clientAddr(addr)  , _userName(user), _nickName(nick)
 {
 	_setHost();
 	_setPort();
@@ -19,6 +19,8 @@ User::User(const User &other)
 	{
 		_userName = other._userName;
 		_nickName = other._nickName;
+		_hostName = other._hostName;
+		_port = other._port;
 		_clientAddr = other._clientAddr;
 		_clientSocket = other._clientSocket;
 	}
@@ -33,22 +35,21 @@ struct sockaddr_in	User::getAddr() const { return _clientAddr; }
 int					User::getSocket() const { return _clientSocket; }
 std::string			User::getHost() const { return _hostName; }
 
-/*Setters*/
-void				User::setUsername(const std::string &name) { _userName = name; }
-void				User::setNickname(const std::string &user) { _nickName = user; }
-void				User::setAddr(const struct sockaddr_in &addr) { _clientAddr = addr; }
-void				User::setSocket(const int &socket) { _clientSocket = socket; }
-
-void				User::addChannel(const std::string &channel)
+std::string			User::getPrefix() const
 {
-	if (find(_channels.begin(), _channels.end(), channel) == _channels.end())
-		_channels.push_back(channel); 
+	std::string prefix;
+	prefix = ":" + getNickname() + "!" + getUsername() + "@" + getHost();
+	return prefix;
 }
 
-
-std::vector<std::string>	User::getChannelsList() { return _channels; }
+/*Setters*/
+void				User::setUsername(const std::string &user) { _userName = user; }
+void				User::setNickname(const std::string &nick) { _nickName = nick;}
+void				User::setAddr(const struct sockaddr_in &addr) { _clientAddr = addr; }
+void				User::setSocket(const int &socket) { _clientSocket = socket; }
 
 /*Private member functions*/
 
 void				User::_setHost() { _hostName = inet_ntoa(_clientAddr.sin_addr); }
 void				User::_setPort() { _port = ntohs(_clientAddr.sin_port); }
+

@@ -228,7 +228,7 @@ bool    Server::clientSocketRecieveOrSend(int i) {
             close_conn = true;
             break;
         }
-		  memset(buffer, '\0', MAX_BUFFER);
+		memset(buffer, '\0', MAX_BUFFER);
     }
     if (close_conn){
         close(_fds[i].fd);

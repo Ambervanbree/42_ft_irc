@@ -11,15 +11,6 @@ void PASS(std::deque<std::string> Command, User &User)
 	std::cout << "PASS" << std::endl;
 }
 
-// NICK <nickname> <hopcount> <username> <host> <servertoken> <umode> <realname>
-// -> Combination of NICK (the user version), USER and MODE.
-void NICK(std::deque<std::string> Command, User &User)
-{
-	(void)Command;
-	(void)User;
-	std::cout << "NICK" << std::endl;
-}
-
 //PING <server1> [ <server2> ]
 //-> Test the presence of an acive client or server.
 void PING(std::deque<std::string> Command, User &User)
