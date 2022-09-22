@@ -21,7 +21,8 @@ class Channel{
 		~Channel();
 
 		void			initModes();
-		void 			setMode();
+		void 			setMode(std::string &modestring, std::string &modesarg);
+		void 			unsetMode(std::string &modestring, std::string &modesarg);
 		void			addUser(std::string key, User &user);
 		std::string		getName();
 		std::string 	getTopic();

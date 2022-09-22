@@ -10,7 +10,16 @@ Channel::Channel(std::string name, User &user) : _name(name) {
 
 Channel::~Channel() {};
 
-void 			Channel::setMode(){
+void 			Channel::setMode(std::string &modestring, std::string &modesarg){
+	(void)modestring;
+	(void)modesarg;
+	// Mode command: 
+	// <channel> {[+|-]|o|p|s|i|t|n|b|v} [<limit>] [<user>] [<ban mask>]
+}
+
+void 			Channel::unsetMode(std::string &modestring, std::string &modesarg){
+	(void)modestring;
+	(void)modesarg;
 	// Mode command: 
 	// <channel> {[+|-]|o|p|s|i|t|n|b|v} [<limit>] [<user>] [<ban mask>]
 }

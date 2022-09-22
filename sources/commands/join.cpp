@@ -10,18 +10,6 @@
 #define KEY1 keys[0]
 #define KEY2 keys[1]
 
-
-Channel*	channelExists(std::string channelName, Server &server){
-	std::list<Channel>::iterator	it 	= server._channels.begin();
-	std::list<Channel>::iterator	ite = server._channels.end();
-
-	for (; it != ite; it++){
-		if ((*it).getName() == channelName)
-			return &(*it);
-	}
-	return NULL;
-}
-
 void		createChannel(std::string name, User &user, Server &server){
 	if (name.size() > 20){
 		std::cerr << "ERR_BADCHANMASK (476)" << std::endl;
@@ -52,7 +40,7 @@ void JOIN(std::deque<std::string> command, User &user, Server &server)
 		return ;
 	}
 	for (size_t i = 0; i < channels.size(); i++){
-		Channel	*chan = channelExists(channels[i], server);
+		Channel	*chan = findChannel(channels[i], server);
 		if (chan != NULL)
 			chan->addUser(keys[i], user);
 		else

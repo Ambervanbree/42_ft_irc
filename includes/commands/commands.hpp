@@ -47,11 +47,11 @@ void NICK(std::deque<std::string> Command, User &User, Server &server);
 
 /*User commands for channels:*/
 
-void JOIN(std::deque<std::string> Command, User &User, Server &server);
-// void PART(std::deque<std::string> Command, User &User, Server &server);
-// void MODE(std::deque<std::string> Command, User &User, Server &server);
-// void TOPIC(std::deque<std::string> Command, User &User, Server &server);
-// void NAMES(std::deque<std::string> Command, User &User, Server &server);
+void JOIN(std::deque<std::string> command, User &user, Server &server);
+// void PART(std::deque<std::string> Command, User &User);
+void MODE(std::deque<std::string> command, User &user, Server &server);
+// void TOPIC(std::deque<std::string> Command, User &User);
+// void NAMES(std::deque<std::string> Command, User &User);
 // void LIST(std::deque<std::string> Command, User &user);
 // void INVITE(std::deque<std::string> Command, User &user);
 // void KICK(std::deque<std::string> Command, User &user);
@@ -64,5 +64,8 @@ void JOIN(std::deque<std::string> Command, User &User, Server &server);
 // void DIE(std::deque<std::string> Command, User &user);
 // void RESTART(std::deque<std::string> Command, User &user);
 
+
+/*Command utils:*/
+Channel*	findChannel(std::string &channelName, Server &server);
 
 #endif

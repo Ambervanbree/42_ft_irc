@@ -19,7 +19,7 @@ OBJ_FILES	=	$(SRC_FILES:.cpp=.o)
 SRC_FILES	=	main.cpp $(SERVER) $(COMMANDS) $(USER) $(CHANNEL) utils.cpp
 COMMANDS	=	$(addprefix commands/, commands.cpp join.cpp nick.cpp)
 USER		=	$(addprefix user/, user.cpp)
-CHANNEL		=	$(addprefix channel/, channel.cpp)
+CHANNEL		=	$(addprefix channel/, channel.cpp command_utils.cpp)
 SERVER		=	$(addprefix server/, server.cpp server_commands.cpp)
 
 
