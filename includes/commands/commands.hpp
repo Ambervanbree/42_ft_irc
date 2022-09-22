@@ -48,8 +48,8 @@ void NICK(std::deque<std::string> Command, User &User, Server &server);
 /*User commands for channels:*/
 
 void JOIN(std::deque<std::string> command, User &user, Server &server);
-// void PART(std::deque<std::string> Command, User &User);
 void MODE(std::deque<std::string> command, User &user, Server &server);
+// void PART(std::deque<std::string> Command, User &User);
 // void TOPIC(std::deque<std::string> Command, User &User);
 // void NAMES(std::deque<std::string> Command, User &User);
 // void LIST(std::deque<std::string> Command, User &user);

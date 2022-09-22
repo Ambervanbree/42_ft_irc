@@ -29,8 +29,15 @@ int main(int argc, char *argv[])
 
 	Server s(port, std::string(argv[2]));
 	s.start();
-    s.interpretCommand(message, user);
-    s.handleConnections();
-    
+
+	std::string	command;
+	do{
+		std::cout << "Type command: " << std::endl;
+		std::getline(std::cin, command);
+		s.interpretCommand(command, user);
+	} while (command != "STOP");
+    // s.interpretCommand(message, user);
+    // s.handleConnections();
+
 	return 0;
 }

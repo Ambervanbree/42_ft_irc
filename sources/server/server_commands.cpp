@@ -13,7 +13,7 @@ void Server::_setCommands()
 	_commands["JOIN"] = JOIN;
 	// _commands["USER"] = USER;
 	// _commands["OPER"] = OPER;
-	// _commands["MODE"] = MODE;
+	_commands["MODE"] = MODE;
 	// _commands["SERVICE"] = SERVICE; 		x
 	// _commands["PRIVMSG"] = PRIVMSG;
 	// _commands["NOTICE"] = NOTICE;
