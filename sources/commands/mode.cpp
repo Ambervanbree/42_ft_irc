@@ -9,9 +9,40 @@
 
 // MODE <target> [<modestring> [<mode arguments>]]
 
-void	parseModeString(std::string modestring, std::deque<char> plus, std::deque<char> min){
-	std::string::iterator	it 	= modestring.begin();
-	std::string::iterator	ite = modestring.end();
+void	addMode(char mode, std::string &modeArg, User &user, Channel *chan){
+	switch (mode){
+		case 'k':
+			if (modeArg.empty())
+				return ; //--> TODO: check what +k does without arg
+			else{
+				std::cout << "alalla" << std::endl;
+			}
+		case 'b':
+			if (modeArg.empty()){
+				std::cout << "RPL_BANLIST (367)" << std::endl;
+				return ;
+			}
+			else{
+				if (chan->isChop(user)){
+					std::cerr << "ERR_CHANOPRIVSNEEDED (482)" << std::endl;
+					return ;
+				}
+				else
+					chan.banUser(modeArg);
+			}
+	}
+
+	/// point these to function table
+
+}
+
+void	eraseMode(char mode, std::string &modeArg){
+	
+}
+
+void	parseModeString(std::string &modeString, std::string &modeArg, User &user, Channel *chan){
+	std::string::iterator	it 	= modeString.begin();
+	std::string::iterator	ite = modeString.end();
 
 	if (!(*it == '+' || *it == '-'))
 		return ;
@@ -20,14 +51,16 @@ void	parseModeString(std::string modestring, std::deque<char> plus, std::deque<c
 		switch (*(it++)){
 			case '+':
 				while (!(*it == '+' || *it == '-' || it == ite)){
-					plus.push_back(*it);
-					std::cout << "pushed " << *it << " to plus" << std::endl;
+					if (!modeArg.empty())
+						modeString.erase(it + 1, ite);
+					addMode(*it, modeArg, user, chan);
 					it++;
 				}
 			case '-':
 				while (!(*it == '+' || *it == '-' || it == ite)){
-					min.push_back(*it);
-					std::cout << "pushed " << *it << " to min" << std::endl;
+					if (!modeArg.empty())
+						modeString.erase(it + 1, ite);
+					eraseMode(*it, modeArg);
 					it++;
 				}
 		}
@@ -36,25 +69,35 @@ void	parseModeString(std::string modestring, std::deque<char> plus, std::deque<c
 	}
 }
 
+// bool 	connectModeArg(std::string &modeString, std::string &modeArg, char &arg){
+// 	std::string::iterator	it = modeString.begin();
+// 	std::string::iterator	ite = modeString.end();
+
+// 	for (; it != ite; it++){
+// 		switch (*it){
+// 			case 'k':
+// 				modeString.erase(++it, ite);
+// 				arg = *it;
+// 			case 't':
+// 				modeString.erase(++it, ite);
+// 				arg = *it;				
+// 		}
+// 	}
+// }
+
 void	channelMode(std::deque<std::string> &command, User &user, Server &server){
 	Channel		*chan = findChannel(TARGET, server);
 
 	if (chan == NULL){
 		std::cerr << "ERR_NOSUCHCHANNEL (403)" << std::endl;
-		// ERR: "<client> <channel> :No such channel"
 		return ;	
 	}
 	if (MODESTRING.empty()){
-		std::cout << "List channel modes" << std::endl;
-		// TODO --> reply RPL_CHANNELMODEIS (324)
+		std::cout << "RPL_CHANNELMODEIS (324)" << std::endl;
 		return ;
 	}
 
-	std::deque<char>	plus;
-	std::deque<char>	min;
-
-	parseModeString(MODESTRING, plus, min);
-	(void)user;
+	parseModeString(MODESTRING, MODEARG, user, chan);
 }
 
 void	userMode(){

@@ -12,9 +12,10 @@ class Channel{
 		std::string					_topic;
 		std::string					_key;
 		std::vector<User>			_users;
+		std::vector<std::string>	_banned;
 		size_t						_size;
 		std::map<char, bool>		_modes;
-		User *						_chop; 	// channel operator
+		std::vector<User>			_chop; 	// channel operator
 
 	public:
 		Channel(std::string name, User &user);
@@ -24,9 +25,15 @@ class Channel{
 		void 			setMode(std::string &modestring, std::string &modesarg);
 		void 			unsetMode(std::string &modestring, std::string &modesarg);
 		void			addUser(std::string key, User &user);
+		bool			onChannel(User &user);
+		bool			isBanned(User &user);
+		bool			correctKey(std::string key);
+		bool			isChop(User &user);
 		std::string		getName();
 		std::string 	getTopic();
 		void 			setTopic(std::string topic);
+		void			setKey(std::string key);
+		void			banUser(std::string nickMask);
 };
 
 #endif

@@ -35,37 +35,92 @@ void 			Channel::setTopic(std::string new_topic) {
 
 void			Channel::initModes(){
 	// TODO --> verify which modes are not necessary
-	_modes['o'] = false; // give/take channel operator privileges
-	_modes['p'] = false; // private channel flag
-	_modes['s'] = false; // secret channel flag
-	_modes['i'] = false; // invite-only channel flag
+	// _modes['o'] = false; // give/take channel operator privileges
+	// _modes['p'] = false; // private channel flag
+	// _modes['s'] = false; // secret channel flag
+	// _modes['i'] = false; // invite-only channel flag
 	_modes['t'] = false; // topic settable by channel operator only flag
-	_modes['n'] = false; // no messages to channel from clients on the outside
-	_modes['m'] = false; // moderated channel
-	_modes['l'] = false; // set the user limit to channel
-	_modes['b'] = false; // set a ban mask to keep users out
-	_modes['v'] = false; // give/take the ability to speak on a moderated channel
+	// _modes['n'] = false; // no messages to channel from clients on the outside
+	// _modes['m'] = false; // moderated channel
+	// _modes['l'] = false; // set the user limit to channel
+	// _modes['b'] = false; // set a ban mask to keep users out
+	// _modes['v'] = false; // give/take the ability to speak on a moderated channel
 	_modes['k'] = false; // set a channel key (password)
 }
 
 void			Channel::addUser(std::string key, User &user){
-	// TODO --> check for active bans
-	if (_modes.find('k') != _modes.end()){
-		if (key != _key){
-			std::cerr << "ERR_BADCHANNELKEY (475)" << std::endl;
-			return ;
-		}
+	if (onChannel(user)){
+		std::cerr << "ERR_USERONCHANNEL (443)" << std::endl;
+		return ;
+	}
+	if (isBanned(user)){
+		std::cerr << "ERR_BANNEDFROMCHAN (474)" << std::endl;
+		return ; 
+	}
+	if (!correctKey(key)){
+		std::cerr << "ERR_BADCHANNELKEY (475)" << std::endl;
+		return ;
 	}
 	// TODO --> send standard channel reply message
 	std::cout << "user " << user.getNickname() << " is added to " << _name << std::endl;
 	_users.push_back(user);
 	_size++;
+	// TODO --> user.addChannel(*this);
 	return ;
 
 	/* TODO --> add possible error replies: 
-		ERR_INVITEONLYCHAN (473)
-		ERR_CHANNELISFULL (471)
-		ERR_BANNEDFROMCHAN (474)
-		ERR_BADCHANMASK (476)
+		ERR_INVITEONLYCHAN (473)  -> invite mode
+		ERR_CHANNELISFULL (471)   -> limit mode
+		ERR_BANNEDFROMCHAN (474)  DONE
+		ERR_BADCHANMASK (476)     DONE
 	*/
+}
+
+bool			Channel::onChannel(User &user){
+	std::vector<User>::iterator	it = _users.begin();
+	std::vector<User>::iterator ite = _users.end();
+
+	for (; it != ite; it++){
+		if (it->getNickname() == user.getNickname())
+			return true;
+	}
+	return false;
+}
+
+bool			Channel::isBanned(User &user){
+	std::vector<User>::iterator	it = _banned.begin();
+	std::vector<User>::iterator ite = _banned.end();
+
+	for (; it != ite; it++){
+		if (it->getNickname() == user.getNickname())
+			return true;
+	}
+	return false;
+}
+
+bool			Channel::isChop(User &user){
+	std::vector<User>::iterator	it = _chop.begin();
+	std::vector<User>::iterator ite = _chop.end();
+
+	for (; it != ite; it++){
+		if (it->getNickname() == user.getNickname())
+			return true;
+	}
+	return false;
+}
+
+void			Channel::setKey(std::string key) {
+	_key = key; 
+}
+
+bool			Channel::correctKey(std::string key) {
+	if (_modes.find('k') != _modes.end() && _key != key){
+		return false;
+	}
+	return true;
+}
+
+void			Channel::banUser(std::string nickMask){
+	_banned.push_back(nickMask);
+	// send to user: ERR_BANNEDFROMCHAN (474)
 }
