@@ -9,31 +9,42 @@
 class Channel{
 	private:
 		std::string					_name; 
-		std::string					_topic;
 		std::string					_key;
 		std::vector<User>			_users;
 		std::vector<std::string>	_banned;
-		size_t						_size;
 		std::map<char, bool>		_modes;
-		std::vector<User>			_chop; 	// channel operator
+		std::vector<std::string>	_chop; 	// channel operator
 
 	public:
+		/* Initialisation */
+
 		Channel(std::string name, User &user);
 		~Channel();
-
 		void			initModes();
-		void 			setMode(std::string &modestring, std::string &modesarg);
-		void 			unsetMode(std::string &modestring, std::string &modesarg);
-		void			addUser(std::string key, User &user);
-		bool			onChannel(User &user);
-		bool			isBanned(User &user);
-		bool			correctKey(std::string key);
-		bool			isChop(User &user);
+
+		/* Getters */
+
 		std::string		getName();
-		std::string 	getTopic();
-		void 			setTopic(std::string topic);
-		void			setKey(std::string key);
-		void			banUser(std::string nickMask);
+
+		/* Checkers */
+
+		bool			onChannel(User &user);
+		bool			isBanned(std::string nickMask);
+		bool			isChop(User &user);
+		bool			correctKey(std::string key);
+
+		/* Setters */
+
+		void 			setMode(std::string &modestring, std::string &modesarg);
+		void			addUser(std::string key, User &user);
+		void			setKey(std::string key, User &user);
+		void			banUser(std::string nickMask, User &user);
+
+		/* Unsetters */
+		void 			unsetKey(User &user);
+		void			unbanUser(std::string nickMask, User &user);
+
+
 };
 
 #endif

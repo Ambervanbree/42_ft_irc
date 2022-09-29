@@ -9,7 +9,7 @@
 void		createChannel(std::string name, User &user, Server &server){
 	server._channels.push_back(Channel(name, user));
 	/* TODO --> add replies: 
-		ERR_TOOMANYCHANNELS (405)
+		ERR_TOOMANYCHANNELS (405) 
 	*/
 }
 

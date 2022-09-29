@@ -73,7 +73,7 @@ void Server::_splitBuffer(char *buffer)
 	split_on_string(buf, "\r\n", _bufferCommand);
 	for (unsigned int i = 0; i < _bufferCommand.size(); i++)
 	{
-		std::cerr << "splitted buffer [" << i << "] " << _bufferCommand[i];
+		std::cerr << "split buffer [" << i << "] " << _bufferCommand[i];
 		std::cerr << " - len: " << _bufferCommand[i].size() << std::endl;
 	}
 }

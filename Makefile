@@ -35,7 +35,7 @@ CFLAGS		=	-Wall -Wextra -Werror -std=c++98 -g
 # includes																		#
 # ***************************************************************************** #
 
-INCL		=	-Iincludes/server/ -Iincludes/commands/ -Iincludes/user/ -Iincludes/
+INCL		=	-Iincludes/
 
 # ***************************************************************************** #
 # rules																			#

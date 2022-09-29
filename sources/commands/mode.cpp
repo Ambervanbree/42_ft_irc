@@ -13,31 +13,42 @@ void	addMode(char mode, std::string &modeArg, User &user, Channel *chan){
 	switch (mode){
 		case 'k':
 			if (modeArg.empty())
-				return ; //--> TODO: check what +k does without arg
-			else{
-				std::cout << "alalla" << std::endl;
-			}
+				return ;
+			else
+				chan->setKey(modeArg, user);
+			modeArg.clear();
+			return ;
 		case 'b':
 			if (modeArg.empty()){
 				std::cout << "RPL_BANLIST (367)" << std::endl;
 				return ;
 			}
-			else{
-				if (chan->isChop(user)){
-					std::cerr << "ERR_CHANOPRIVSNEEDED (482)" << std::endl;
-					return ;
-				}
-				else
-					chan.banUser(modeArg);
-			}
+			chan->banUser(modeArg, user);
+			modeArg.clear();
+			return ;
+		default:
+			std::cerr << "mode not handled (yet)" << std::endl;
+			return ;
 	}
-
-	/// point these to function table
-
 }
 
-void	eraseMode(char mode, std::string &modeArg){
-	
+void	eraseMode(char mode, std::string &modeArg, User &user, Channel *chan){
+	switch (mode){
+		case 'k':
+			chan->unsetKey(user);
+			return ;
+		case 'b':
+			if (modeArg.empty()){
+				std::cout << "ERR_NEEDMOREPARAMS (461)" << std::endl;
+				return ;
+			}
+			chan->unbanUser(modeArg, user);
+			modeArg.clear();
+			return ;
+		default:
+			std::cerr << "mode not handled (yet)" << std::endl;
+			return ;
+	}	
 }
 
 void	parseModeString(std::string &modeString, std::string &modeArg, User &user, Channel *chan){
@@ -60,7 +71,7 @@ void	parseModeString(std::string &modeString, std::string &modeArg, User &user, 
 				while (!(*it == '+' || *it == '-' || it == ite)){
 					if (!modeArg.empty())
 						modeString.erase(it + 1, ite);
-					eraseMode(*it, modeArg);
+					// eraseMode(*it, modeArg);
 					it++;
 				}
 		}
@@ -96,7 +107,6 @@ void	channelMode(std::deque<std::string> &command, User &user, Server &server){
 		std::cout << "RPL_CHANNELMODEIS (324)" << std::endl;
 		return ;
 	}
-
 	parseModeString(MODESTRING, MODEARG, user, chan);
 }
 
