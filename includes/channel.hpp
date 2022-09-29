@@ -35,6 +35,7 @@ class Channel{
 		bool			isBanned(std::string nickMask);
 		bool			isChop(std::string nickMask);
 		bool			correctKey(std::string key);
+		bool			isEmpty();
 
 		/* Setters */
 

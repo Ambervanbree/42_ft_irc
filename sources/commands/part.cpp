@@ -3,7 +3,7 @@
 #include "server.hpp"
 #include "commands.hpp"
 
-//PART <channel>
+//PART <channel>{,<channel>} [<reason>]
 
 void PART(std::deque<std::string> command, User &user, Server &server)
 {
@@ -16,9 +16,15 @@ void PART(std::deque<std::string> command, User &user, Server &server)
 		std::cerr << "ERR_NOSUCHCHANNEL (403)" << std::endl;
 		return ;
 	}
+	if (!chan->onChannel(user)){
+		std::cerr << "ERR_NOTONCHANNEL (442)" << std::endl;
+		return ;
+	}
+	std::cout << user.getNickname() << " removed from channel " << chan->getName() << std::endl;
 	chan->removeUser(user);
-	// if (chan->_users.size() == 0){
-	// 	server._channels.erase(chan);
-	// 	delete &chan;
-	// }
+	if (chan->isEmpty()){
+		server._channels.erase(chan);
+		delete chan;
+		std::cout << "Channel " << chan->getName() << " deleted" << std::endl;
+	}
 }

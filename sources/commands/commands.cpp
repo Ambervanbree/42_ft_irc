@@ -223,15 +223,6 @@ void WHOWAS(std::deque<std::string> Command, User &User)
 
 /*User commands for channels:*/
 
-//PART <channel>
-//-> User is removed from active members list.
-void PART(std::deque<std::string> Command, User &User)
-{
-	(void)Command;
-	(void)User;
-	std::cout << "PART" << std::endl;
-}
-
 //TOPIC <channel> [ <topic> ]
 //-> Change or view the topic of a channel.
 void TOPIC(std::deque<std::string> Command, User &User)
