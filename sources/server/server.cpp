@@ -1,4 +1,4 @@
-#include "server.hpp"
+#include "../../includes/server/server.hpp"
 
 /* ************************************************************************** */
 /*                        CONSTRUCTORS / DESTRUCTORS                          */
@@ -163,7 +163,7 @@ bool    Server::handleEvents(bool *end_server){
     for (i = 0; i < current_size; i++){
         if(_fds[i].revents == 0)
             continue;
-        if(_fds[i].revents != POLLIN){
+        if((_fds[i].revents != POLLIN) && (_fds[i].revents != POLLOUT)){
             std::cout << "Error! revents = " << _fds[i].revents << std::endl;
             *end_server = true;
             break;
@@ -195,46 +195,92 @@ void    Server::acceptConnections(bool *end_server) {
         }
         std::cout << "[+] New incoming connection - " << new_fd << std::endl;
         _fds[_nfds].fd = new_fd;
-        _fds[_nfds].events = POLLIN;
+        _fds[_nfds].events = POLLIN | POLLOUT;
         _nfds++;
     }
 }
+
+// bool    Server::clientSocketEvent(int i) {
+//     bool    close_conn;
+//     char    buffer[MAX_BUFFER];
+//     int     ret;
+//     int     len;
+//     bool    compress_array = false;
+    
+//     std::cout << "[+] Descriptor " << _fds[i].fd << " is readable" << std::endl;
+//     close_conn = false;
+
+//     while (true) {
+//         memset(buffer, '\0', MAX_BUFFER);
+//         ret = recv(_fds[i].fd, buffer, sizeof(buffer), 0);
+//         if (ret < 0){
+//             if (errno != EWOULDBLOCK){
+//                 perror("  recv() failed");
+//                 close_conn = true;
+//             }
+//             break;
+//         }
+//         if (ret == 0){
+//             std::cout << "  Connection closed" << std::endl;
+//             close_conn = true;
+//             break;
+//         }
+//         len = ret;
+//         // std::cout << "[+] " << len << " bytes received" << std::endl;
+//         // std::cout <<"[+] message : " << buffer << std::endl;
+//         ret = send(_fds[i].fd, buffer, len, 0);
+//         if (ret < 0){
+//             perror("send() failed");
+//             close_conn = true;
+//             break;
+//         }
+// 	  	_handleBuffer(buffer, _fds[i].fd);
+//     }
+//     if (close_conn){
+//         close(_fds[i].fd);
+//         _fds[i].fd = -1;
+//         compress_array = true;
+//     }
+//     return compress_array;
+// }
+
 
 bool    Server::clientSocketEvent(int i) {
     bool    close_conn;
     char    buffer[MAX_BUFFER];
     int     ret;
-    int     len;
+    char    resp[60] = "J'ai bien recu ton message et je t'en remercie\n";
     bool    compress_array = false;
     
     std::cout << "[+] Descriptor " << _fds[i].fd << " is readable" << std::endl;
     close_conn = false;
 
     while (true) {
-        memset(buffer, '\0', MAX_BUFFER);
-        ret = recv(_fds[i].fd, buffer, sizeof(buffer), 0);
-        if (ret < 0){
-            if (errno != EWOULDBLOCK){
-                perror("  recv() failed");
-                close_conn = true;
+        if (_fds[i].revents == POLLOUT) {
+            memset(buffer, '\0', MAX_BUFFER);
+            ret = recv(_fds[i].fd, buffer, sizeof(buffer), 0);
+            if (ret < 0){
+                if (errno != EWOULDBLOCK){
+                    perror("  recv() failed");
+                    close_conn = true;
+                }
+                break;
             }
-            break;
+            if (ret == 0){
+                std::cout << "  Connection closed" << std::endl;
+                close_conn = true;
+                break;
+            }
+            ret = send(_fds[i].fd, resp, strlen(resp), 0);
+            if (ret < 0){
+                perror("send() failed");
+                close_conn = true;
+                break;
+            }
+            _handleBuffer(buffer, _fds[i].fd);
         }
-        if (ret == 0){
-            std::cout << "  Connection closed" << std::endl;
-            close_conn = true;
-            break;
+        if (_fds[i].revents == POLLIN) {
         }
-        len = ret;
-        std::cout << "[+] " << len << " bytes received" << std::endl;
-        std::cout <<"[+] message : " << buffer << std::endl;
-        // ret = send(_fds[i].fd, buffer, len, 0);
-        // if (ret < 0){
-        //     perror("send() failed");
-        //     close_conn = true;
-        //     break;
-        // }
-	  	_handleBuffer(buffer, _fds[i].fd);
     }
     if (close_conn){
         close(_fds[i].fd);
@@ -243,7 +289,6 @@ bool    Server::clientSocketEvent(int i) {
     }
     return compress_array;
 }
-
 /******************************************************************************/
 /*  decrementFileDescriptors()
     If the compress_array flag was turned on, we need to squeeze together

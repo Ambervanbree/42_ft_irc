@@ -25,12 +25,12 @@ int main(int argc, char *argv[])
 		return 1;
 	    
 	Server s(port, std::string(argv[2]));
-	User user;
 	std::string message = argv[2];
 
+	User user;
 	s.start();
-  s.interpretCommand(message, user);
-  s.handleConnections();
+	// s.interpretCommand(message, user);
+	s.handleConnections();
     
 	return 0;
 }
