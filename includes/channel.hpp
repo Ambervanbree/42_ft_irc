@@ -7,11 +7,13 @@
 # include <set>
 # include "user.hpp"
 
+class Server;
+
 class Channel{
 	private:
 		std::string					_name; 
 		std::string					_key;
-		std::set<std::string>		_users;
+		std::set<User *>			_users;
 		std::set<std::string>		_banned;
 		std::map<char, bool>		_modes;
 		std::set<std::string>		_chop; 	// channel operator
@@ -19,7 +21,7 @@ class Channel{
 	public:
 		/* Initialisation */
 
-		Channel(std::string name, std::string nickMask);
+		Channel(std::string name, User &user);
 		~Channel();
 		void			initModes();
 
@@ -29,20 +31,21 @@ class Channel{
 
 		/* Checkers */
 
-		bool			onChannel(std::string nickMask);
+		bool			onChannel(User &user);
 		bool			isBanned(std::string nickMask);
 		bool			isChop(std::string nickMask);
 		bool			correctKey(std::string key);
 
 		/* Setters */
 
-		void			addUser(std::string key, std::string nickMask);
+		void			addUser(std::string key, User &user);
 		void			setKey(std::string key, std::string userMask);
 		void			banUser(std::string toBan, std::string userNick);
 
 		/* Unsetters */
 		void 			unsetKey(std::string userNick);
 		void			unbanUser(std::string toUnban, std::string userNick);
+		void			removeUser(User &user);
 
 
 };

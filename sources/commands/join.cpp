@@ -6,8 +6,10 @@
 #define CHANNELS command[1]
 #define KEYS command[2]
 
-void		createChannel(std::string name, std::string nickMask, Server &server){
-	server._channels.push_back(Channel(name, nickMask));
+void		createChannel(std::string name, User &user, Server &server){
+	Channel	*new_channel = new Channel(name, user);
+
+	server._channels.insert(new_channel);
 	/* TODO --> add replies: 
 		ERR_TOOMANYCHANNELS (405) 
 	*/
@@ -41,9 +43,9 @@ void JOIN(std::deque<std::string> command, User &user, Server &server)
 			return ;
 		Channel	*chan = findChannel(channels[i], server);
 		if (chan != NULL)
-			chan->addUser(keys[i], user.getNickname());
+			chan->addUser(keys[i], user);
 		else
-			createChannel(channels[i], user.getNickname(), server);
+			createChannel(channels[i], user, server);
 	}
 
 

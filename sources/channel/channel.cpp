@@ -4,11 +4,11 @@
 /*  Initialisation - constructors and initialisation of modes table
 *******************************************************************************/
 
-Channel::Channel(std::string name, std::string nickMask) : _name(name) {
-	std::cout << "channel " << name << " created by " << nickMask << std::endl;
+Channel::Channel(std::string name, User &user) : _name(name) {
+	std::cout << "channel " << name << " created by " << user.getNickname() << std::endl;
 	initModes();
-	_chop.insert(nickMask);
-	_users.insert(nickMask);
+	_chop.insert(user.getNickname());
+	_users.insert(&user);
 };
 
 Channel::~Channel() {};
@@ -38,8 +38,8 @@ std::string		Channel::getName() {return _name; }
 /*  Checkers
 *******************************************************************************/
 
-bool			Channel::onChannel(std::string nickMask){
-	return (_users.find(nickMask) != _users.end());
+bool			Channel::onChannel(User &user){
+	return (_users.find(&user) != _users.end());
 }
 
 bool			Channel::isBanned(std::string nickMask){
@@ -47,7 +47,7 @@ bool			Channel::isBanned(std::string nickMask){
 }
 
 bool			Channel::isChop(std::string nickMask){
-	return (_chop.find(nickMask) != _users.end());
+	return (_chop.find(nickMask) != _chop.end());
 }
 
 bool			Channel::correctKey(std::string key) {
@@ -66,12 +66,12 @@ bool			Channel::correctKey(std::string key) {
 /*  Setters
 *******************************************************************************/
 
-void			Channel::addUser(std::string key, std::string nickMask){
-	if (onChannel(nickMask)){
+void			Channel::addUser(std::string key, User &user){
+	if (onChannel(user)){
 		std::cerr << "ERR_USERONCHANNEL (443)" << std::endl;
 		return ;
 	}
-	if (isBanned(nickMask)){
+	if (isBanned(user.getNickname())){
 		std::cerr << "ERR_BANNEDFROMCHAN (474)" << std::endl;
 		return ; 
 	}
@@ -80,8 +80,8 @@ void			Channel::addUser(std::string key, std::string nickMask){
 		return ;
 	}
 	// TODO --> send standard channel reply message
-	std::cout << "user " << nickMask << " is added to " << _name << std::endl;
-	_users.insert(nickMask);
+	std::cout << "user " << user.getNickname() << " is added to " << _name << std::endl;
+	_users.insert(&user);
 	// TODO --> user.addChannel(*this);
 	return ;
 
@@ -141,4 +141,8 @@ void			Channel::unbanUser(std::string toUnban, std::string userNick){
 		std::cout << "No more bans on channel." << std::endl;
 		_modes['b'] = false;
 	}
+}
+
+void			Channel::removeUser(User &user){
+	_users.erase(&user);
 }

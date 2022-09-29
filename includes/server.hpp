@@ -32,6 +32,8 @@
 // timeout of 3 minutes (3 * 60 * 1000) miliseconds
 # define TIME_OUT       180000
 
+class Channel;
+
 class Server {
 
 /* ************************************************************************** */
@@ -62,10 +64,10 @@ private:
     struct  pollfd      _fds[MAX_FDS];
 	
 	std::map<std::string, command>	_commands;
-	std::deque<std::string>	_bufferCommand;
+	std::deque<std::string>			_bufferCommand;
   
   public:
-    std::list<Channel>	_channels;
+    std::set<Channel *>	_channels;
 	std::list<User>		users;
     
 /* ************************************************************************** */
