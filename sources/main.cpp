@@ -26,16 +26,14 @@ int main(int argc, char *argv[])
 	if (port == -1)
 		return 1;
 	    
+	Server s(port, std::string(argv[2]));
 	User user;
 	Channel channel;
 	Parser parser;
 	
-	parser.interpretCommand(argv[2], user, channel);
-	
-	Server s(port, std::string(argv[2]));
-    
     s.start();
     s.handleConnections();
+	parser.interpretCommand(argv[2], user, channel);
     
 	return 0;
 }

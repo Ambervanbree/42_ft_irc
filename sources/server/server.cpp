@@ -170,14 +170,18 @@ bool    Server::handleEvents(bool *end_server){
             break;
         }
         if (_fds[i].fd == _serverSocket)
-            listeningSocketAcceptConnections(end_server);
+            listeningSocketEvent(end_server);
         else
-            compress_array = clientSocketRecieveOrSend(i);
+            compress_array = clientSocketEvent(i);
     }
     return compress_array;
 }
 
-void    Server::listeningSocketAcceptConnections(bool *end_server) {
+void    Server::listeningSocketEvent(bool *end_server) {
+    acceptConnections(end_server);
+}
+
+void    Server::acceptConnections(bool *end_server) {
     int new_fd = 0;
 
     std::cout << "[+] Listening socket is readable" << std::endl;
@@ -197,7 +201,7 @@ void    Server::listeningSocketAcceptConnections(bool *end_server) {
     }
 }
 
-bool    Server::clientSocketRecieveOrSend(int i) {
+bool    Server::clientSocketEvent(int i) {
     bool    close_conn;
     char    buffer[MAX_BUFFER];
     int     ret;
@@ -207,6 +211,7 @@ bool    Server::clientSocketRecieveOrSend(int i) {
     std::cout << "[+] Descriptor " << _fds[i].fd << " is readable" << std::endl;
     close_conn = false;
     while (true) {
+        memset(buffer, 0, strlen(buffer));
         ret = recv(_fds[i].fd, buffer, sizeof(buffer), 0);
         if (ret < 0){
             if (errno != EWOULDBLOCK){
@@ -223,12 +228,12 @@ bool    Server::clientSocketRecieveOrSend(int i) {
         len = ret;
         std::cout << "[+] " << len << " bytes received" << std::endl;
         std::cout <<"[+] message : " << buffer << std::endl;
-        ret = send(_fds[i].fd, buffer, len, 0);
-        if (ret < 0){
-            perror("send() failed");
-            close_conn = true;
-            break;
-        }
+        // ret = send(_fds[i].fd, buffer, len, 0);
+        // if (ret < 0){
+        //     perror("send() failed");
+        //     close_conn = true;
+        //     break;
+        // }
     }
     if (close_conn){
         close(_fds[i].fd);
