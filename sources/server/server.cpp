@@ -5,19 +5,19 @@
 /* ************************************************************************** */
 
 Server::Server(int port, std::string password)
+
 : _port(port), _password(password), _nfds(0)  {}
 
 Server::~Server(void) {
     closeConnections();
 }
 
-
-
 /* ************************************************************************** */
 /*                         PUBLIC MEMBER FUNCTIONS                            */
 /* ************************************************************************** */
 
 void    Server::start(void){
+	_setCommands();
     makeServerSocket();
     binding();
     listening();
@@ -27,7 +27,6 @@ void    Server::handleConnections(void){
     initConnections();
     handleIncomingConnections();
 }
-
 
 /* ************************************************************************** */
 /*                         PRIVATE MEMBER FUNCTIONS                           */
@@ -210,8 +209,9 @@ bool    Server::clientSocketEvent(int i) {
     
     std::cout << "[+] Descriptor " << _fds[i].fd << " is readable" << std::endl;
     close_conn = false;
+
     while (true) {
-        memset(buffer, 0, strlen(buffer));
+        memset(buffer, '\0', MAX_BUFFER);
         ret = recv(_fds[i].fd, buffer, sizeof(buffer), 0);
         if (ret < 0){
             if (errno != EWOULDBLOCK){
@@ -234,6 +234,7 @@ bool    Server::clientSocketEvent(int i) {
         //     close_conn = true;
         //     break;
         // }
+	  	_handleBuffer(buffer, _fds[i].fd);
     }
     if (close_conn){
         close(_fds[i].fd);

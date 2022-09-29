@@ -1,6 +1,6 @@
 #include "server.hpp"
-#include "parser.hpp"
-//#include "user.hpp"
+#include "channel.hpp"
+#include "user.hpp"
 
 static int check_arg(int argc, char **argv)
 {
@@ -18,8 +18,6 @@ static int check_arg(int argc, char **argv)
 	return port;
 }
 
-std::map<std::string, command> _commands;
-
 int main(int argc, char *argv[]) 
 {
 	int port = check_arg(argc, argv);
@@ -28,12 +26,11 @@ int main(int argc, char *argv[])
 	    
 	Server s(port, std::string(argv[2]));
 	User user;
-	Channel channel;
-	Parser parser;
-	
-    s.start();
-    s.handleConnections();
-	parser.interpretCommand(argv[2], user, channel);
+	std::string message = argv[2];
+
+	s.start();
+  s.interpretCommand(message, user);
+  s.handleConnections();
     
 	return 0;
 }
