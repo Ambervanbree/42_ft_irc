@@ -43,7 +43,6 @@ void    Server::handleConnections(void){
 *******************************************************************************/
 void    Server::makeServerSocket(void){
     int ret;
-    int flags;
     int on = 1;
 
     _serverSocket = socket(AF_INET, SOCK_STREAM, 0);
@@ -57,10 +56,7 @@ void    Server::makeServerSocket(void){
         close(_serverSocket);
         exit(-1);
     }
-    flags = fcntl(_serverSocket, F_GETFL, 0);
-    if (flags == -1)
-        flags = 0;
-    ret = fcntl(_serverSocket, F_SETFL, flags | O_NONBLOCK);
+    ret = fcntl(_serverSocket, F_SETFL, O_NONBLOCK);
     if (ret < 0){
         perror("fcntl() failed");
         close(_serverSocket);
@@ -70,10 +66,12 @@ void    Server::makeServerSocket(void){
 
 /******************************************************************************/
 /*  binding()
+    - initializes the sockaddr_in structure (_serverAddr) with memset
     - binds the socket
 *******************************************************************************/
 void    Server::binding(void){
     int ret;
+
     memset(&_serverAddr, 0, sizeof(_serverAddr));
     _serverAddr.sin_family = AF_INET;
     memcpy(&_serverAddr.sin_addr, &in6addr_any, sizeof(in6addr_any));
@@ -104,13 +102,19 @@ void    Server::listening(void){
 /******************************************************************************/
 /*  initConnections()
     - Initializes the pollfd structure _fds
-    - Sets up the initial listening socket _fds[0] (= server socket)
+    - Sets up the initial listening socket 
+    - _fds[0].fd = server/listening socket
+    - _fds[0].events = events we are interested in managing
+            POLLIN event = There is data to read
+            POLLOUT event = Writing is now possible
+
+    !!! We might have to add other events !!!
 *******************************************************************************/
 void    Server::initConnections(void){
     _nfds = 0;
     memset(_fds, _nfds , sizeof(_fds));
     _fds[_nfds].fd = _serverSocket;
-    _fds[_nfds].events = POLLIN;
+    _fds[_nfds].events = POLLIN | POLLOUT;
     _nfds++;
 }
 
@@ -150,7 +154,6 @@ void   Server::handleIncomingConnections(void){
     - Loop through to find the descriptors that returned POLLIN and 
     determine whether it's the listening or the active connection.
 *******************************************************************************/
-
 bool    Server::handleEvents(bool *end_server){       
     int     i;
     int     current_size = 0;
@@ -166,14 +169,18 @@ bool    Server::handleEvents(bool *end_server){
             break;
         }
         if (_fds[i].fd == _serverSocket)
-            listeningSocketAcceptConnections(end_server);
+            listeningSocketEvent(end_server);
         else
-            compress_array = clientSocketRecieveOrSend(i);
+            compress_array = clientSocketEvent(i);
     }
     return compress_array;
 }
 
-void    Server::listeningSocketAcceptConnections(bool *end_server) {
+void    Server::listeningSocketEvent(bool *end_server) {
+    acceptConnections(end_server);
+}
+
+void    Server::acceptConnections(bool *end_server) {
     int new_fd = 0;
 
     std::cout << "[+] Listening socket is readable" << std::endl;
@@ -193,7 +200,7 @@ void    Server::listeningSocketAcceptConnections(bool *end_server) {
     }
 }
 
-bool    Server::clientSocketRecieveOrSend(int i) {
+bool    Server::clientSocketEvent(int i) {
     bool    close_conn;
     char    buffer[MAX_BUFFER];
     int     ret;
@@ -203,8 +210,8 @@ bool    Server::clientSocketRecieveOrSend(int i) {
     std::cout << "[+] Descriptor " << _fds[i].fd << " is readable" << std::endl;
     close_conn = false;
 
-    memset(buffer, '\0', MAX_BUFFER);
     while (true) {
+        memset(buffer, '\0', MAX_BUFFER);
         ret = recv(_fds[i].fd, buffer, sizeof(buffer), 0);
         if (ret < 0){
             if (errno != EWOULDBLOCK){
@@ -221,14 +228,13 @@ bool    Server::clientSocketRecieveOrSend(int i) {
         len = ret;
         std::cout << "[+] " << len << " bytes received" << std::endl;
         std::cout <<"[+] message : " << buffer << std::endl;
+        // ret = send(_fds[i].fd, buffer, len, 0);
+        // if (ret < 0){
+        //     perror("send() failed");
+        //     close_conn = true;
+        //     break;
+        // }
 	  	_handleBuffer(buffer, _fds[i].fd);
-        ret = send(_fds[i].fd, buffer, len, 0);
-        if (ret < 0){
-            perror("send() failed");
-            close_conn = true;
-            break;
-        }
-		memset(buffer, '\0', MAX_BUFFER);
     }
     if (close_conn){
         close(_fds[i].fd);
