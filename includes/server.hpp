@@ -34,6 +34,14 @@
 
 class Channel;
 
+struct Command
+{
+	std::string				prefix;
+	std::string 			cmd_name;
+	std::deque<std::string>	args;
+	std::string				trailer;
+};
+
 class Server {
 
 /* ************************************************************************** */
@@ -62,6 +70,7 @@ private:
     int                 _timeout;
     int                 _nfds;
     struct  pollfd      _fds[MAX_FDS];
+	Command				_command;
 	
 	std::map<std::string, command>	_commands;
 	std::deque<std::string>			_bufferCommand;
@@ -91,8 +100,9 @@ private:
 
 	/*Functions to set command list and launch commands*/
 	void _setCommands();
-	std::deque<std::string> _splitMessage(std::string message);
-	void _launchCommand(std::deque<std::string> command, User &user);
+	void _messageToCommandStruct(std::string message);
+	void _clearCommandStruct();
+	void _launchCommand(User &user);
 	void _splitBuffer(char *buffer);
 	void _handleBuffer(char *buffer, int clientSocket);
 
@@ -101,14 +111,11 @@ public:
     void handleConnections(void);
 
 	void interpretCommand(std::string &message, User &user); /*Change to Private at the end of project*/
-};
 
-struct Command
-{
-	std::string				prefix;
-	std::string 			cmd_name;
-	std::deque<std::string>	args;
-	std::string				trailer;
+	std::string 			&getPrefix();
+	std::string				&getCommand();
+	std::deque<std::string>	&getArgs();
+	std::string				&getTrailer();
 };
 
 #endif

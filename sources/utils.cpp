@@ -9,7 +9,9 @@ Split args : split str into a tab on each caracters of delimiter
 
 void split_args(std::string &in, char *delimiter, std::deque<std::string> &out)
 {
-    char *token = strtok(const_cast<char*>(in.c_str()), delimiter);
+    if (in.empty())
+		return ;
+	char *token = strtok(const_cast<char*>(in.c_str()), delimiter);
     while (token != NULL)
     {
         out.push_back(std::string(token));

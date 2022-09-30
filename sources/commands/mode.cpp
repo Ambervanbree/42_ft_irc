@@ -3,10 +3,9 @@
 #include "server.hpp"
 #include "commands.hpp"
 
-#define TARGET command[1]
-#define MODESTRING command[2]
-#define MODEARG command[3]
-
+#define TARGET	 	server.getArgs()[0]
+#define MODESTRING 	server.getArgs()[1]
+#define MODEARG		server.getArgs()[2]
 // 	MODE <target> [<modestring> [<mode arguments>]]
 
 void	addMode(char mode, std::string &modeArg, std::string nickMask, Channel *chan){
@@ -78,7 +77,7 @@ void	parseModeString(std::string &modeString, std::string &modeArg, std::string 
 	}
 }
 
-void	channelMode(std::deque<std::string> &command, std::string nickMask, Server &server){
+void	channelMode(std::string nickMask, Server &server){
 	Channel		*chan = findChannel(TARGET, server);
 
 	if (chan == NULL){
@@ -97,9 +96,9 @@ void	userMode(){
 	std::cout << "User MODE requested" << std::endl;
 }
 
-void MODE(std::deque<std::string> command, User &user, Server &server){
+void MODE(User &user, Server &server){
 	if (TARGET[0] == '#')
-		channelMode(command, user.getNickname(), server);
+		channelMode(user.getNickname(), server);
 	else
 		userMode();
 }

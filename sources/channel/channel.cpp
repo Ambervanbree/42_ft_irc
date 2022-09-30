@@ -79,7 +79,7 @@ void			Channel::addUser(std::string key, User &user){
 		std::cerr << "ERR_BANNEDFROMCHAN (474)" << std::endl;
 		return ; 
 	}
-	if (!correctKey(key)){
+	if (key.size() && !correctKey(key)){
 		std::cerr << "ERR_BADCHANNELKEY (475)" << std::endl;
 		return ;
 	}
@@ -130,6 +130,7 @@ void 			Channel::unsetKey(std::string userNick){
 		return ;		
 	}
 	if (_modes.find('k') != _modes.end()){
+		// TODO ----> should not work if key not set
 		std::cout << "Key unset" << std::endl;
 		_key.clear();
 		_modes['k'] = false;
