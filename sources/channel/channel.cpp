@@ -130,6 +130,7 @@ void 			Channel::unsetKey(std::string userNick){
 		return ;		
 	}
 	if (_modes.find('k') != _modes.end()){
+		// TODO ----> should not work if key not set
 		std::cout << "Key unset" << std::endl;
 		_key.clear();
 		_modes['k'] = false;

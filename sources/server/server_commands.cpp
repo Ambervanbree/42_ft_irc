@@ -44,7 +44,9 @@ void Server::_messageToCommandStruct(std::string message){
 
 	split_args(message, delimiter, out);
 	if (out.size() < 4){
-		std::cerr << "ERR_NEEDMOREPARAMS (461)" << std::endl;
+		std::cerr << "Less than 4 parametres" << std::endl;
+		// TODO ---> Not sure how IRC reacts in this case
+		// does it check if the command exists before it checks if there is an argument?
 		return ;
 	}
 
@@ -67,7 +69,7 @@ void Server::_clearCommandStruct(){
 void Server::_launchCommand(User &user)
 {
 	std::map<std::string, command>::iterator it;
-	it = _commands.find(_command.getCommand());
+	it = _commands.find(_command.cmd_name);
 	if (it != _commands.end())
 		it->second(user, *this);
 	else
