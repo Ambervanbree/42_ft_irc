@@ -13,7 +13,7 @@ void Server::_setCommands()
 	_commands["JOIN"] = JOIN;
 	// _commands["USER"] = USER;
 	// _commands["OPER"] = OPER;
-	// _commands["MODE"] = MODE;
+	_commands["MODE"] = MODE;
 	// _commands["SERVICE"] = SERVICE; 		x
 	// _commands["PRIVMSG"] = PRIVMSG;
 	// _commands["NOTICE"] = NOTICE;
@@ -26,7 +26,7 @@ void Server::_setCommands()
 	// _commands["WHO"] = WHO; 				?
 	// _commands["WHOWAS"] = WHOWAS; 		x
 	// _commands["WHOIS"] = WHOIS;
-	// _commands["PART"] = PART;
+	_commands["PART"] = PART;
 	// _commands["TOPIC"] = TOPIC;
 	// _commands["NAMES"] = NAMES; 			x
 	// _commands["LIST"] = LIST; 			x

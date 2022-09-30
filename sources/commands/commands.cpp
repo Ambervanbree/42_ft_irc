@@ -104,15 +104,6 @@ void OPER(std::deque<std::string> Command, User &User)
 	std::cout << "OPER" << std::endl;
 }
 
-//MODE <nickname>
-//-> Change status.
-void MODE(std::deque<std::string> Command, User &User)
-{
-	(void)Command;
-	(void)User;
-	std::cout << "MODE" << std::endl;
-}
-
 //SERVICE <nickname> <reserved> <distribution> <type> <reserved> <info>
 //-> Register a new service
 void SERVICE(std::deque<std::string> Command, User &User)
@@ -231,33 +222,6 @@ void WHOWAS(std::deque<std::string> Command, User &User)
 }
 
 /*User commands for channels:*/
-
-//JOIN <channel>
-//-> Start listening a specific channel.
-/*void JOIN(std::deque<std::string> Command, User &User)
-{
-	(void)Command;
-	(void)User;
-	std::cout << "JOIN" << std::endl;
-}*/
-
-//PART <channel>
-//-> User is removed from active members list.
-void PART(std::deque<std::string> Command, User &User)
-{
-	(void)Command;
-	(void)User;
-	std::cout << "PART" << std::endl;
-}
-
-//MODE <channel>
-//-> Change characteristics of a channel.
-/*void MODE(std::deque<std::string> Command, User &User)
-{
-	(void)Command;
-	(void)User;
-	std::cout << "MODE" << std::endl;
-}*/
 
 //TOPIC <channel> [ <topic> ]
 //-> Change or view the topic of a channel.
