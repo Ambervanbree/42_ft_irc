@@ -79,7 +79,7 @@ void			Channel::addUser(std::string key, User &user){
 		std::cerr << "ERR_BANNEDFROMCHAN (474)" << std::endl;
 		return ; 
 	}
-	if (!correctKey(key)){
+	if (key.size() && !correctKey(key)){
 		std::cerr << "ERR_BADCHANNELKEY (475)" << std::endl;
 		return ;
 	}

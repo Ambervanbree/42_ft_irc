@@ -38,32 +38,49 @@ void Server::_setCommands()
 	// _commands["RESTART"] = RESTART; 		?
 }
 
-std::deque<std::string> Server::_splitMessage(std::string message)
-{
-	std::deque<std::string> out;
-	char delimiter[] = " ";
+void Server::_messageToCommandStruct(std::string message){
+	std::deque<std::string> 	out;
+	char 						delimiter[] = " ";
+
 	split_args(message, delimiter, out);
-	return out;
+	if (out.size() < 4){
+		std::cerr << "ERR_NEEDMOREPARAMS (461)" << std::endl;
+		return ;
+	}
+
+	std::deque<std::string>::iterator it = out.begin();
+	std::deque<std::string>::iterator ite = out.end();
+	
+	_command.prefix = *it++;
+	_command.cmd_name = *it++;
+	_command.trailer = *--ite;
+	_command.args.insert(_command.args.begin(), it, ite);
 }
 
-void Server::_launchCommand(std::deque<std::string> commande, User &user)
+void Server::_clearCommandStruct(){
+	_command.prefix.clear();
+	_command.cmd_name.clear();
+	_command.trailer.clear();
+	_command.args.clear();	
+}
+
+void Server::_launchCommand(User &user)
 {
-	if (commande.size() == 0)
-		return ;
-	int index = 0;
-	if (commande[0].size() != 0 && commande[0][0] == ':')
-		index = 1;
 	std::map<std::string, command>::iterator it;
-	it = _commands.find(commande[index]);
+	it = _commands.find(_command.getCommand());
 	if (it != _commands.end())
-		it->second(commande, user, *this);
+		it->second(user, *this);
 	else
 		std::cerr << "No command found\n";
 }
 
 void Server::interpretCommand(std::string &message, User &user)
-{
-	_launchCommand(_splitMessage(message), user);
+{	
+	if (message[0] != ':')
+		return ;
+	_messageToCommandStruct(message);
+	_launchCommand(user);
+	_clearCommandStruct();
 }
 
 void Server::_splitBuffer(char *buffer)
