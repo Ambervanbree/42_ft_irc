@@ -24,20 +24,13 @@ int main(int argc, char *argv[])
 	if (port == -1)
 		return 1;
 	    
+	Server s(port, std::string(argv[2]));
 	User user;
 	std::string message = argv[2];
 
-	Server s(port, std::string(argv[2]));
 	s.start();
-
-	std::string	command;
-	do{
-		std::cout << "Type command: " << std::endl;
-		std::getline(std::cin, command);
-		s.interpretCommand(command, user);
-	} while (command != "STOP");
-    // s.interpretCommand(message, user);
-    // s.handleConnections();
-
+  s.interpretCommand(message, user);
+  s.handleConnections();
+    
 	return 0;
 }

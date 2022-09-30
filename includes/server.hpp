@@ -82,8 +82,9 @@ private:
     void initConnections(void);
     void handleIncomingConnections(void);
     bool handleEvents(bool *end_server);
-    void listeningSocketAcceptConnections(bool *end_server);
-    bool clientSocketRecieveOrSend(int i);
+    void listeningSocketEvent(bool *end_server);
+    bool clientSocketEvent(int i);
+    void acceptConnections(bool *end_server);
     
     void decrementFileDescriptors(void);
     void closeConnections(void);
