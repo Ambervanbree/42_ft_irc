@@ -28,7 +28,6 @@ void PART(std::deque<std::string> command, User &user, Server &server)
 			if (it->getName() == chan->getName()){
 				std::cout << "Channel " << chan->getName() << " deleted" << std::endl;
 				server._channels.erase(it);
-				break ;
 			}
 		}
 	}

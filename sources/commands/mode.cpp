@@ -28,6 +28,8 @@ void	addMode(char mode, std::string &modeArg, std::string nickMask, Channel *cha
 		default:
 			std::cerr << "mode not handled (yet)" << std::endl;
 			return ;
+		// TODO ----> clear modeARG
+		// TODO ----> check number of arguments for every function
 	}
 }
 
