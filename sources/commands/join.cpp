@@ -7,9 +7,7 @@
 #define KEYS command[2]
 
 void		createChannel(std::string name, User &user, Server &server){
-	Channel	*new_channel = new Channel(name, user);
-
-	server._channels.insert(new_channel);
+	server._channels.push_back(Channel(name, user));
 	/* TODO --> add replies: 
 		ERR_TOOMANYCHANNELS (405) 
 	*/

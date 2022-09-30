@@ -129,9 +129,11 @@ void 			Channel::unsetKey(std::string userNick){
 		std::cerr << "ERR_CHANOPRIVSNEEDED (482)" << std::endl;
 		return ;		
 	}
-	std::cout << "Key unset" << std::endl;
-	_key.clear();
-	_modes['k'] = false;
+	if (_modes.find('k') != _modes.end()){
+		std::cout << "Key unset" << std::endl;
+		_key.clear();
+		_modes['k'] = false;
+	}
 }
 
 void			Channel::unbanUser(std::string toUnban, std::string userNick){
@@ -139,11 +141,12 @@ void			Channel::unbanUser(std::string toUnban, std::string userNick){
 		std::cerr << "ERR_CHANOPRIVSNEEDED (482)" << std::endl;
 		return ;		
 	}
-	std::cout << "Ubanned user: " << toUnban << std::endl;
-	_banned.erase(toUnban);
-	if (_banned.empty()){
-		std::cout << "No more bans on channel." << std::endl;
-		_modes['b'] = false;
+	if (_banned.erase(toUnban)){
+		std::cout << "Ubanned user: " << toUnban << std::endl;
+		if (_banned.empty()){
+			std::cout << "No more bans on channel." << std::endl;
+			_modes['b'] = false;
+		}
 	}
 }
 

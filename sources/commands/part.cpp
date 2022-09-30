@@ -23,8 +23,13 @@ void PART(std::deque<std::string> command, User &user, Server &server)
 	std::cout << user.getNickname() << " removed from channel " << chan->getName() << std::endl;
 	chan->removeUser(user);
 	if (chan->isEmpty()){
-		server._channels.erase(chan);
-		delete chan;
-		std::cout << "Channel " << chan->getName() << " deleted" << std::endl;
+		std::list<Channel>::iterator	it = server._channels.begin();
+		for (; it != server._channels.end(); it++){
+			if (it->getName() == chan->getName()){
+				std::cout << "Channel " << chan->getName() << " deleted" << std::endl;
+				server._channels.erase(it);
+				break ;
+			}
+		}
 	}
 }

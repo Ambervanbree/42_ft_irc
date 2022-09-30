@@ -67,7 +67,7 @@ private:
 	std::deque<std::string>			_bufferCommand;
   
   public:
-    std::set<Channel *>	_channels;
+    std::list<Channel>	_channels;
 	std::list<User>		users;
     
 /* ************************************************************************** */

@@ -16,15 +16,14 @@ void	addMode(char mode, std::string &modeArg, std::string nickMask, Channel *cha
 				return ;
 			else
 				chan->setKey(modeArg, nickMask);
-			modeArg.clear();
 			return ;
 		case 'b':
 			if (modeArg.empty()){
 				std::cout << "RPL_BANLIST (367)" << std::endl;
+				std::cout << "RPL_ENDOFBANLIST (368)" << std::endl;
 				return ;
 			}
 			chan->banUser(modeArg, nickMask);
-			modeArg.clear();
 			return ;
 		default:
 			std::cerr << "mode not handled (yet)" << std::endl;
@@ -46,7 +45,8 @@ void	eraseMode(char mode, std::string &modeArg, std::string nickMask, Channel *c
 			modeArg.clear();
 			return ;
 		default:
-			std::cerr << "mode not handled (yet)" << std::endl;
+			std::cerr << "ERR_UMODEUNKNOWNFLAG (501)" << std::endl;
+			// ++ MODE message
 			return ;
 	}	
 }
