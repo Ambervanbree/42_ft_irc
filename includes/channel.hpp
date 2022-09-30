@@ -4,28 +4,51 @@
 # include <iostream>
 # include <vector>
 # include <map>
+# include <set>
 # include "user.hpp"
+
+class Server;
 
 class Channel{
 	private:
 		std::string					_name; 
-		std::string					_topic;
 		std::string					_key;
-		std::vector<User>			_users;
-		size_t						_size;
+		std::set<User *>			_users;
+		std::set<std::string>		_banned;
 		std::map<char, bool>		_modes;
-		User *						_chop; 	// channel operator
+		std::set<std::string>		_chop; 	// channel operator
 
 	public:
+		/* Initialisation */
+
 		Channel(std::string name, User &user);
 		~Channel();
-
 		void			initModes();
-		void 			setMode();
-		void			addUser(std::string key, User &user);
+
+		/* Getters */
+
 		std::string		getName();
-		std::string 	getTopic();
-		void 			setTopic(std::string topic);
+
+		/* Checkers */
+
+		bool			onChannel(User &user);
+		bool			isBanned(std::string nickMask);
+		bool			isChop(std::string nickMask);
+		bool			correctKey(std::string key);
+		bool			isEmpty();
+
+		/* Setters */
+
+		void			addUser(std::string key, User &user);
+		void			setKey(std::string key, std::string userMask);
+		void			banUser(std::string toBan, std::string userNick);
+
+		/* Unsetters */
+		void 			unsetKey(std::string userNick);
+		void			unbanUser(std::string toUnban, std::string userNick);
+		void			removeUser(User &user);
+
+
 };
 
 #endif

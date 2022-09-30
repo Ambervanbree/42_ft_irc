@@ -13,7 +13,7 @@ void Server::_setCommands()
 	_commands["JOIN"] = JOIN;
 	// _commands["USER"] = USER;
 	// _commands["OPER"] = OPER;
-	// _commands["MODE"] = MODE;
+	_commands["MODE"] = MODE;
 	// _commands["SERVICE"] = SERVICE; 		x
 	// _commands["PRIVMSG"] = PRIVMSG;
 	// _commands["NOTICE"] = NOTICE;
@@ -26,7 +26,7 @@ void Server::_setCommands()
 	// _commands["WHO"] = WHO; 				?
 	// _commands["WHOWAS"] = WHOWAS; 		x
 	// _commands["WHOIS"] = WHOIS;
-	// _commands["PART"] = PART;
+	_commands["PART"] = PART;
 	// _commands["TOPIC"] = TOPIC;
 	// _commands["NAMES"] = NAMES; 			x
 	// _commands["LIST"] = LIST; 			x
@@ -73,7 +73,7 @@ void Server::_splitBuffer(char *buffer)
 	split_on_string(buf, "\r\n", _bufferCommand);
 	for (unsigned int i = 0; i < _bufferCommand.size(); i++)
 	{
-		std::cerr << "splitted buffer [" << i << "] " << _bufferCommand[i];
+		std::cerr << "split buffer [" << i << "] " << _bufferCommand[i];
 		std::cerr << " - len: " << _bufferCommand[i].size() << std::endl;
 	}
 }
