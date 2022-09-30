@@ -129,7 +129,7 @@ void 			Channel::unsetKey(std::string userNick){
 		std::cerr << "ERR_CHANOPRIVSNEEDED (482)" << std::endl;
 		return ;		
 	}
-	if (_modes.find('k') != _modes.end()){
+	if (_modes.find('k')->second){
 		// TODO ----> should not work if key not set
 		std::cout << "Key unset" << std::endl;
 		_key.clear();
