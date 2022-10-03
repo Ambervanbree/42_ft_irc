@@ -10,6 +10,7 @@ User::User(const int &socket, const struct sockaddr_in &addr, const std::string 
 
 User::~User() {};
 
+/*Placeholder before using the real user*/
 User::User() : _nickName("default user") { std::cout << "[+] A user is born\n"; }
 
 
@@ -34,13 +35,8 @@ std::string 		User::getNickname() const { return _nickName; }
 struct sockaddr_in	User::getAddr() const { return _clientAddr; }
 int					User::getSocket() const { return _clientSocket; }
 std::string			User::getHost() const { return _hostName; }
-
-std::string			User::getPrefix() const
-{
-	std::string prefix;
-	prefix = ":" + getNickname() + "!" + getUsername() + "@" + getHost();
-	return prefix;
-}
+std::string			User::getPrefix() const { return (":" + getNickMask()); }
+std::string			User::getNickMask() const { return (getNickname() + "!" + getUsername() + "@" + getHost()); }
 
 /*Setters*/
 void				User::setUsername(const std::string &user) { _userName = user; }
@@ -52,4 +48,3 @@ void				User::setSocket(const int &socket) { _clientSocket = socket; }
 
 void				User::_setHost() { _hostName = inet_ntoa(_clientAddr.sin_addr); }
 void				User::_setPort() { _port = ntohs(_clientAddr.sin_port); }
-
