@@ -19,12 +19,12 @@ void change_nickname(User &user, Server &server, const std::string &new_nickname
 }
 
 
-void NICK(std::deque<std::string> command, User &user, Server &server)
+void NICK(User &user, Server &server)
 {
 	std::cerr << "Command NICK\n";
-	if (command.size() == 3 && command[0].size() && command[0][0] == ':')
-		change_nickname(user, server, command[2]);
-	(void)command;
+	// check nr of argumengs
+	// if (command.size() == 3 && command[0].size() && command[0][0] == ':')
+	change_nickname(user, server, server.getArgs()[0]);
 	(void)user;
 	(void)server;
 }
