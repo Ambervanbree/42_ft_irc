@@ -16,17 +16,24 @@ Channel::~Channel() {};
 
 void			Channel::initModes(){
 	// TODO --> verify which modes are not necessary
-	// _modes['o'] = false; // give/take channel operator privileges
-	// _modes['p'] = false; // private channel flag
-	// _modes['s'] = false; // secret channel flag
-	// _modes['i'] = false; // invite-only channel flag
-	// _modes['t'] = false; // topic settable by channel operator only flag
-	// _modes['n'] = false; // no messages to channel from clients on the outside
-	// _modes['m'] = false; // moderated channel
-	// _modes['l'] = false; // set the user limit to channel
-	_modes['b'] = false; // set a ban mask to keep users out
-	// _modes['v'] = false; // give/take the ability to speak on a moderated channel
-	_modes['k'] = false; // set a channel key (password)
+	// _modes['a'] = false; // toggle the anonymous channel flag;
+	// _modes['i'] = false; // toggle the invite-only channel flag;;
+	// _modes['m'] = false; // toggle the moderated channel
+	// _modes['n'] = false; // toggle the no messages to channel from clients on the outside
+	// _modes['q'] = false; // toggle the quiet channel flag
+	// _modes['p'] = false; // toggle the private channel flag
+	// _modes['s'] = false; // toggle the secret channel flag
+	// _modes['r'] = false; // toggle the server reop flag
+	// _modes['t'] = false; // toggle the topic settable by channel operator only flag
+
+// non toggles:
+	_modes['o'] = false; // give/take channel operator privileges
+	// 'v'	give/take the voice privilege;
+	// 'k'	set/remove the channel key (password);
+	// 'l'	set/remove the user limit to channel;
+	_modes['b'] = false; // set/remove ban mask to keep users out;
+	// 'e'	set/remove an exception mask to override a ban mask;
+	// 'I'	set/remove an invitation mask to automatically override the invite-only flag;
 }
 
 /******************************************************************************/
@@ -57,7 +64,7 @@ bool			Channel::correctKey(std::string key) {
 		given key, else it will be ignored, so true is returned.
 	*/
 
-	if (_modes.find('k') != _modes.end() && _key != key){
+	if (!_key.empty() && (_key != key)){
 		return false;
 	}
 	return true;
@@ -107,7 +114,7 @@ void			Channel::setKey(std::string key, std::string userMask) {
 	// grammar check key
 	std::cout << "Set key to: " << key << std::endl;
 	_key = key;
-	_modes['k'] = true;
+	_modes['k'] = true ;
 }
 
 void			Channel::banUser(std::string toBan, std::string userNick){
@@ -132,7 +139,6 @@ void 			Channel::unsetKey(std::string userNick){
 		return ;		
 	}
 	if (_modes.find('k')->second){
-		// TODO ----> should not work if key not set
 		std::cout << "Key unset" << std::endl;
 		_key.clear();
 		_modes['k'] = false;
@@ -145,11 +151,9 @@ void			Channel::unbanUser(std::string toUnban, std::string userNick){
 		return ;		
 	}
 	if (_banned.erase(toUnban)){
-		std::cout << "Ubanned user: " << toUnban << std::endl;
-		if (_banned.empty()){
-			std::cout << "No more bans on channel." << std::endl;
+		if (_banned.empty())
 			_modes['b'] = false;
-		}
+		std::cout << "Ubanned user: " << toUnban << std::endl;
 	}
 }
 
