@@ -29,22 +29,9 @@ void PART(User &user, Server &server)
 			std::cerr << "ERR_NOTONCHANNEL (442)" << std::endl;
 			return ;
 		}
-		removeUserFromChannel(chan, user, server, MESSAGE);
+		if (server.getArgs().size() > 1)
+			removeUserFromChannel(chan, user, server, MESSAGE);
+		else
+			removeUserFromChannel(chan, user, server, "");
 	}
 }
-
-class Animal{
-	public: 
-	Animal ();
-	~animal();
-}
-
-class Dog : public Animal{
-
-	public:
-		getBrain();
-}
-
-Animal *a1 = new Dog;
-
-a1.getBrain();

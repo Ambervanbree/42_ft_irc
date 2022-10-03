@@ -26,10 +26,13 @@ bool grammarCheckChannel(std::string name){
 void partFromAllChannels(User &user, Server &server){
 	std::list<Channel>::iterator	it = server._channels.begin();
 	std::list<Channel>::iterator	ite = server._channels.end();
+	Channel							*temp;
 
-	for (; it != ite; it++){
-		if (it->onChannel(user))
-			removeUserFromChannel(&(*it), user, server, "");
+	while (it != ite){
+		temp = &(*it);
+		it++;
+		if (temp->onChannel(user))
+			removeUserFromChannel(temp, user, server, "");
 	}
 }
 
