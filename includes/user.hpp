@@ -30,6 +30,16 @@ class User
 		std::string			getPrefix() const;
 		std::string			getNickMask() const;
 
+		void	setPassRegistered(const bool passRegister);
+		void	setNickRegistered(const bool nickRegister);
+		void	setUserRegistered(const bool userRegister);
+		void	setRegistered(const bool setRegister);
+
+		bool	getPassRegistered() const;
+		bool	getNickRegistered() const;
+		bool	getUserRegistered() const;
+		bool	getRegistered() const;
+
 	private:
 		User();
 		User &operator=(const User &other);
@@ -50,8 +60,14 @@ class User
 		void		_setNickname(const std::string &nick);
 		void		_setAddr(const struct sockaddr_in &addr);
 		void		_setSocket(const int &socket);
+		bool	_isPassRegistered;
+		bool	_isNickRegistered;
+		bool	_isUserRegistered;
+		bool	_isRegistered;
+
 		void		_setHost();
 		void		_setPort();
+		void		_initRegister();
 };
 
 #endif
