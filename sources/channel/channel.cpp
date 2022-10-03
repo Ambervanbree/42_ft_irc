@@ -5,10 +5,11 @@
 *******************************************************************************/
 
 Channel::Channel(std::string name, User &user) : _name(name) {
-	std::cout << "channel " << name << " created by " << user.getNickname() << std::endl;
+	std::cout << "channel " << name << " created" << std::endl;
 	initModes();
-	_chop.insert(user.getNickname());
 	_users.insert(&user);
+	std::cout << "JOIN message from " << user.getNickname() << " on channel " << getName() << std::endl;
+	_chop.insert(user.getNickname());
 };
 
 Channel::~Channel() {};
@@ -83,10 +84,11 @@ void			Channel::addUser(std::string key, User &user){
 		std::cerr << "ERR_BADCHANNELKEY (475)" << std::endl;
 		return ;
 	}
-	// TODO --> send standard channel reply message
-	std::cout << "user " << user.getNickname() << " is added to " << _name << std::endl;
 	_users.insert(&user);
-	// TODO --> user.addChannel(*this);
+	// channel message: 
+	std::cout << "JOIN message from " << user.getNickname() << " on channel " << getName() << std::endl;
+	// std::cout << "RPL_TOPIC (332)" << std::endl; // ----> if we decide to include topic
+	std::cout << "RPL_NAMREPLY (356)" << std::endl;
 	return ;
 
 	/* TODO --> add possible error replies: 
@@ -151,6 +153,11 @@ void			Channel::unbanUser(std::string toUnban, std::string userNick){
 	}
 }
 
-void			Channel::removeUser(User &user){
+void			Channel::removeUser(User &user, std::string message){
+	std::cout << "User " << user.getNickname() << " leaving channel " << getName();
+	if (!message.empty())
+		std::cout << " with the message \"" << message << "\"" << std::endl;
+	else
+		std::cout << std::endl;
 	_users.erase(&user);
 }

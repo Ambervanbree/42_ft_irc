@@ -23,12 +23,26 @@ bool grammarCheckChannel(std::string name){
 	return true;
 }
 
+void partFromAllChannels(User &user, Server &server){
+	std::list<Channel>::iterator	it = server._channels.begin();
+	std::list<Channel>::iterator	ite = server._channels.end();
+
+	for (; it != ite; it++){
+		if (it->onChannel(user))
+			removeUserFromChannel(&(*it), user, server, "");
+	}
+}
+
 void JOIN(User &user, Server &server)
 {
 	std::deque<std::string>	channels;
 	std::deque<std::string>	keys;
 	char 					delimiter[] = ",";
 	
+	if (CHANNELS == "0"){
+		partFromAllChannels(user, server);
+		return ;
+	}
 	split_args(CHANNELS, delimiter, channels);
 	if (server.getArgs().size() > 1)
 		split_args(KEYS, delimiter, keys);

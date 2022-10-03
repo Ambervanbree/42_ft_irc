@@ -67,5 +67,6 @@ void PART(User &user, Server &server);
 
 /*Command utils:*/
 Channel*	findChannel(std::string &channelName, Server &server);
+void 		removeUserFromChannel(Channel *channel, User &user, Server &server, std::string message);
 
 #endif

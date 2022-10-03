@@ -46,7 +46,7 @@ class Channel{
 		/* Unsetters */
 		void 			unsetKey(std::string userNick);
 		void			unbanUser(std::string toUnban, std::string userNick);
-		void			removeUser(User &user);
+		void			removeUser(User &user, std::string message);
 
 
 };
