@@ -278,3 +278,9 @@ void    Server::closeConnections(void) {
             close(_fds[i].fd);
     }
 }
+
+
+std::string 			&Server::getPrefix() {return _command.prefix; }
+std::string				&Server::getCommand() {return _command.cmd_name; }
+std::deque<std::string>	&Server::getArgs() {return _command.args; }
+std::string				&Server::getTrailer() {return _command.trailer; }

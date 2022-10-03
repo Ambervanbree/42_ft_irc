@@ -3,8 +3,8 @@
 #include "server.hpp"
 #include "commands.hpp"
 
-#define CHANNELS command[1]
-#define KEYS command[2]
+#define CHANNELS 	server.getArgs()[0]
+#define KEYS 		server.getArgs()[1]
 
 void		createChannel(std::string name, User &user, Server &server){
 	server._channels.push_back(Channel(name, user));
@@ -23,16 +23,17 @@ bool grammarCheckChannel(std::string name){
 	return true;
 }
 
-void JOIN(std::deque<std::string> command, User &user, Server &server)
+void JOIN(User &user, Server &server)
 {
 	std::deque<std::string>	channels;
 	std::deque<std::string>	keys;
 	char 					delimiter[] = ",";
 	
 	split_args(CHANNELS, delimiter, channels);
-	split_args(KEYS, delimiter, keys);
+	if (server.getArgs().size() > 1)
+		split_args(KEYS, delimiter, keys);
 
-	if (!channels.size()){
+	if (channels.empty()){
 		std::cerr << "ERR_NEEDMOREPARAMS (461)" << std::endl;
 		return ;
 	}
@@ -45,7 +46,6 @@ void JOIN(std::deque<std::string> command, User &user, Server &server)
 		else
 			createChannel(channels[i], user, server);
 	}
-
 
 
 	/* TODO --> add channel replies: 
