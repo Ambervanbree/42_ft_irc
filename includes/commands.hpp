@@ -10,6 +10,8 @@
 # include "utils.hpp"
 
 class Server;
+class User;
+class Channel;
 
 typedef void (*command)(User &user, Server &server);
 

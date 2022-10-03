@@ -8,6 +8,7 @@
 # include "user.hpp"
 
 class Server;
+class User;
 
 class Channel{
 	private:

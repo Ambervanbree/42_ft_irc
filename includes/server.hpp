@@ -19,8 +19,9 @@
 # include <string>
 # include <map>
 # include <list>
-# include "../commands/commands.hpp"
-# include "../channel.hpp"
+# include "commands.hpp"
+# include "channel.hpp"
+# include "user.hpp"
 
 
 // maximum length of the queue of pending connections
@@ -33,6 +34,7 @@
 # define TIME_OUT       180000
 
 class Channel;
+class User;
 
 struct Command
 {
@@ -70,14 +72,15 @@ private:
     int                 _timeout;
     int                 _nfds;
     struct  pollfd      _fds[MAX_FDS];
-	Command				_command;
 	
 	std::map<std::string, command>	_commands;
 	std::deque<std::string>			_bufferCommand;
   
   public:
+	Command				_command;
     std::list<Channel>	_channels;
-	std::list<User>		users;
+	std::list<User>     users;
+    int                 nbUsers;
     
 /* ************************************************************************** */
 /*                              MEMBER FUNCTIONS                              */
@@ -92,7 +95,7 @@ private:
     void handleIncomingConnections(void);
     bool handleEvents(bool *end_server);
     void listeningSocketEvent(bool *end_server);
-    bool clientSocketEvent(int i);
+    bool clientSocketEvent(int i, User &user);
     void acceptConnections(bool *end_server);
     
     void decrementFileDescriptors(void);
@@ -104,7 +107,7 @@ private:
 	void _clearCommandStruct();
 	void _launchCommand(User &user);
 	void _splitBuffer(char *buffer);
-	void _handleBuffer(char *buffer, int clientSocket);
+	void _handleBuffer(char *buffer, User &user);
 
 public:
     void start(void);
