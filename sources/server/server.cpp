@@ -1,4 +1,4 @@
-#include "server.hpp"
+#include "../../includes/server/server.hpp"
 
 /* ************************************************************************** */
 /*                        CONSTRUCTORS / DESTRUCTORS                          */
@@ -36,7 +36,8 @@ void    Server::handleConnections(void){
 /*  makeServerSocket()
     - socket() function creates the server socket that will recieve incoming
     connections
-    - setsockopt() function allows the server socket to be reusable
+    - setsockopt() function allows the server socket to be reusable (so_reuseaddr
+    poption)
     - fcntl() function sets the server socket to be nonblocking. 
     All of the sockets for the incoming connections will also be nonblocking 
     since they will inherit that state from the listening server socket.
@@ -47,18 +48,22 @@ void    Server::makeServerSocket(void){
 
     _serverSocket = socket(AF_INET, SOCK_STREAM, 0);
     if (_serverSocket < 0) {
-        perror("socket() failed");
+        std::cerr << "socket() failed" << std::endl;
         exit(-1);
     }
     ret = setsockopt(_serverSocket, SOL_SOCKET, SO_REUSEADDR, (char *)&on, sizeof(on));
+    // ---> A ESSAYER pour simplification
+    // ret = setsockopt(_serverSocket, SOL_SOCKET, SO_REUSEADDR, on, sizeof(on));
     if (ret < 0){
-        perror("setsockopt() failed");
+        std::cerr << "setsockopt() failed" << std::endl;
         close(_serverSocket);
         exit(-1);
     }
+    // ---> ESSAYER sans fcntl car pas sure que ce soit necessaire de le faire 
+    // sur linux
     ret = fcntl(_serverSocket, F_SETFL, O_NONBLOCK);
     if (ret < 0){
-        perror("fcntl() failed");
+        std::cerr << "fcntl() failed" << std::endl;
         close(_serverSocket);
         exit(-1);
     }
@@ -80,7 +85,7 @@ void    Server::binding(void){
     ret = bind(_serverSocket, (const struct sockaddr *) &_serverAddr, sizeof(_serverAddr));
         std::cout << "[+] The server socket has fd nb " << _serverSocket << std::endl;
     if (ret < 0){
-        perror("bind() failed");
+        std::cerr << "bind() failed" << std::endl;
         close(_serverSocket);
         exit(-1);
     }
@@ -96,7 +101,7 @@ void    Server::listening(void){
     if (ret == 0)
         std::cout << "[+] Server is listening" << std::endl;
     else
-        perror("listen() failed");
+        std::cerr << "listen() failed" << std::endl;
 }
 
 /******************************************************************************/
@@ -135,8 +140,10 @@ void   Server::handleIncomingConnections(void){
     while (end_server == false) {
         std::cout << "[+] Waiting on poll()..." << std::endl;
         ret = poll(_fds, _nfds, TIME_OUT);
+        // voir si pas plus logique ainsi:
+        // ret = poll(_fds, MAX_FDS, TIME_OUT);
         if (ret < 0)
-            perror("poll() failed");
+            std::cerr << "poll() failed" << std::endl;
         if (ret == 0)
             std::cout << "[-] poll() timed out." << std::endl;
         if ((ret < 0) || (ret == 0))
@@ -156,18 +163,19 @@ void   Server::handleIncomingConnections(void){
 *******************************************************************************/
 bool    Server::handleEvents(bool *end_server){       
     int     i;
-    int     current_size = 0;
+    // int     current_size = 0;
     bool    compress_array = false;
 
-    current_size = _nfds;
-    for (i = 0; i < current_size; i++){
+    // current_size = _nfds;
+    for (i = 0; i < _nfds; i++){
         if(_fds[i].revents == 0)
             continue;
-        if(_fds[i].revents != POLLIN){
-            std::cout << "Error! revents = " << _fds[i].revents << std::endl;
-            *end_server = true;
-            break;
-        }
+    // verifier si c'est vraiment necessaire parce que ca bloque IRSSI
+        // if((_fds[i].revents != POLLIN) && (_fds[i].revents != POLLOUT)){
+        //     std::cout << "Error! revents = " << _fds[i].revents << std::endl;
+        //     *end_server = true;
+        //     break;
+        // }
         if (_fds[i].fd == _serverSocket)
             listeningSocketEvent(end_server);
         else
@@ -188,53 +196,55 @@ void    Server::acceptConnections(bool *end_server) {
         new_fd = accept(_serverSocket, NULL, NULL);
         if (new_fd < 0){
             if (errno != EWOULDBLOCK){
-                perror("accept() failed");
+                std::cerr << "accept() failed" << std::endl;
                 *end_server = true;
             }
             break;
         }
         std::cout << "[+] New incoming connection - " << new_fd << std::endl;
         _fds[_nfds].fd = new_fd;
-        _fds[_nfds].events = POLLIN;
+        _fds[_nfds].events = POLLIN | POLLOUT;
         _nfds++;
     }
+    std::cout << "End of accept boucle" << std::endl;
 }
 
 bool    Server::clientSocketEvent(int i) {
     bool    close_conn;
     char    buffer[MAX_BUFFER];
     int     ret;
-    int     len;
+    char    resp[60] = "J'ai bien recu ton message et je t'en remercie\n";
     bool    compress_array = false;
     
     std::cout << "[+] Descriptor " << _fds[i].fd << " is readable" << std::endl;
     close_conn = false;
 
     while (true) {
-        memset(buffer, '\0', MAX_BUFFER);
-        ret = recv(_fds[i].fd, buffer, sizeof(buffer), 0);
-        if (ret < 0){
-            if (errno != EWOULDBLOCK){
-                perror("  recv() failed");
-                close_conn = true;
+        if (_fds[i].revents == POLLOUT) {
+            memset(buffer, '\0', MAX_BUFFER);
+            ret = recv(_fds[i].fd, buffer, sizeof(buffer), 0);
+            if (ret < 0){
+                if (errno != EWOULDBLOCK){
+                    std::cerr << "  recv() failed" << std::endl;
+                    close_conn = true;
+                }
+                break;
             }
-            break;
+            if (ret == 0){
+                std::cout << "[+] Connection closed" << std::endl;
+                close_conn = true;
+                break;
+            }
+            ret = send(_fds[i].fd, resp, strlen(resp), 0);
+            if (ret < 0){
+                std::cerr << "send() failed" << std::endl;
+                close_conn = true;
+                break;
+            }
+            _handleBuffer(buffer, _fds[i].fd);
         }
-        if (ret == 0){
-            std::cout << "  Connection closed" << std::endl;
-            close_conn = true;
-            break;
-        }
-        len = ret;
-        std::cout << "[+] " << len << " bytes received" << std::endl;
-        std::cout <<"[+] message : " << buffer << std::endl;
-        // ret = send(_fds[i].fd, buffer, len, 0);
-        // if (ret < 0){
-        //     perror("send() failed");
-        //     close_conn = true;
-        //     break;
+        // if (_fds[i].revents == POLLIN) {
         // }
-	  	_handleBuffer(buffer, _fds[i].fd);
     }
     if (close_conn){
         close(_fds[i].fd);
@@ -243,7 +253,6 @@ bool    Server::clientSocketEvent(int i) {
     }
     return compress_array;
 }
-
 /******************************************************************************/
 /*  decrementFileDescriptors()
     If the compress_array flag was turned on, we need to squeeze together
