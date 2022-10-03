@@ -27,8 +27,11 @@
 # define MAX_CONNECTS   5
 // maximum number of connections
 # define MAX_FDS        1024
-// maximum command size
-# define MAX_BUFFER     512
+/*  maximum command size
+    "messages shall not exceed 512 characters in length, counting all 
+    characters including the trailing CR-LF (=\n). Thus, there are 510 
+    characters maximum allowed for the command and its parameters."    */
+# define MAX_BUFFER     510
 // timeout of 3 minutes (3 * 60 * 1000) miliseconds
 # define TIME_OUT       180000
 
@@ -68,7 +71,8 @@ private:
   
   public:
     std::list<Channel>	_channels;
-	std::list<User>		users;
+	std::deque<User>    users;
+    int                 nbUsers;
     
 /* ************************************************************************** */
 /*                              MEMBER FUNCTIONS                              */

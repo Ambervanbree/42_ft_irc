@@ -81,7 +81,7 @@ void Server::_splitBuffer(char *buffer)
 void Server::_handleBuffer(char *buffer, int clientSocket)
 {
 	/*Placeholder of User who will be search by his socketId*/
-	User user;
+	User user(*this, clientSocket, "dflt user", "dflt nick");
 	(void)clientSocket;
 	_splitBuffer(buffer);
 	while (_bufferCommand.size())

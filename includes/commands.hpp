@@ -5,6 +5,7 @@
 # include <vector>
 # include <string>
 # include <iostream>
+#include "server.hpp"
 # include "channel.hpp"
 # include "user.hpp"
 # include "utils.hpp"
