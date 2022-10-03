@@ -153,7 +153,7 @@ void			Channel::unbanUser(std::string toUnban, std::string userNick){
 	if (_banned.erase(toUnban)){
 		if (_banned.empty())
 			_modes['b'] = false;
-		std::cout << "Ubanned user: " << toUnban << std::endl;
+		std::cout << "[+] Unbanned user: " << toUnban << std::endl;
 	}
 }
 

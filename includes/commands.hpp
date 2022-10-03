@@ -51,7 +51,7 @@ void JOIN(User &user, Server &server);
 void MODE(User &user, Server &server);
 void PART(User &user, Server &server);
 // void TOPIC(User &User);
-// void NAMES(User &User);
+void NAMES(User &user, Server &server);
 // void LIST(User &user);
 // void INVITE(User &user);
 // void KICK(User &user);

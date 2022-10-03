@@ -16,7 +16,6 @@ struct Mode{
 	int						argNr;
 };
 
-
 void	addMode(char toSet, Mode &mode){
 	switch (toSet){
 		case 'k':
