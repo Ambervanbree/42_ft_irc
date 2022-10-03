@@ -91,19 +91,19 @@ void Server::interpretCommand(std::string &message, User &user)
 
 void Server::_splitBuffer(char *buffer)
 {
-	std::cerr << "-> Receive from client: " << buffer << std::endl;
+	std::cerr << "[+] Received from client: " << buffer << std::endl;
 	std::string buf = buffer;
 	split_on_string(buf, "\r\n", _bufferCommand);
 	for (unsigned int i = 0; i < _bufferCommand.size(); i++)
 	{
-		std::cerr << "split buffer [" << i << "] " << _bufferCommand[i];
-		std::cerr << " - len: " << _bufferCommand[i].size() << std::endl;
+		std::cerr << "[+] split buffer [" << i << "] " << _bufferCommand[i];
+		std::cerr << " -> len: " << _bufferCommand[i].size() << std::endl;
 	}
 }
 
 void Server::_handleBuffer(char *buffer, int clientSocket)
 {
-	/*Placeholder of User who will be search by his socketId*/
+	/*Placeholder of User who will be searched by socketId*/
 	User user;
 	(void)clientSocket;
 	std::cerr << "User nick mask: " << user.getNickMask() << std::endl;

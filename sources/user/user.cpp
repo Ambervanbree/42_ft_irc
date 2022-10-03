@@ -11,7 +11,7 @@ User::User(const int &socket, const struct sockaddr_in &addr, const std::string 
 User::~User() {};
 
 /*Placeholder before using the real user*/
-User::User() : _nickName("default_user") { std::cout << "A user is born\n"; }
+User::User() : _nickName("default user") { std::cout << "[+] A user is born\n"; }
 
 
 User::User(const User &other)
