@@ -24,6 +24,7 @@ class User
 		int					getSocket() const;
 		std::string			getHost() const;
 		int					getPort() const;
+		std::string			getNickMask() const;
 		std::string			getPrefix() const;
 
 	private:

@@ -43,20 +43,26 @@ void Server::_messageToCommandStruct(std::string message){
 	char 						delimiter[] = " ";
 
 	split_args(message, delimiter, out);
-	if (out.size() < 4){
-		std::cerr << "Less than 4 parametres" << std::endl;
-		// TODO ---> Not sure how IRC reacts in this case
-		// does it check if the command exists before it checks if there is an argument?
-		return ;
+	unsigned int i = 0;
+	if (out[i].size() && out[i][0] == ':')
+		_command.prefix = out[i++];
+	if (out[i].size() && out[i][0] != ':')
+		_command.cmd_name = out[i++];
+	while (out[i].size() && out[i][0] != ':')
+		_command.args.push_back(out[i++]);
+	while (out[i].size())
+	{
+		_command.trailer += out[i++];
+		if (i != out.size())
+			_command.trailer += " ";
 	}
-
-	std::deque<std::string>::iterator it = out.begin();
-	std::deque<std::string>::iterator ite = out.end();
-	
-	_command.prefix = *it++;
-	_command.cmd_name = *it++;
-	_command.trailer = *--ite;
-	_command.args.insert(_command.args.begin(), it, ite);
+	std::cerr << "\n------ Command struct details -----\n";
+	std::cerr << "Prefix: " << _command.prefix << std::endl;
+	std::cerr << "Command_name: " << _command.cmd_name << std::endl;
+	std::cerr << "Args:\n";
+	for (unsigned int i = 0; i < _command.args.size(); i++)
+		std::cerr << _command.args[i] << "\n";
+	std::cerr << "Trailer: " << _command.trailer << std::endl <<std::endl;
 }
 
 void Server::_clearCommandStruct(){
@@ -78,8 +84,6 @@ void Server::_launchCommand(User &user)
 
 void Server::interpretCommand(std::string &message, User &user)
 {	
-	if (message[0] != ':')
-		return ;
 	_messageToCommandStruct(message);
 	_launchCommand(user);
 	_clearCommandStruct();
@@ -87,13 +91,13 @@ void Server::interpretCommand(std::string &message, User &user)
 
 void Server::_splitBuffer(char *buffer)
 {
-	std::cerr << "-> Receive from client: " << buffer << std::endl;
+	std::cerr << "[+] Received from client: " << buffer << std::endl;
 	std::string buf = buffer;
 	split_on_string(buf, "\r\n", _bufferCommand);
 	for (unsigned int i = 0; i < _bufferCommand.size(); i++)
 	{
-		std::cerr << "split buffer [" << i << "] " << _bufferCommand[i];
-		std::cerr << " - len: " << _bufferCommand[i].size() << std::endl;
+		std::cerr << "[+] split buffer [" << i << "] " << _bufferCommand[i];
+		std::cerr << " -> len: " << _bufferCommand[i].size() << std::endl;
 	}
 }
 
@@ -102,6 +106,7 @@ void Server::_handleBuffer(char *buffer, int clientSocket)
 	/*Placeholder of User who will be search by his socketId*/
 	User user(*this, clientSocket, "dflt user", "dflt nick");
 	(void)clientSocket;
+	std::cerr << "User nick mask: " << user.getNickMask() << std::endl;
 	_splitBuffer(buffer);
 	while (_bufferCommand.size())
 	{
