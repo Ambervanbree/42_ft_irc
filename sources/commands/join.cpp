@@ -7,7 +7,7 @@
 #define KEYS 		server.getArgs()[1]
 
 void		createChannel(std::string name, User &user, Server &server){
-	server._choenels.insert(std::make_pair(name, Channel(name, user)));
+	server._channels.insert(std::make_pair(name, Channel(name, user)));
 	/* TODO --> add replies: 
 		ERR_TOOMANYCHANNELS (405) 
 	*/
@@ -24,8 +24,8 @@ bool grammarCheckChannel(std::string name){
 }
 
 void partFromAllChannels(User &user, Server &server){
-	std::map<std::string, Channel>::iterator	it 	= server._choenels.begin();
-	std::map<std::string, Channel>::iterator	ite = server._choenels.end();
+	std::map<std::string, Channel>::iterator	it 	= server._channels.begin();
+	std::map<std::string, Channel>::iterator	ite = server._channels.end();
 	std::map<std::string, Channel>::iterator 	temp;
 
 	while (it != ite){

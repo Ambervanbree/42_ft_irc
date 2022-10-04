@@ -5,7 +5,7 @@
 
 //PART <channel>{,<channel>} [<reason>]
 #define CHANNELS 	server.getArgs()[0]
-#define MESSAGE 	server.getArgs()[1]
+#define MESSAGE 	server._command.trailer
 
 void PART(User &user, Server &server)
 {
@@ -29,9 +29,9 @@ void PART(User &user, Server &server)
 			std::cerr << "ERR_NOTONCHANNEL (442)" << std::endl;
 			return ;
 		}
-		if (server.getArgs().size() > 1)
-			removeUserFromChannel(chan, user, server, MESSAGE);
-		else
+		if (server._command.trailer.empty())
 			removeUserFromChannel(chan, user, server, "");
+		else
+			removeUserFromChannel(chan, user, server, MESSAGE);
 	}
 }
