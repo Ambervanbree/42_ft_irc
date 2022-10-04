@@ -27,6 +27,11 @@ User::User(const User &other)
 		_nickName = other._nickName;
 		_hostName = other._hostName;
 		_port = other._port;
+		_clientAddr = other._clientAddr;
+		_isPassRegistered = other._isPassRegistered;
+		_isNickRegistered = other._isNickRegistered;
+		_isUserRegistered = other._isUserRegistered;
+		_isRegistered = other._isRegistered;
 	}
 }
 
@@ -45,6 +50,11 @@ std::string			User::getPrefix() const
 	prefix = ":" + getNickname() + "!" + getUsername() + "@" + getHost();
 	return prefix;
 }
+
+bool	User::getPassRegistered() const { return _isPassRegistered; }
+bool	User::getNickRegistered() const { return _isNickRegistered; }
+bool	User::getUserRegistered() const { return _isUserRegistered; }
+bool	User::getRegistered() const { return _isRegistered; }
 
 /*Setters*/
 void				User::_setUsername(const std::string &user) { _userName = user; }
@@ -65,9 +75,25 @@ void				User::_setNickname(const std::string &nick) {
 // void				User::_setAddr(const struct sockaddr_in &addr) { _clientAddr = addr; }
 void				User::_setSocket(const int &socket) { clientSocket = socket; }
 
-/*Private member functions*/
+void	User::setPassRegistered(const bool passRegister) { _isPassRegistered = passRegister; }
+void	User::setNickRegistered(const bool nickRegister) { _isNickRegistered = nickRegister; }
+void	User::setUserRegistered(const bool userRegister) { _isUserRegistered = userRegister; }
+void	User::setRegistered(const bool isregister) { _isRegistered = isregister; }
+
+void	User::_initRegister()
+{	
+	_isPassRegistered = false;
+	_isNickRegistered = false;
+	_isUserRegistered = false;
+	_isRegistered = false;
+}
 
 // void				User::_setHost() { _hostName = inet_ntoa(_clientAddr.sin_addr); }
 // void				User::_setPort() { _port = ntohs(_clientAddr.sin_port); }
 
 
+/*Handling buffer*/
+
+void		User::setBuffer(const std::string &buf) { std::string tmp = _buffer + buf; _buffer = tmp; }
+void		User::resetBuffer() { _buffer.clear(); }
+std::string	User::getBuffer() const { return _buffer; }

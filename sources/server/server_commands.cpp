@@ -88,11 +88,12 @@ void Server::interpretCommand(std::string &message, User &user)
 	_clearCommandStruct();
 }
 
-void Server::_splitBuffer(char *buffer)
+void Server::_splitBuffer(std::string buffer)
 {
-	std::cerr << "[+] Received from client: " << buffer << std::endl;
-	std::string buf = buffer;
-	split_on_string(buf, "\r\n", _bufferCommand);
+	std::string delimiter = "\r\n";
+	if (buffer.size() > 1 && buffer[buffer.size() - 2] != '\r')
+		delimiter = "\n";
+	split_on_string(buffer, delimiter, _bufferCommand);
 	for (unsigned int i = 0; i < _bufferCommand.size(); i++)
 	{
 		std::cerr << "[+] split buffer [" << i << "] " << _bufferCommand[i];
@@ -104,15 +105,13 @@ void Server::_handleBuffer(char *buffer, User &user)
 {
 	/*Placeholder of User who will be searched by socketId*/
 
-	// User user(*this, clientSocket, "dflt user", "dflt nick");
-
-	/*Here the problem is that a new user is created everytime a new command is sent*/
-
-	// std::cerr << "User nick mask: " << user.getNickMask() << std::endl;
-	_splitBuffer(buffer);
-	while (_bufferCommand.size())
+	if (buffer[strlen(buffer) - 1] == '\n')
 	{
-		interpretCommand(_bufferCommand[0], user);
-		_bufferCommand.pop_front();
+		_splitBuffer(std::string(buffer));
+		while (_bufferCommand.size())
+		{
+			interpretCommand(_bufferCommand[0], user);
+			_bufferCommand.pop_front();
+		}
 	}
 }
