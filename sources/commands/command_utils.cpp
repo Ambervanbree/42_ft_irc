@@ -5,9 +5,9 @@
 #define iterator	std::map<std::string, Channel>::iterator
 
 Channel*	findChannel(std::string &channelName, Server &server){
-	iterator	it = server._channels.find(channelName);
+	iterator	it = server._choenels.find(channelName);
 
-	if (it != server._channels.end())
+	if (it != server._choenels.end())
 		return &(it->second);
 	return NULL;
 }
@@ -15,6 +15,6 @@ Channel*	findChannel(std::string &channelName, Server &server){
 void 	removeUserFromChannel(Channel *channel, User &user, Server &server, std::string message){
 	channel->removeUser(user, message);
 	if (channel->isEmpty()){
-		server._channels.erase(channel->getName());
+		server._choenels.erase(channel->getName());
 	}
 }
