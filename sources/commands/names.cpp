@@ -28,8 +28,8 @@ void	channelNames(Server &server){
 }
 
 void	userNames(User &user, Server &server){
-	std::map<std::string, Channel>::iterator	it = server._channels.begin();
-	std::map<std::string, Channel>::iterator	ite = server._channels.end();
+	std::map<std::string, Channel>::iterator	it = server._choenels.begin();
+	std::map<std::string, Channel>::iterator	ite = server._choenels.end();
 
 	for (; it != ite; it++){
 		if (it->second.onChannel(user)){
