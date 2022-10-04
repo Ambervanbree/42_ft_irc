@@ -58,16 +58,6 @@ void SQUIT(std::deque<std::string> Command, User &User)
 
 /*User commands:*/
 
-//USER <user> <mode> <unused> <realname>
-//-> Specify the username, hostname and realname of 
-//   a new user at the beginning of connection
-void USER(std::deque<std::string> Command, User &User)
-{
-	(void)Command;
-	(void)User;
-	std::cout << "USER" << std::endl;
-}
-
 //OPER <name> <password>
 //-> Obtain operator priviliges.
 void OPER(std::deque<std::string> Command, User &User)

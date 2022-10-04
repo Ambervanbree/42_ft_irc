@@ -17,7 +17,6 @@ class Channel;
 
 /*Server commands*/
 
-void PASS(User &User, Server &server);
 // void PING(User &User, Server &server);
 // void PONG(User &User, Server &server);
 // void ERROR(User &User, Server &server);
@@ -28,9 +27,9 @@ void PASS(User &User, Server &server);
 
 /*User commands:*/
 
-// void PASS(User &User, Server &server);
+void PASS(User &User, Server &server);
 void NICK(User &User, Server &server);
-// void USER(User &User, Server &server);
+void USER(User &User, Server &server);
 // void OPER(User &User, Server &server);
 // void MODE(User &User, Server &server);
 // void SERVICE(User &User, Server &server);

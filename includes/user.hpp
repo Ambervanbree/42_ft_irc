@@ -10,6 +10,8 @@
 # include <list>
 # include "server.hpp"
 
+#define USERLEN 18
+
 class Server;
 
 class User

@@ -1,13 +1,7 @@
 #include "user.hpp"
 #include "server.hpp"
-// #include <string>
 
-// NICK <nickname> <hopcount> <username> <host> <servertoken> <umode> <realname>
-// -> Combination of NICK (the user version), USER and MODE.
-
-/*Irssi send: 
-- registration : USER <nick> <user> <host> :<realname>
-- change nick : :<nick> USER <newnick>*/
+// NICK <nickname>
 
 int	wrongGrammar(const std::string &nick) {
 	char forbidden[] = {' ', ',', '*', '?', '!', '@', '.'};
