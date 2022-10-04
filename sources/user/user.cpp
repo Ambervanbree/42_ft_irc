@@ -6,7 +6,6 @@ User::User(Server &s, const int &socket, const std::string &user,
 {
 	std::cout << "[+] A user is born" << std::endl;
 	// _setPass(user);
-	_server->nbUsers++;
 	_setUsername(user);
 	_setNickname(nick);
 	// _setHost();
@@ -50,18 +49,16 @@ std::string			User::getPrefix() const
 /*Setters*/
 void				User::_setUsername(const std::string &user) { _userName = user; }
 void				User::_setNickname(const std::string &nick) {
-	int i = 0;
-	
 	if (nick.length() > 9){
 		std::cerr << "(432) ERR_ERRONEUSNICKNAME" << std::endl;
 		return;
 	}
-	while (i < _server->nbUsers){
-		if (_server->users[i].getNickname().compare(nick) == 0){
+	std::list<User>::iterator ite;
+	for(ite = _server->users.begin(); ite != _server->users.end(); ite++){
+		if ((*ite).getNickname().compare(nick) == 0){
 			std::cerr << "(433) ERR_NICKNAMEINUSE" << std::endl;
 			return;
 		}
-		i++;
 	}
 	_nickName = nick;
 }

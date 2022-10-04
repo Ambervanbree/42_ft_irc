@@ -21,7 +21,7 @@
 # include <list>
 # include "commands.hpp"
 # include "channel.hpp"
-# include "user.hpp"
+// # include "user.hpp"
 
 
 // maximum length of the queue of pending connections
@@ -35,6 +35,8 @@
 
 class Channel;
 class User;
+class Server;
+typedef     void (*command)(User &user, Server &server);
 
 struct Command
 {
@@ -80,7 +82,6 @@ private:
 	Command				_command;
     std::list<Channel>	_channels;
 	std::list<User>     users;
-    int                 nbUsers;
     
 /* ************************************************************************** */
 /*                              MEMBER FUNCTIONS                              */
