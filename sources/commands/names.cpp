@@ -26,11 +26,11 @@ void	channelNames(Server &server){
 }
 
 void	userNames(User &user, Server &server){
-	std::list<Channel>::iterator	it = server._channels.begin();
-	std::list<Channel>::iterator	ite = server._channels.end();
+	std::map<std::string, Channel>::iterator	it = server._channels.begin();
+	std::map<std::string, Channel>::iterator	ite = server._channels.end();
 
 	for (; it != ite; it++){
-		if (it->onChannel(user)){
+		if (it->second.onChannel(user)){
 			//replies for channel:
 			std::cout << "RPL_NAMREPLY" << std::endl;
 			std::cout << "RPL_ENDOFNAMES" << std::endl;		
