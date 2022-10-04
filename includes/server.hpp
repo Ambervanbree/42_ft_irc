@@ -28,8 +28,11 @@
 # define MAX_CONNECTS   5
 // maximum number of connections
 # define MAX_FDS        1024
-// maximum command size
-# define MAX_BUFFER     512
+/*  maximum command size
+    "messages shall not exceed 512 characters in length, counting all 
+    characters including the trailing CR-LF (=\n). Thus, there are 510 
+    characters maximum allowed for the command and its parameters."    */
+# define MAX_BUFFER     510
 // timeout of 3 minutes (3 * 60 * 1000) miliseconds
 # define TIME_OUT       180000
 
@@ -68,7 +71,6 @@ private:
 
 private:
     int                 _port;
-    std::string         _password;
     int                 _serverSocket;
     struct sockaddr_in  _serverAddr;
     int                 _timeout;
@@ -82,6 +84,7 @@ private:
 	Command							_command;
 	std::map<std::string, Channel>	_channels;
 	std::list<User>					users;
+    std::string                     password;
     
 /* ************************************************************************** */
 /*                              MEMBER FUNCTIONS                              */

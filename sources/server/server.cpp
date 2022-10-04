@@ -5,7 +5,7 @@
 /* ************************************************************************** */
 
 Server::Server(int port, std::string password)
-: _port(port), _password(password), _nfds(0)  {}
+: _port(port), _nfds(0), password(password)  {}
 
 Server::~Server(void) {
     closeConnections();
@@ -210,7 +210,7 @@ void    Server::acceptConnections(bool *end_server) {
         _fds[_nfds].fd = new_fd;
         _fds[_nfds].events = POLLIN | POLLOUT;
         _nfds++;
-        User newUser(*this, new_fd, "dflt user", "dflt nick");
+        User newUser(new_fd);
         users.push_back(newUser);
     }
     // std::cout << "End of accept boucle" << std::endl;

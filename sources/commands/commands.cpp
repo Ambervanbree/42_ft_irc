@@ -2,15 +2,6 @@
 
 /*Server commands*/
 
-// PASS <password> <version> <flags>
-// set a connection pas
-void PASS(std::deque<std::string> Command, User &User)
-{
-	(void)Command;
-	(void)User;
-	std::cout << "PASS" << std::endl;
-}
-
 //PING <server1> [ <server2> ]
 //-> Test the presence of an acive client or server.
 void PING(std::deque<std::string> Command, User &User)
@@ -66,24 +57,6 @@ void SQUIT(std::deque<std::string> Command, User &User)
 }
 
 /*User commands:*/
-
-//PASS <password>
-//-> Set a connection password.
-/*void PASS(std::deque<std::string> Command, User &User)
-{
-	(void)Command;
-	(void)User;
-	std::cout << "PASS" << std::endl;
-}*/
-
-//NICK <nickname>
-//-> Give user a nickname or change the existing one.
-/*void NICK(std::deque<std::string> Command, User &User)
-{
-	(void)Command;
-	(void)User;
-	std::cout << "NICK" << std::endl;
-}*/
 
 //USER <user> <mode> <unused> <realname>
 //-> Specify the username, hostname and realname of 
