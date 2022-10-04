@@ -69,7 +69,7 @@ void			Channel::sendList(User &user){
 	(void)user;
 	// RPL sent to user:
 	std::cout << "RPL_LIST (322)" << std::endl;
-	std::cout << "RPL_LISTEND (323)" << std::endl;			
+	std::cout << "RPL_LISTEND (323)" << std::endl;
 }
 
 
@@ -164,7 +164,7 @@ void			Channel::setTopic(std::string newTopic, std::string userNick){
 		return ;
 	}
 	_topic = newTopic;
-	// channel message TOPIC? 
+	// channel message TOPIC? TODO
 }
 
 /******************************************************************************/

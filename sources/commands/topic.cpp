@@ -22,8 +22,9 @@ void TOPIC(User &user, Server &server){
 		std::cerr << "ERR_NOTONCHANNEL (442)" << std::endl; 
 		return ;
 	}
-	if (server.getArgs().size() < 2)
+	if (server._command.trailer.empty())
 		chan->sendTopic(user);
 	else
 		chan->setTopic(NEWTOPIC, user.getNickMask());
+	/// QUESTION. Is there a difference between an empty trailer and no trailer? 
 }
