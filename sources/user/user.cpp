@@ -18,8 +18,9 @@ User::User(const User &other)
 {
 	if (this != &other) {
 		clientSocket = other.clientSocket;
-		_userName = other._userName;
 		_nickName = other._nickName;
+		_userName = other._userName;
+		_realName = other._realName;
 		_hostName = other._hostName;
 		_port = other._port;
 		_clientAddr = other._clientAddr;
