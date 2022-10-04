@@ -8,10 +8,9 @@ void	PASS(User &user, Server &server)
 {
 	std::cout << "PASS" << std::endl;
 	(void)user;
-	if (server._command.cmd_name.compare(server.password))
+	if (server._command.args[0].compare(server.password))
 		std::cerr << "ERR_PASSWDMISMATCH (464)" << std::endl;
 	else
-		std::cout << "Right password !";
-	//  Voir si le pb de non reconnaissance du pwd vient du parsing
+		std::cerr << "Right password !" << std::endl;
 	// ------> + close the connection
 }
