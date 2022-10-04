@@ -92,3 +92,8 @@ void	User::_initRegister()
 // void				User::_setPort() { _port = ntohs(_clientAddr.sin_port); }
 
 
+/*Handling buffer*/
+
+void		User::setBuffer(const std::string &buf) { std::string tmp = _buffer + buf; _buffer = tmp; }
+void		User::resetBuffer() { _buffer.clear(); }
+std::string	User::getBuffer() const { return _buffer; }

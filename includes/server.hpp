@@ -107,7 +107,7 @@ private:
 	void _messageToCommandStruct(std::string message);
 	void _clearCommandStruct();
 	void _launchCommand(User &user);
-	void _splitBuffer(char *buffer);
+	void _splitBuffer(std::string buffer);
 	void _handleBuffer(char *buffer, User &user);
 
 public:

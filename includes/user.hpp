@@ -40,6 +40,10 @@ class User
 		bool	getUserRegistered() const;
 		bool	getRegistered() const;
 
+		void	setBuffer(const std::string &buf);
+		void	resetBuffer();
+		std::string	getBuffer() const;
+	
 	private:
 		User();
 		User &operator=(const User &other);
@@ -60,6 +64,9 @@ class User
 		void		_setNickname(const std::string &nick);
 		void		_setAddr(const struct sockaddr_in &addr);
 		void		_setSocket(const int &socket);
+		
+		std::string			_buffer;
+
 		bool	_isPassRegistered;
 		bool	_isNickRegistered;
 		bool	_isUserRegistered;
