@@ -34,6 +34,8 @@ class Channel{
 		/* Message requests */
 
 		void			sendTopic(User &user);
+		void			sendNames(User &user);
+		void			sendList(User &user);
 
 		/* Checkers */
 
@@ -48,13 +50,12 @@ class Channel{
 		void			addUser(std::string key, User &user);
 		void			setKey(std::string key, std::string userMask);
 		void			banUser(std::string toBan, std::string userNick);
+		void			setTopic(std::string newTopic, std::string userNick);
 
 		/* Unsetters */
 		void 			unsetKey(std::string userNick);
 		void			unbanUser(std::string toUnban, std::string userNick);
 		void			removeUser(User &user, std::string message);
-
-
 };
 
 #endif

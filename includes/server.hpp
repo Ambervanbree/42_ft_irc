@@ -80,7 +80,7 @@ private:
   
   public:
 	Command							_command;
-	std::map<std::string, Channel>	_choenels;
+	std::map<std::string, Channel>	_channels;
 	std::list<User>					users;
     
 /* ************************************************************************** */

@@ -6,24 +6,25 @@
 // TOPIC <channel> [ <topic> ]
 
 #define CHANNEL	 	server.getArgs()[0]
-#define NEWTOPIC 	server.getArgs()[1]
+#define NEWTOPIC 	server._command.trailer
 
 void TOPIC(User &user, Server &server){
 	if (CHANNEL.empty()){
-		// ERR_NEEDMOREPARAMS 
+		std::cerr << "ERR_NEEDMOREPARAMS (461)" << std::endl; 
 		return ;
 	}
-	if (NEWTOPIC.empty()){
-		Channel *chan = findChannel(CHANNEL, server);
-		if (chan == NULL)
-			return ;
-		if (!chan->onChannel(user)){
-			// ERR_NOTONCHANNEL
-			return ;
-		}
-		// chan->sendTopic(user);
+	Channel *chan = findChannel(CHANNEL, server);
+	if (chan == NULL){
+		std::cerr << "ERR_NOSUCHCHANNEL (403)" << std::endl; 
+		return ;		
 	}
-	else{
-		// chan->setTopic(user);
+	if (!chan->onChannel(user)){
+		std::cerr << "ERR_NOTONCHANNEL (442)" << std::endl; 
+		return ;
 	}
+	if (server._command.trailer.empty())
+		chan->sendTopic(user);
+	else
+		chan->setTopic(NEWTOPIC, user.getNickMask());
+	/// QUESTION. Is there a difference between an empty trailer and no trailer? 
 }

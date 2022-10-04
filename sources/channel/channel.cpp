@@ -5,10 +5,9 @@
 *******************************************************************************/
 
 Channel::Channel(std::string name, User &user) : _name(name) {
-	std::cout << "channel " << name << " created" << std::endl;
 	initModes();
 	_users.insert(&user);
-	std::cout << "JOIN message from " << user.getNickname() << " on channel " << getName() << std::endl;
+	std::cout << "JOIN message from " << user.getNickname() << " on new channel " << getName() << std::endl;
 	_chop.insert(user.getNickname());
 };
 
@@ -47,12 +46,32 @@ std::string		Channel::getName() const {return _name; }
 *******************************************************************************/
 
 void			Channel::sendTopic(User &user){
-	if (!_topic.empty()){
-		// RPL_TOPIC
-		(void)user;
+	(void)user; 
+	// RPL sent to user:
+	if (_topic.empty()){
+		std::cout << "RPL_NOTOPIC (331)" << std::endl;
+		return ;
+	}
+	else{
+		std::cout << "RPL_TOPIC (332)" << std::endl;
 		return ;
 	}
 }
+
+void			Channel::sendNames(User &user){
+	(void)user;
+	// RPL sent to user:
+	std::cout << "RPL_NAMREPLY (353)" << std::endl;
+	std::cout << "RPL_ENDOFNAMES (366)" << std::endl;			
+}
+
+void			Channel::sendList(User &user){
+	(void)user;
+	// RPL sent to user:
+	std::cout << "RPL_LIST (322)" << std::endl;
+	std::cout << "RPL_LISTEND (323)" << std::endl;
+}
+
 
 /******************************************************************************/
 /*  Checkers
@@ -104,26 +123,24 @@ void			Channel::addUser(std::string key, User &user){
 		return ;
 	}
 	_users.insert(&user);
-	// channel message: 
+	// RPL sent to channel (including user):
 	std::cout << "JOIN message from " << user.getNickname() << " on channel " << getName() << std::endl;
-	// std::cout << "RPL_TOPIC (332)" << std::endl; // ----> if we decide to include topic
+	// RPL sent to user:
+	std::cout << "RPL_TOPIC (332)" << std::endl;
 	std::cout << "RPL_NAMREPLY (356)" << std::endl;
 	return ;
 
 	/* TODO --> add possible error replies: 
 		ERR_INVITEONLYCHAN (473)  -> invite mode
 		ERR_CHANNELISFULL (471)   -> limit mode
-		ERR_BANNEDFROMCHAN (474)  DONE
-		ERR_BADCHANMASK (476)     DONE
 	*/
 }
 
-void			Channel::setKey(std::string key, std::string userMask) {
-	if (!isChop(userMask)){
+void			Channel::setKey(std::string key, std::string nickMask) {
+	if (!isChop(nickMask)){
 		std::cerr << "ERR_CHANOPRIVSNEEDED (482)" << std::endl;
 		return ;		
 	}
-	// grammar check key
 	std::cout << "Set key to: " << key << std::endl;
 	_key = key;
 	_modes['k'] = true ;
@@ -139,6 +156,15 @@ void			Channel::banUser(std::string toBan, std::string userNick){
 	std::cout << "Banned user: " << toBan << std::endl;
 	_banned.insert(toBan);
 	_modes['b'] = true;
+}
+
+void			Channel::setTopic(std::string newTopic, std::string userNick){
+	if (!isChop(userNick)){
+		std::cerr << "ERR_CHANOPRIVSNEEDED (482)" << std::endl;
+		return ;
+	}
+	_topic = newTopic;
+	// channel message TOPIC? TODO
 }
 
 /******************************************************************************/
