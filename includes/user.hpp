@@ -15,8 +15,7 @@ class Server;
 class User
 {
 	public:
-		User(Server &s, const int &socket, const std::string &user,
-			const std::string &nick);
+		User(Server &s, const int &socket);
 		User(const User &other);
 		~User();
 

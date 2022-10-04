@@ -1,13 +1,12 @@
 #include "user.hpp"
 
-User::User(Server &s, const int &socket, const std::string &user,
-	const std::string &nick)
+User::User(Server &s, const int &socket)
 	: _server(&s), clientSocket(socket)
 {
 	std::cout << "[+] A user is born" << std::endl;
 	// _setPass(user);
-	_setUsername(user);
-	_setNickname(nick);
+	_setUsername("dflt user");
+	_setNickname("dflt nick");
 	// _setHost();
 	// _setPort();
 }
