@@ -53,7 +53,7 @@ void JOIN(User &user, Server &server);
 void MODE(User &user, Server &server);
 void PART(User &user, Server &server);
 // void TOPIC(User &User);
-// void NAMES(User &User);
+void NAMES(User &user, Server &server);
 // void LIST(User &user);
 // void INVITE(User &user);
 // void KICK(User &user);
@@ -69,5 +69,6 @@ void PART(User &user, Server &server);
 
 /*Command utils:*/
 Channel*	findChannel(std::string &channelName, Server &server);
+void 		removeUserFromChannel(Channel *channel, User &user, Server &server, std::string message);
 
 #endif
