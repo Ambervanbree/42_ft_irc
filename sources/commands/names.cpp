@@ -3,6 +3,8 @@
 #include "server.hpp"
 #include "commands.hpp"
 
+// NAMES [ <channel> ]
+
 #define CHANNELS	 	server.getArgs()[0]
 
 void	channelNames(Server &server){
