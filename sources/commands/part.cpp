@@ -5,6 +5,7 @@
 
 //PART <channel>{,<channel>} [<reason>]
 #define CHANNELS 	server.getArgs()[0]
+#define MESSAGE 	server.getArgs()[1]
 
 void PART(User &user, Server &server)
 {
@@ -28,17 +29,9 @@ void PART(User &user, Server &server)
 			std::cerr << "ERR_NOTONCHANNEL (442)" << std::endl;
 			return ;
 		}
-		std::cout << user.getNickname() << " removed from channel " << chan->getName() << std::endl;
-		chan->removeUser(user);
-		if (chan->isEmpty()){
-			std::list<Channel>::iterator	it = server._channels.begin();
-			for (; it != server._channels.end(); it++){
-				if (it->getName() == chan->getName()){
-					std::cout << "Channel " << chan->getName() << " deleted" << std::endl;
-					server._channels.erase(it);
-					break ;
-				}
-			}
-		}
+		if (server.getArgs().size() > 1)
+			removeUserFromChannel(chan, user, server, MESSAGE);
+		else
+			removeUserFromChannel(chan, user, server, "");
 	}
 }

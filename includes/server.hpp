@@ -19,8 +19,8 @@
 # include <string>
 # include <map>
 # include <list>
-# include "../commands/commands.hpp"
-# include "../channel.hpp"
+# include "commands.hpp"
+# include "channel.hpp"
 
 
 // maximum length of the queue of pending connections
@@ -79,9 +79,8 @@ private:
 	std::deque<std::string>			_bufferCommand;
   
   public:
-    std::list<Channel>	_channels;
-	std::deque<User>    users;
-    int                 nbUsers;
+    std::map<std::string, Channel>	_channels;
+	std::list<User>					users;
     
 /* ************************************************************************** */
 /*                              MEMBER FUNCTIONS                              */
