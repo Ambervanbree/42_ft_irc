@@ -50,9 +50,9 @@ void NICK(User &User, Server &server);
 void JOIN(User &user, Server &server);
 void MODE(User &user, Server &server);
 void PART(User &user, Server &server);
-// void TOPIC(User &User);
+void TOPIC(User &user, Server &server);
 void NAMES(User &user, Server &server);
-// void LIST(User &user);
+void LIST(User &user, Server &server);
 // void INVITE(User &user);
 // void KICK(User &user);
 

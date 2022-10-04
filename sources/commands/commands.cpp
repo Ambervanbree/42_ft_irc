@@ -223,33 +223,6 @@ void WHOWAS(std::deque<std::string> Command, User &User)
 
 /*User commands for channels:*/
 
-//TOPIC <channel> [ <topic> ]
-//-> Change or view the topic of a channel.
-void TOPIC(std::deque<std::string> Command, User &User)
-{
-	(void)Command;
-	(void)User;
-	std::cout << "TOPIC" << std::endl;
-}
-
-//NAMES [ <channel> ]
-//-> List all nicknames visible to the client. 
-void NAMES(std::deque<std::string> Command, User &User)
-{
-	(void)Command;
-	(void)User;
-	std::cout << "NAMES" << std::endl;
-}
-
-//LIST [ <channel> ]
-//-> List channels and their topics.
-void LIST(std::deque<std::string> Command, User &user)
-{
-	(void)Command;
-	(void)user;
-	std::cout << "LIST" << std::endl;
-}
-
 //INVITE <nickname> <channel>
 //-> Invite a user to a channel.
 void INVITE(std::deque<std::string> Command, User &user)

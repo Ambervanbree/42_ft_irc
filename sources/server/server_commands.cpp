@@ -27,9 +27,9 @@ void Server::_setCommands()
 	// _commands["WHOWAS"] = WHOWAS; 		x
 	// _commands["WHOIS"] = WHOIS;
 	_commands["PART"] = PART;
-	// _commands["TOPIC"] = TOPIC;
+	_commands["TOPIC"] = TOPIC;
 	_commands["NAMES"] = NAMES;
-	// _commands["LIST"] = LIST; 			x
+	_commands["LIST"] = LIST;
 	// _commands["INVITE"] = INVITE; 		x
 	// _commands["KICK"] = KICK;
 	// _commands["CONNECT"] = CONNECT;
