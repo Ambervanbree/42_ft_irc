@@ -1,11 +1,10 @@
-#include "server.hpp"
+#include "../includes/server.hpp"
 
 /* ************************************************************************** */
 /*                        CONSTRUCTORS / DESTRUCTORS                          */
 /* ************************************************************************** */
 
 Server::Server(int port, std::string password)
-
 : _port(port), _password(password), _nfds(0)  {}
 
 Server::~Server(void) {
@@ -163,6 +162,7 @@ void   Server::handleIncomingConnections(void){
 *******************************************************************************/
 bool    Server::handleEvents(bool *end_server){       
     int     i;
+    std::list<User>::iterator ite;
     // int     current_size = 0;
     bool    compress_array = false;
 
@@ -178,14 +178,19 @@ bool    Server::handleEvents(bool *end_server){
         // }
         if (_fds[i].fd == _serverSocket)
             listeningSocketEvent(end_server);
-        else
-            compress_array = clientSocketEvent(i);
+        else {
+            for(ite = users.begin(); ite != users.end(); ite++){
+                if (_fds[i].fd == (*ite).clientSocket)
+                    compress_array = clientSocketEvent(i, (*ite));
+            }
+        }
     }
     return compress_array;
 }
 
 void    Server::listeningSocketEvent(bool *end_server) {
     acceptConnections(end_server);
+    // others;
 }
 
 void    Server::acceptConnections(bool *end_server) {
@@ -205,11 +210,13 @@ void    Server::acceptConnections(bool *end_server) {
         _fds[_nfds].fd = new_fd;
         _fds[_nfds].events = POLLIN | POLLOUT;
         _nfds++;
+        User newUser(*this, new_fd, "dflt user", "dflt nick");
+        users.push_back(newUser);
     }
-    std::cout << "End of accept boucle" << std::endl;
+    // std::cout << "End of accept boucle" << std::endl;
 }
 
-bool    Server::clientSocketEvent(int i) {
+bool    Server::clientSocketEvent(int i, User &user) {
     bool    close_conn;
     char    buffer[MAX_BUFFER];
     int     ret;
@@ -241,7 +248,7 @@ bool    Server::clientSocketEvent(int i) {
                 close_conn = true;
                 break;
             }
-            _handleBuffer(buffer, _fds[i].fd);
+            _handleBuffer(buffer, user);
         }
         // if (_fds[i].revents == POLLIN) {
         // }

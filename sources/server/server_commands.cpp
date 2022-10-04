@@ -50,8 +50,7 @@ void Server::_messageToCommandStruct(std::string message){
 		_command.cmd_name = out[i++];
 	while (out[i].size() && out[i][0] != ':')
 		_command.args.push_back(out[i++]);
-	while (out[i].size())
-	{
+	while (out[i].size()){
 		_command.trailer += out[i++];
 		if (i != out.size())
 			_command.trailer += " ";
@@ -68,8 +67,8 @@ void Server::_messageToCommandStruct(std::string message){
 void Server::_clearCommandStruct(){
 	_command.prefix.clear();
 	_command.cmd_name.clear();
-	_command.trailer.clear();
 	_command.args.clear();	
+	_command.trailer.clear();
 }
 
 void Server::_launchCommand(User &user)
@@ -101,12 +100,15 @@ void Server::_splitBuffer(char *buffer)
 	}
 }
 
-void Server::_handleBuffer(char *buffer, int clientSocket)
+void Server::_handleBuffer(char *buffer, User &user)
 {
 	/*Placeholder of User who will be searched by socketId*/
-	User user;
-	(void)clientSocket;
-	std::cerr << "User nick mask: " << user.getNickMask() << std::endl;
+
+	// User user(*this, clientSocket, "dflt user", "dflt nick");
+
+	/*Here the problem is that a new user is created everytime a new command is sent*/
+
+	// std::cerr << "User nick mask: " << user.getNickMask() << std::endl;
 	_splitBuffer(buffer);
 	while (_bufferCommand.size())
 	{

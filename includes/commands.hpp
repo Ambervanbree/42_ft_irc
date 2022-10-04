@@ -5,13 +5,15 @@
 # include <vector>
 # include <string>
 # include <iostream>
-# include "channel.hpp"
-# include "user.hpp"
+// # include "channel.hpp"
+// # include "user.hpp"
 # include "utils.hpp"
 
 class Server;
+class User;
+class Channel;
 
-typedef void (*command)(User &user, Server &server);
+// typedef     void (*command)(User &user, Server &server);
 
 /*Server commands*/
 
