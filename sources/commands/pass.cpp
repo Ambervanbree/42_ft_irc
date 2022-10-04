@@ -10,6 +10,7 @@ void	PASS(User &user, Server &server)
 	(void)user;
 	if (server._command.args[0].compare(server.password))
 		std::cerr << "ERR_PASSWDMISMATCH (464)" << std::endl;
+	// RIGHT PASSWORD MESSAGE TO BE DISCARDED
 	else
 		std::cerr << "Right password !" << std::endl;
 	// ------> + close the connection

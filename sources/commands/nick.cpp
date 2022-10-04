@@ -40,11 +40,11 @@ void NICK(User &user, Server &server)
 {
 	std::cout << "Command NICK" << std::endl;
 	std::cout << "Nickname before command NICK: " << user.getNickname() << std::endl;
-	if (server._command.args.size() == 0 || (server._command.args[0] == "\0"))
+	if (server._command.args.empty()) {
 		std::cerr << "(431) ERR_NONICKNAMEGIVEN" << std::endl;
-
+		return;
+	}
 	std::string nick = server._command.args[0];
-
 	if (wrongGrammar(nick))
 		std::cerr << "(432) ERR_ERRONEUSNICKNAME" << std::endl;
 	else if (existingNick(nick, server))
@@ -52,4 +52,5 @@ void NICK(User &user, Server &server)
 	else
 		user._setNickname(nick);
 	std::cout << "Nickname after command NICK: " << user.getNickname() << std::endl;
+	return;
 }
