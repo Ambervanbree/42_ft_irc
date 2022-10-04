@@ -79,7 +79,8 @@ private:
 	std::deque<std::string>			_bufferCommand;
   
   public:
-    std::map<std::string, Channel>	_choenels;
+	Command							_command;
+	std::map<std::string, Channel>	_choenels;
 	std::list<User>					users;
     
 /* ************************************************************************** */
