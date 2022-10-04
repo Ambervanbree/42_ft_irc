@@ -14,6 +14,7 @@ class Channel{
 	private:
 		std::string					_name; 
 		std::string					_key;
+		std::string					_topic;
 		std::set<User *>			_users;
 		std::set<std::string>		_banned;
 		std::map<char, bool>		_modes;
@@ -29,6 +30,10 @@ class Channel{
 		/* Getters */
 
 		std::string		getName() const;
+
+		/* Message requests */
+
+		void			sendTopic(User &user);
 
 		/* Checkers */
 
