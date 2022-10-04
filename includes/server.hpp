@@ -19,8 +19,8 @@
 # include <string>
 # include <map>
 # include <list>
-# include "../commands/commands.hpp"
-# include "../channel.hpp"
+# include "commands.hpp"
+# include "channel.hpp"
 
 
 // maximum length of the queue of pending connections
