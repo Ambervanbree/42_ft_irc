@@ -27,15 +27,15 @@ class Channel{
 
 		/* Getters */
 
-		std::string		getName();
+		std::string		getName() const;
 
 		/* Checkers */
 
-		bool			onChannel(User &user);
-		bool			isBanned(std::string nickMask);
-		bool			isChop(std::string nickMask);
-		bool			correctKey(std::string key);
-		bool			isEmpty();
+		bool			onChannel(User &user) const;
+		bool			isBanned(std::string nickMask) const;
+		bool			isChop(std::string nickMask) const;
+		bool			correctKey(std::string key) const;
+		bool			isEmpty() const;
 
 		/* Setters */
 
@@ -46,7 +46,7 @@ class Channel{
 		/* Unsetters */
 		void 			unsetKey(std::string userNick);
 		void			unbanUser(std::string toUnban, std::string userNick);
-		void			removeUser(User &user);
+		void			removeUser(User &user, std::string message);
 
 
 };

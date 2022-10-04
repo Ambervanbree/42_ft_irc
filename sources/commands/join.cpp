@@ -7,7 +7,7 @@
 #define KEYS 		server.getArgs()[1]
 
 void		createChannel(std::string name, User &user, Server &server){
-	server._channels.push_back(Channel(name, user));
+	server._channels.insert(std::make_pair(name, Channel(name, user)));
 	/* TODO --> add replies: 
 		ERR_TOOMANYCHANNELS (405) 
 	*/
@@ -23,12 +23,29 @@ bool grammarCheckChannel(std::string name){
 	return true;
 }
 
+void partFromAllChannels(User &user, Server &server){
+	std::map<std::string, Channel>::iterator	it = server._channels.begin();
+	std::map<std::string, Channel>::iterator	ite = server._channels.end();
+	std::map<std::string, Channel>::iterator 	temp;
+
+	while (it != ite){
+		temp = it;
+		it++;
+		if (temp->second.onChannel(user))
+			removeUserFromChannel(&(temp->second), user, server, "");
+	}
+}
+
 void JOIN(User &user, Server &server)
 {
 	std::deque<std::string>	channels;
 	std::deque<std::string>	keys;
 	char 					delimiter[] = ",";
 	
+	if (CHANNELS == "0"){
+		partFromAllChannels(user, server);
+		return ;
+	}
 	split_args(CHANNELS, delimiter, channels);
 	if (server.getArgs().size() > 1)
 		split_args(KEYS, delimiter, keys);
