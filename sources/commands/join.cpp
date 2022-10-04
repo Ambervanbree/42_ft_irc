@@ -24,7 +24,7 @@ bool grammarCheckChannel(std::string name){
 }
 
 void partFromAllChannels(User &user, Server &server){
-	std::map<std::string, Channel>::iterator	it = server._channels.begin();
+	std::map<std::string, Channel>::iterator	it 	= server._channels.begin();
 	std::map<std::string, Channel>::iterator	ite = server._channels.end();
 	std::map<std::string, Channel>::iterator 	temp;
 
@@ -47,13 +47,12 @@ void JOIN(User &user, Server &server)
 		return ;
 	}
 	split_args(CHANNELS, delimiter, channels);
-	if (server.getArgs().size() > 1)
-		split_args(KEYS, delimiter, keys);
-
 	if (channels.empty()){
 		std::cerr << "ERR_NEEDMOREPARAMS (461)" << std::endl;
 		return ;
 	}
+	if (server.getArgs().size() > 1)
+		split_args(KEYS, delimiter, keys);
 	for (size_t i = 0; i < channels.size(); i++){
 		if (!grammarCheckChannel(channels[i]))
 			return ;

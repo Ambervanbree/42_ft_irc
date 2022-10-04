@@ -1,5 +1,6 @@
 #ifndef USER_HPP
 # define USER_HPP
+
 # include <string>
 # include <vector>
 # include <algorithm>
