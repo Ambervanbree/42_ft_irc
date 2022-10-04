@@ -31,6 +31,7 @@ void	userNames(User &user, Server &server){
 
 	for (; it != ite; it++){
 		if (it->onChannel(user)){
+			//replies for channel:
 			std::cout << "RPL_NAMREPLY" << std::endl;
 			std::cout << "RPL_ENDOFNAMES" << std::endl;		
 		}
@@ -38,8 +39,8 @@ void	userNames(User &user, Server &server){
 }
 
 void NAMES(User &user, Server &server){
-	if (!CHANNELS.empty())
-		channelNames(server);
-	else
+	if (CHANNELS.empty())
 		userNames(user, server);
+	else
+		channelNames(server);
 }

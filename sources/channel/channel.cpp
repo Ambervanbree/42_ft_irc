@@ -40,25 +40,25 @@ void			Channel::initModes(){
 /*  Getters
 *******************************************************************************/
 
-std::string		Channel::getName() {return _name; }
+std::string		Channel::getName() const {return _name; }
 
 /******************************************************************************/
 /*  Checkers
 *******************************************************************************/
 
-bool			Channel::onChannel(User &user){
+bool			Channel::onChannel(User &user) const {
 	return (_users.find(&user) != _users.end());
 }
 
-bool			Channel::isBanned(std::string nickMask){
+bool			Channel::isBanned(std::string nickMask) const {
 	return (_banned.find(nickMask) != _banned.end());
 }
 
-bool			Channel::isChop(std::string nickMask){
+bool			Channel::isChop(std::string nickMask) const {
 	return (_chop.find(nickMask) != _chop.end());
 }
 
-bool			Channel::correctKey(std::string key) {
+bool			Channel::correctKey(std::string key) const {
 	/* 	
 		If key mode is set, mode argument will be cross referenced with the
 		given key, else it will be ignored, so true is returned.
@@ -70,7 +70,7 @@ bool			Channel::correctKey(std::string key) {
 	return true;
 }
 
-bool			Channel::isEmpty(){
+bool			Channel::isEmpty() const {
 	return (_users.size() == 0);
 }
 
@@ -164,4 +164,17 @@ void			Channel::removeUser(User &user, std::string message){
 	else
 		std::cout << std::endl;
 	_users.erase(&user);
+}
+
+
+/******************************************************************************/
+/*  Non member overload
+*******************************************************************************/
+
+bool			operator<(const Channel &lhs, const Channel &rhs){
+	return lhs.getName() < rhs.getName();
+}
+
+bool			operator==(const Channel &lhs, const Channel &rhs){
+	return lhs.getName() == rhs.getName();
 }
