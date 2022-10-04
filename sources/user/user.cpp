@@ -54,6 +54,7 @@ bool	User::getRegistered() const { return _isRegistered; }
 /*Setters*/
 void				User::_setNickname(const std::string &nick) { _nickName = nick; }
 void				User::_setUsername(const std::string &user) { _userName = user; }
+void				User::_setRealname(const std::string &realname) { _realName =  realname; }
 void				User::_setAddr(const struct sockaddr_in &addr) { _clientAddr = addr; }
 void				User::_setSocket(const int &socket) { clientSocket = socket; }
 

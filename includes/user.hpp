@@ -51,6 +51,7 @@ class User
 
 		struct sockaddr_in	_clientAddr;
 		std::string			_userName;
+		std::string			_realName;
 		std::string			_nickName;
 		std::string			_hostName;
 		int					_port;
@@ -60,6 +61,7 @@ class User
 
 	public:
 		void		_setUsername(const std::string &username);
+		void		_setRealname(const std::string &username);
 		void		_setNickname(const std::string &nick);
 		void		_setAddr(const struct sockaddr_in &addr);
 		void		_setSocket(const int &socket);
