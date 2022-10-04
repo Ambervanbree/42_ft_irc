@@ -71,7 +71,6 @@ private:
 
 private:
     int                 _port;
-    std::string         _password;
     int                 _serverSocket;
     struct sockaddr_in  _serverAddr;
     int                 _timeout;
@@ -85,6 +84,7 @@ private:
 	Command							_command;
 	std::map<std::string, Channel>	_choenels;
 	std::list<User>					users;
+    std::string                     password;
     
 /* ************************************************************************** */
 /*                              MEMBER FUNCTIONS                              */

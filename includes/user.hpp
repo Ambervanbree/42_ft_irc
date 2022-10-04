@@ -15,14 +15,14 @@ class Server;
 class User
 {
 	public:
-		User(Server &s, const int &socket);
+		User(const int &socket);
 		User(const User &other);
 		~User();
 
 		std::string			getPass() const;
 		std::string			getUsername() const;
 		std::string			getNickname() const;
-		// struct sockaddr_in	getAddr() const;
+		struct sockaddr_in	getAddr() const;
 		int					getSocket() const;
 		std::string			getHost() const;
 		int					getPort() const;
@@ -33,7 +33,6 @@ class User
 		User();
 		User &operator=(const User &other);
 
-		Server*				_server;
 		struct sockaddr_in	_clientAddr;
 		std::string			_userName;
 		std::string			_nickName;
@@ -44,7 +43,6 @@ class User
 		int					clientSocket;
 
 	public:
-		void		_setPass(const std::string &pass);
 		void		_setUsername(const std::string &username);
 		void		_setNickname(const std::string &nick);
 		void		_setAddr(const struct sockaddr_in &addr);

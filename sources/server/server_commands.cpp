@@ -2,7 +2,7 @@
 
 void Server::_setCommands()
 {
-	// _commands["PASS"] = PASS;
+	_commands["PASS"] = PASS;
 	_commands["NICK"] = NICK;
 	// _commands["PING"] = PING;
 	// _commands["PONG"] = PONG;
