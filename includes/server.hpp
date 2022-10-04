@@ -79,9 +79,8 @@ private:
 	std::deque<std::string>			_bufferCommand;
   
   public:
-	Command				_command;
-    std::list<Channel>	_channels;
-	std::list<User>     users;
+    std::map<std::string, Channel>	_choenels;
+	std::list<User>					users;
     
 /* ************************************************************************** */
 /*                              MEMBER FUNCTIONS                              */
