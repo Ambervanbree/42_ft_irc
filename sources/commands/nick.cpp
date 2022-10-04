@@ -1,5 +1,6 @@
 #include "user.hpp"
 #include "server.hpp"
+// #include <string>
 
 // NICK <nickname> <hopcount> <username> <host> <servertoken> <umode> <realname>
 // -> Combination of NICK (the user version), USER and MODE.
@@ -9,8 +10,19 @@
 - change nick : :<nick> USER <newnick>*/
 
 int	wrongGrammar(const std::string &nick) {
+	char forbidden[] = {' ', ',', '*', '?', '!', '@', '.'};
+	char wrongStart[] = {'&', ':', '#'};
+	unsigned long i = 0;
+
 	if (nick.length() > 9)
 		return 1;
+	if ((nick[0] == wrongStart[0]) || nick[0] == wrongStart[1]
+		|| nick[0] == wrongStart[2])
+		return 1;
+	for(; i < sizeof(forbidden); i++) {
+		if (nick.find(forbidden[i]) != std::string::npos)
+			return 1;
+	}
 	return 0;
 }
 
