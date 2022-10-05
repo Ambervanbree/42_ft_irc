@@ -31,15 +31,15 @@ class User
 		std::string			getPrefix() const;
 		std::string			getNickMask() const;
 
-		void	setPassRegistered(const bool passRegister);
-		void	setNickRegistered(const bool nickRegister);
-		void	setUserRegistered(const bool userRegister);
-		void	setRegistered(const bool setRegister);
+		// void	setPassRegistered(const bool passRegister);
+		// void	setNickRegistered(const bool nickRegister);
+		// void	setUserRegistered(const bool userRegister);
+		// void	setRegistered(const bool setRegister);
 
-		bool	getPassRegistered() const;
-		bool	getNickRegistered() const;
-		bool	getUserRegistered() const;
-		bool	getRegistered() const;
+		// bool	getPassRegistered() const;
+		// bool	getNickRegistered() const;
+		// bool	getUserRegistered() const;
+		// bool	getRegistered() const;
 
 		void	setBuffer(const std::string &buf);
 		void	resetBuffer();
@@ -68,14 +68,16 @@ class User
 		
 		std::string			_buffer;
 
-		bool	_isPassRegistered;
-		bool	_isNickRegistered;
-		bool	_isUserRegistered;
+		bool	_isPassChecked;
+		// bool	_isNickRegistered;
+		// bool	_isUserRegistered;
 		bool	_isRegistered;
 
 		void		_setHost();
 		void		_setPort();
-		void		_initRegister();
+		// void		_initRegister();
+
+		bool		operator==(const User& y);
 };
 
 #endif
