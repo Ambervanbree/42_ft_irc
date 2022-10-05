@@ -9,8 +9,11 @@
 #define NEWTOPIC 	server._command.trailer
 
 void TOPIC(User &user, Server &server){
+<<<<<<< HEAD
 	if (!user.getRegistered())
 		return ;
+=======
+>>>>>>> 3510727 (first version invite)
 	if (CHANNEL.empty()){
 		std::cerr << "ERR_NEEDMOREPARAMS (461)" << std::endl; 
 		return ;

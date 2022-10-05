@@ -35,8 +35,11 @@ void	allNamesUser(User &user, Server &server){
 }
 
 void NAMES(User &user, Server &server){
+<<<<<<< HEAD
 	if (!user.getRegistered())
 		return ;
+=======
+>>>>>>> 3510727 (first version invite)
 	if (ARGUMENTS.empty())
 		allNamesUser(user, server);
 	else

@@ -74,6 +74,18 @@ void			Channel::sendList(User &user){
 	std::cout << "RPL_LISTEND (323)" << std::endl;
 }
 
+void			Channel::sendInvite(std::string toInvite, User &user){
+	// if (!isChop(user.getNickMask())){
+	// 	std::cerr << "ERR_CHANOPRIVSNEEDED (482)" << std::endl;
+	// 	return ;			
+	// } ---> TODO if we handle mode 'i'
+	(void)user;
+	_invite.insert(toInvite);
+	// RPL sent to user:
+	std::cout << "RPL_LIST (322)" << std::endl;
+}
+
+
 /******************************************************************************/
 /*  Checkers
 *******************************************************************************/
@@ -88,9 +100,15 @@ bool			Channel::onChannel(std::string nickName) const {
 
 	for (; it != ite; it++){
 		if ((*it)->getNickname() == nickName)
+<<<<<<< HEAD
 			return true ;
 	}
 	return false ;
+=======
+			return false ;
+	}
+	return true ;
+>>>>>>> 3510727 (first version invite)
 }
 
 bool			Channel::isBanned(std::string nickMask) const {
@@ -179,12 +197,20 @@ void			Channel::setTopic(std::string newTopic, std::string nickMask){
 	if (newTopic == ":"){
 		_topic.clear();
 		// send to channel:
+<<<<<<< HEAD
 		std::cout << "[+] MODE message: Topic is cleared" << std::endl;
+=======
+		std::cout << "Topic is cleared" << std::endl;
+>>>>>>> 3510727 (first version invite)
 	}
 	else{
 		_topic = newTopic.erase(0, 1);
 		// send to channel:
+<<<<<<< HEAD
 		std::cout << "[+] MODE message: New channel topic: " << _topic << std::endl;
+=======
+		std::cout << "Channel message new topic: " << _topic << std::endl;
+>>>>>>> 3510727 (first version invite)
 	}
 }
 
