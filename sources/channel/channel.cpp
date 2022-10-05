@@ -8,7 +8,7 @@ Channel::Channel(std::string name, User &user) : _name(name) {
 	initModes();
 	_users.insert(&user);
 	std::cout << "JOIN message from " << user.getNickname() << " on new channel " << getName() << std::endl;
-	_chop.insert(user.getNickname());
+	_chop.insert(user.getNickMask());
 };
 
 Channel::~Channel() {};
@@ -164,6 +164,7 @@ void			Channel::setTopic(std::string newTopic, std::string userNick){
 		return ;
 	}
 	_topic = newTopic;
+	std::cout << "Channel message new topic: " << _topic << std::endl;
 	// channel message TOPIC? TODO
 }
 
