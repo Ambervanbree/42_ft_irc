@@ -8,7 +8,7 @@ Channel::Channel(std::string name, User &user) : _name(name) {
 	initModes();
 	_users.insert(&user);
 	std::cout << "JOIN message from " << user.getNickname() << " on new channel " << getName() << std::endl;
-	_chop.insert(user.getNickname());
+	_chop.insert(user.getNickMask());
 };
 
 Channel::~Channel() {};
@@ -54,6 +54,7 @@ void			Channel::sendTopic(User &user){
 	}
 	else{
 		std::cout << "RPL_TOPIC (332)" << std::endl;
+		std::cout << "RPL_TOPICWHOTIME (333)" << std::endl;
 		return ;
 	}
 }
@@ -71,6 +72,14 @@ void			Channel::sendList(User &user){
 	std::cout << "RPL_LIST (322)" << std::endl;
 	std::cout << "RPL_LISTEND (323)" << std::endl;
 }
+
+void			Channel::sendTopic(User &user){
+	(void)user;
+	// RPL sent to user:
+	std::cout << "RPL_LIST (322)" << std::endl;
+	std::cout << "RPL_LISTEND (323)" << std::endl;
+}
+
 
 
 /******************************************************************************/
@@ -114,11 +123,11 @@ void			Channel::addUser(std::string key, User &user){
 		std::cerr << "ERR_USERONCHANNEL (443)" << std::endl;
 		return ;
 	}
-	if (isBanned(user.getNickname())){
+	if (isBanned(user.getNickMask())){
 		std::cerr << "ERR_BANNEDFROMCHAN (474)" << std::endl;
 		return ; 
 	}
-	if (key.size() && !correctKey(key)){
+	if (_modes['k'] == true && !correctKey(key)){
 		std::cerr << "ERR_BADCHANNELKEY (475)" << std::endl;
 		return ;
 	}
@@ -136,18 +145,18 @@ void			Channel::addUser(std::string key, User &user){
 	*/
 }
 
-void			Channel::setKey(std::string key, std::string nickMask) {
+void			Channel::setKey(std::string newKey, std::string nickMask) {
 	if (!isChop(nickMask)){
 		std::cerr << "ERR_CHANOPRIVSNEEDED (482)" << std::endl;
 		return ;		
 	}
-	std::cout << "Set key to: " << key << std::endl;
-	_key = key;
+	std::cout << "Set key to: " << newKey << std::endl;
+	_key = newKey;
 	_modes['k'] = true ;
 }
 
-void			Channel::banUser(std::string toBan, std::string userNick){
-	if (!isChop(userNick)){
+void			Channel::banUser(std::string toBan, std::string nickMask){
+	if (!isChop(nickMask)){
 		std::cerr << "ERR_CHANOPRIVSNEEDED (482)" << std::endl;
 		return ;		
 	}
@@ -158,21 +167,25 @@ void			Channel::banUser(std::string toBan, std::string userNick){
 	_modes['b'] = true;
 }
 
-void			Channel::setTopic(std::string newTopic, std::string userNick){
-	if (!isChop(userNick)){
-		std::cerr << "ERR_CHANOPRIVSNEEDED (482)" << std::endl;
-		return ;
-	}
-	_topic = newTopic;
-	// channel message TOPIC? TODO
+void			Channel::setTopic(std::string newTopic, std::string nickMask){
+	// if (_modes['t'] == true && !isChop(nickMask)){
+	// 	std::cerr << "ERR_CHANOPRIVSNEEDED (482)" << std::endl;
+	// 	return ;
+	// }
+	if (newTopic == ":")
+		_topic.clear();
+	else
+		_topic = newTopic;
+	// send to channel:
+	std::cout << "Channel message new topic: " << _topic << std::endl;
 }
 
 /******************************************************************************/
 /*  Unsetters
 *******************************************************************************/
 
-void 			Channel::unsetKey(std::string userNick){
-	if (!isChop(userNick)){
+void 			Channel::unsetKey(std::string nickMask){
+	if (!isChop(nickMask)){
 		std::cerr << "ERR_CHANOPRIVSNEEDED (482)" << std::endl;
 		return ;		
 	}
@@ -183,8 +196,8 @@ void 			Channel::unsetKey(std::string userNick){
 	}
 }
 
-void			Channel::unbanUser(std::string toUnban, std::string userNick){
-	if (!isChop(userNick)){
+void			Channel::unbanUser(std::string toUnban, std::string nickMask){
+	if (!isChop(nickMask)){
 		std::cerr << "ERR_CHANOPRIVSNEEDED (482)" << std::endl;
 		return ;		
 	}

@@ -136,7 +136,7 @@ void	userMode(){
 
 void MODE(User &user, Server &server){
 	if (TARGET[0] == '#')
-		channelMode(user.getNickname(), server);
+		channelMode(user.getNickMask(), server);
 	else
 		userMode();
 }
