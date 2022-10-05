@@ -163,7 +163,10 @@ void			Channel::setTopic(std::string newTopic, std::string userNick){
 		std::cerr << "ERR_CHANOPRIVSNEEDED (482)" << std::endl;
 		return ;
 	}
-	_topic = newTopic;
+	if (newTopic == ":")
+		_topic.clear();
+	else
+		_topic = newTopic;
 	std::cout << "Channel message new topic: " << _topic << std::endl;
 	// channel message TOPIC? TODO
 }
@@ -172,8 +175,8 @@ void			Channel::setTopic(std::string newTopic, std::string userNick){
 /*  Unsetters
 *******************************************************************************/
 
-void 			Channel::unsetKey(std::string userNick){
-	if (!isChop(userNick)){
+void 			Channel::unsetKey(std::string userNickMask){
+	if (!isChop(userNickMask)){
 		std::cerr << "ERR_CHANOPRIVSNEEDED (482)" << std::endl;
 		return ;		
 	}

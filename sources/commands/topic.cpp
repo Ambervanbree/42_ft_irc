@@ -10,6 +10,7 @@
 
 void TOPIC(User &user, Server &server){
 	std::cout << "New topic: [" << NEWTOPIC << "]" << std::endl;
+	std::cout << "Channel: [" << CHANNEL << "]" << std::endl;
 
 	if (CHANNEL.empty()){
 		std::cerr << "ERR_NEEDMOREPARAMS (461)" << std::endl; 
@@ -28,5 +29,4 @@ void TOPIC(User &user, Server &server){
 		chan->sendTopic(user);
 	else
 		chan->setTopic(NEWTOPIC, user.getNickMask());
-	/// QUESTION. Is there a difference between an empty trailer and no trailer? 
 }
