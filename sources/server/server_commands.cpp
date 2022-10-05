@@ -46,15 +46,19 @@ void Server::_messageToCommandStruct(std::string message){
 	unsigned int i = 0;
 	if (out[i].size() && out[i][0] == ':')
 		_command.prefix = out[i++];
-	if (out[i].size() && out[i][0] != ':')
+	if (i < out.size() && out[i].size() && out[i][0] != ':')
 		_command.cmd_name = out[i++];
-	while (out[i].size() && out[i][0] != ':')
+	while (i < out.size() && out[i].size() && out[i][0] != ':')
 		_command.args.push_back(out[i++]);
-	while (out[i].size()){
+	while (i < out.size() && out[i].size()){
 		_command.trailer += out[i++];
 		if (i != out.size())
 			_command.trailer += " ";
 	}
+	out.clear();
+	for (unsigned int i = 0; i < _command.cmd_name.size(); i++)
+		_command.cmd_name[i] = std::toupper(_command.cmd_name[i]);
+
 	std::cerr << "\n------ Command struct details -----\n";
 	std::cerr << "Prefix: " << _command.prefix << std::endl;
 	std::cerr << "Command_name: " << _command.cmd_name << std::endl;
