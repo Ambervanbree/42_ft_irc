@@ -5,13 +5,13 @@
 
 // NAMES [ <channel> ]
 
-#define CHANNELS	 	server.getArgs()[0]
+#define ARGUMENTS	 	server.getArgs()
 
 void	channelNames(User &user, Server &server){
 	std::deque<std::string>	channels;
 	char 					delimiter[] = ",";
 
-	split_args(CHANNELS, delimiter, channels);
+	split_args(ARGUMENTS[0], delimiter, channels);
 	
 	std::deque<std::string>::iterator	it = channels.begin();
 	std::deque<std::string>::iterator	ite = channels.end();
@@ -35,7 +35,7 @@ void	allNamesUser(User &user, Server &server){
 }
 
 void NAMES(User &user, Server &server){
-	if (CHANNELS.empty())
+	if (ARGUMENTS.empty())
 		allNamesUser(user, server);
 	else
 		channelNames(user, server);

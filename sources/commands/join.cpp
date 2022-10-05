@@ -3,6 +3,7 @@
 #include "server.hpp"
 #include "commands.hpp"
 
+#define ARGUMENTS 	server.getArgs()
 #define CHANNELS 	server.getArgs()[0]
 #define KEYS 		server.getArgs()[1]
 
@@ -42,13 +43,13 @@ void JOIN(User &user, Server &server)
 	std::deque<std::string>	keys;
 	char 					delimiter[] = ",";
 	
-	if (CHANNELS == "0"){
-		partFromAllChannels(user, server);
+	if (ARGUMENTS.empty()){
+		std::cerr << "ERR_NEEDMOREPARAMS (461)" << std::endl;
 		return ;
 	}
 	split_args(CHANNELS, delimiter, channels);
-	if (channels.empty()){
-		std::cerr << "ERR_NEEDMOREPARAMS (461)" << std::endl;
+	if (CHANNELS == "0"){
+		partFromAllChannels(user, server);
 		return ;
 	}
 	if (server.getArgs().size() > 1)

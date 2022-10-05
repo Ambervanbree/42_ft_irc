@@ -9,6 +9,7 @@ Channel::Channel(std::string name, User &user) : _name(name) {
 	_users.insert(&user);
 	std::cout << "JOIN message from " << user.getNickname() << " on new channel " << getName() << std::endl;
 	_chop.insert(user.getNickMask());
+	// TODO --> If chop sends messages associated with a channel, @ is prefixed to its nickname
 };
 
 Channel::~Channel() {};
@@ -73,12 +74,35 @@ void			Channel::sendList(User &user){
 	std::cout << "RPL_LISTEND (323)" << std::endl;
 }
 
+void			Channel::sendInvite(std::string toInvite, User &user){
+	// if (!isChop(user.getNickMask())){
+	// 	std::cerr << "ERR_CHANOPRIVSNEEDED (482)" << std::endl;
+	// 	return ;			
+	// } ---> TODO if we handle mode 'i'
+	(void)user;
+	_invite.insert(toInvite);
+	// RPL sent to user:
+	std::cout << "RPL_LIST (322)" << std::endl;
+}
+
+
 /******************************************************************************/
 /*  Checkers
 *******************************************************************************/
 
 bool			Channel::onChannel(User &user) const {
 	return (_users.find(&user) != _users.end());
+}
+
+bool			Channel::onChannel(std::string nickName) const {
+	std::set<User *>::iterator	it = _users.begin();
+	std::set<User *>::iterator	ite = _users.end();
+
+	for (; it != ite; it++){
+		if ((*it)->getNickname() == nickName)
+			return false ;
+	}
+	return true ;
 }
 
 bool			Channel::isBanned(std::string nickMask) const {
@@ -164,12 +188,16 @@ void			Channel::setTopic(std::string newTopic, std::string nickMask){
 	// 	return ;
 	// }
 	(void) nickMask; // TODO Will use this later, if I implement mode 't'
-	if (newTopic == ":")
+	if (newTopic == ":"){
 		_topic.clear();
-	else
-		_topic = newTopic;
-	// send to channel:
-	std::cout << "Channel message new topic: " << _topic << std::endl;
+		// send to channel:
+		std::cout << "Topic is cleared" << std::endl;
+	}
+	else{
+		_topic = newTopic.erase(0, 1);
+		// send to channel:
+		std::cout << "Channel message new topic: " << _topic << std::endl;
+	}
 }
 
 /******************************************************************************/

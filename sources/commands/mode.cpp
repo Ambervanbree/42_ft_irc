@@ -98,10 +98,10 @@ void	fillModeStruct(Mode &mode, std::string nickMask, Channel *channel, Server &
 	mode.modeString 	= MODESTRING;
 	mode.nickMask 		= nickMask;
 	mode.argNr			= 0;
-	size_t args 		= server.getArgs().size();
+	size_t args 		= server.getArgs().size() - 2;
 	std::string			temp;
 
-	for (size_t i = 0; i < args && i < 3; i++){
+	for (size_t i = 0; i < args; i++){
 		temp = server.getArgs()[i+2];
 		if (temp[0] == '+' || temp[0] == '-')
 			mode.modeString.append(temp);
@@ -117,7 +117,7 @@ void	channelMode(std::string nickMask, Server &server){
 		std::cerr << "ERR_NOSUCHCHANNEL (403)" << std::endl;
 		return ;	
 	}
-	if (MODESTRING.empty()){
+	if (server.getArgs().size() < 2){
 		std::cout << "RPL_CHANNELMODEIS (324)" << std::endl;
 		return ;
 	}
@@ -129,12 +129,16 @@ void	channelMode(std::string nickMask, Server &server){
 }
 
 void	userMode(){
-	std::cerr << "ERR_UNKNOWNMODE (472)" << std::endl;
-	std::cout << "RPL_CHANNELMODEIS (324)" << std::endl;
+	std::cerr << "ERR_UMODEUNKNOWNFLAG (501)" << std::endl;
+	std::cerr << "RPL_UMODEIS (221)" << std::endl;
 	return ;
 }
 
 void MODE(User &user, Server &server){
+	if (server.getArgs().empty()){
+		std::cout << "ERR_NEEDMOREPARAMS (461)" << std::endl;
+		return ;		
+	}
 	if (TARGET[0] == '#')
 		channelMode(user.getNickMask(), server);
 	else

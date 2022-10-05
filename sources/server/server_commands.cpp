@@ -30,7 +30,7 @@ void Server::_setCommands()
 	_commands["TOPIC"] = TOPIC;
 	_commands["NAMES"] = NAMES;
 	_commands["LIST"] = LIST;
-	// _commands["INVITE"] = INVITE; 		x
+	_commands["INVITE"] = INVITE;
 	// _commands["KICK"] = KICK;
 	// _commands["CONNECT"] = CONNECT;
 	// _commands["KILL"] = KILL;
