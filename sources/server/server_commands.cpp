@@ -107,15 +107,17 @@ void Server::_splitBuffer(std::string buffer)
 
 void Server::_handleBuffer(char *buffer, User &user)
 {
-	/*Placeholder of User who will be searched by socketId*/
-
-	if (buffer[strlen(buffer) - 1] == '\n')
+	user.setBuffer(std::string(buffer));
+	std::string newBuffer = user.getBuffer();
+	
+	if (newBuffer[newBuffer.size() - 1] == '\n')
 	{
-		_splitBuffer(std::string(buffer));
+		_splitBuffer(std::string(newBuffer));
 		while (_bufferCommand.size())
 		{
 			interpretCommand(_bufferCommand[0], user);
 			_bufferCommand.pop_front();
 		}
+		user.resetBuffer();
 	}
 }
