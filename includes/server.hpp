@@ -21,6 +21,8 @@
 # include <list>
 # include "commands.hpp"
 # include "channel.hpp"
+# include "replies.hpp"
+
 
 // maximum length of the queue of pending connections
 # define MAX_CONNECTS   5

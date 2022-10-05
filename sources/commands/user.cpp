@@ -1,6 +1,6 @@
 #include "user.hpp"
 #include "server.hpp"
-#include<string>
+#include <string>
 
 // USER <username> <unused> <unused> :<realname>
 
@@ -27,5 +27,7 @@ void USER(User &user, Server &server)
 	user.setRealname(realname.erase(0, 1));
 	user.setRegistered();
 	std::cerr << "(001) RPL_WELCOME" << std::endl;
+	std::cerr << RPL_WELCOME(user.getNickname(), user.getNickMask());
+	std::cerr << std::endl;
 	return;
 }
