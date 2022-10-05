@@ -73,15 +73,6 @@ void			Channel::sendList(User &user){
 	std::cout << "RPL_LISTEND (323)" << std::endl;
 }
 
-void			Channel::sendTopic(User &user){
-	(void)user;
-	// RPL sent to user:
-	std::cout << "RPL_LIST (322)" << std::endl;
-	std::cout << "RPL_LISTEND (323)" << std::endl;
-}
-
-
-
 /******************************************************************************/
 /*  Checkers
 *******************************************************************************/
@@ -172,6 +163,7 @@ void			Channel::setTopic(std::string newTopic, std::string nickMask){
 	// 	std::cerr << "ERR_CHANOPRIVSNEEDED (482)" << std::endl;
 	// 	return ;
 	// }
+	(void) nickMask; // TODO Will use this later, if I implement mode 't'
 	if (newTopic == ":")
 		_topic.clear();
 	else
