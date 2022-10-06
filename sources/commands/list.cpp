@@ -5,13 +5,13 @@
 
 // LIST [ <channel> ]
 
-#define CHANNELS	 	server.getArgs()[0]
+#define ARGUMENTS	 	server.getArgs()
 
 void	channelList(User &user, Server &server){
 	std::deque<std::string>	channels;
 	char 					delimiter[] = ",";
 
-	split_args(CHANNELS, delimiter, channels);	
+	split_args(ARGUMENTS[0], delimiter, channels);	
 	std::deque<std::string>::iterator	it = channels.begin();
 	std::deque<std::string>::iterator	ite = channels.end();
 	Channel		*temp;
@@ -34,7 +34,9 @@ void	allListsUser(User &user, Server &server){
 }
 
 void LIST(User &user, Server &server){
-	if (CHANNELS.empty())
+	if (!user.getRegistered())
+		return ;
+	if (ARGUMENTS.empty())
 		allListsUser(user, server);
 	else
 		channelList(user, server);

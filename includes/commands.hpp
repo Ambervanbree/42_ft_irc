@@ -54,7 +54,7 @@ void PART(User &user, Server &server);
 void TOPIC(User &user, Server &server);
 void NAMES(User &user, Server &server);
 void LIST(User &user, Server &server);
-// void INVITE(User &user);
+void INVITE(User &user, Server &server);
 // void KICK(User &user);
 
 /*Operator commands:*/

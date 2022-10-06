@@ -9,6 +9,8 @@
 
 void PART(User &user, Server &server)
 {
+	if (!user.getRegistered())
+		return ;
 	if (server.getArgs().empty()){
 		std::cerr << "ERR_NEEDMOREPARAMS (461)" << std::endl;
 		return ;

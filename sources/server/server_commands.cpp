@@ -30,7 +30,7 @@ void Server::_setCommands()
 	_commands["TOPIC"] = TOPIC;
 	_commands["NAMES"] = NAMES;
 	_commands["LIST"] = LIST;
-	// _commands["INVITE"] = INVITE; 		x
+	_commands["INVITE"] = INVITE;
 	// _commands["KICK"] = KICK;
 	// _commands["CONNECT"] = CONNECT;
 	// _commands["KILL"] = KILL;
@@ -46,15 +46,19 @@ void Server::_messageToCommandStruct(std::string message){
 	unsigned int i = 0;
 	if (out[i].size() && out[i][0] == ':')
 		_command.prefix = out[i++];
-	if (out[i].size() && out[i][0] != ':')
+	if (i < out.size() && out[i].size() && out[i][0] != ':')
 		_command.cmd_name = out[i++];
-	while (out[i].size() && out[i][0] != ':')
+	while (i < out.size() && out[i].size() && out[i][0] != ':')
 		_command.args.push_back(out[i++]);
-	while (out[i].size()){
+	while (i < out.size() && out[i].size()){
 		_command.trailer += out[i++];
 		if (i != out.size())
 			_command.trailer += " ";
 	}
+	out.clear();
+	for (unsigned int i = 0; i < _command.cmd_name.size(); i++)
+		_command.cmd_name[i] = std::toupper(_command.cmd_name[i]);
+
 	std::cerr << "\n------ Command struct details -----\n";
 	std::cerr << "Prefix: " << _command.prefix << std::endl;
 	std::cerr << "Command_name: " << _command.cmd_name << std::endl;
@@ -103,15 +107,17 @@ void Server::_splitBuffer(std::string buffer)
 
 void Server::_handleBuffer(char *buffer, User &user)
 {
-	/*Placeholder of User who will be searched by socketId*/
-
-	if (buffer[strlen(buffer) - 1] == '\n')
+	user.setBuffer(std::string(buffer));
+	std::string newBuffer = user.getBuffer();
+	
+	if (newBuffer[newBuffer.size() - 1] == '\n')
 	{
-		_splitBuffer(std::string(buffer));
+		_splitBuffer(std::string(newBuffer));
 		while (_bufferCommand.size())
 		{
 			interpretCommand(_bufferCommand[0], user);
 			_bufferCommand.pop_front();
 		}
+		user.resetBuffer();
 	}
 }
