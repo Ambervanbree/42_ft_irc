@@ -148,35 +148,24 @@ void			Channel::addUser(std::string key, User &user){
 	*/
 }
 
-void			Channel::setKey(std::string newKey, std::string nickMask) {
-	if (!isChop(nickMask)){
-		std::cerr << "ERR_CHANOPRIVSNEEDED (482)" << std::endl;
-		return ;		
-	}
-	std::cout << "[+] MODE message: Set key to: " << newKey << std::endl;
+void			Channel::setKey(std::string newKey) {
 	_key = newKey;
 	_modes['k'] = true ;
+	// send to channel:
+	std::cout << "[+] MODE message: Set key to: " << _key << std::endl;
 }
 
-void			Channel::banUser(std::string toBan, std::string nickMask){
-	if (!isChop(nickMask)){
-		std::cerr << "ERR_CHANOPRIVSNEEDED (482)" << std::endl;
-		return ;		
-	}
+void			Channel::banUser(std::string toBan){
 	if (isBanned(toBan))
 		return ;
-	std::cout << "[+] MODE message: Banned user: " << toBan << std::endl;
 	_banned.insert(toBan);
 	_modes['b'] = true;
+	// send to channel:
+	std::cout << "[+] MODE message: Banned user: " << toBan << std::endl;
 }
 
-void			Channel::setTopic(std::string newTopic, std::string nickMask){
-	// if (_modes['t'] == true && !isChop(nickMask)){
-	// 	std::cerr << "ERR_CHANOPRIVSNEEDED (482)" << std::endl;
-	// 	return ;
-	// }
-	(void)nickMask; // TODO --> this is needed if mode 't' is implemented
-	if (newTopic == ":")
+void			Channel::setTopic(std::string newTopic){
+	if (newTopic == ":"){
 		_topic.clear();
 		// send to channel:
 		std::cout << "[+] MODE message: Topic is cleared" << std::endl;
@@ -204,11 +193,7 @@ void 			Channel::unsetKey(std::string nickMask){
 	}
 }
 
-void			Channel::unbanUser(std::string toUnban, std::string nickMask){
-	if (!isChop(nickMask)){
-		std::cerr << "ERR_CHANOPRIVSNEEDED (482)" << std::endl;
-		return ;		
-	}
+void			Channel::unbanUser(std::string toUnban){
 	if (_banned.erase(toUnban)){
 		if (_banned.empty())
 			_modes['b'] = false;

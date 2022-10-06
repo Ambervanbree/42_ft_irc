@@ -27,5 +27,5 @@ void TOPIC(User &user, Server &server){
 	if (!server._command.trailer.empty())
 		chan->sendTopic(user);
 	else
-		chan->setTopic(NEWTOPIC, user.getNickMask());
+		chan->setTopic(NEWTOPIC);
 }

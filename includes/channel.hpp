@@ -50,13 +50,13 @@ class Channel{
 		/* Setters */
 
 		void			addUser(std::string key, User &user);
-		void			setKey(std::string key, std::string userMask);
-		void			banUser(std::string toBan, std::string userNick);
-		void			setTopic(std::string newTopic, std::string userNick);
+		void			setKey(std::string key);
+		void			banUser(std::string toBan);
+		void			setTopic(std::string newTopic);
 
 		/* Unsetters */
 		void 			unsetKey(std::string userNick);
-		void			unbanUser(std::string toUnban, std::string userNick);
+		void			unbanUser(std::string toUnban);
 		void			removeUser(User &user, std::string message);
 };
 
