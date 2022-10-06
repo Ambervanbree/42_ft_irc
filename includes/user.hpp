@@ -31,15 +31,15 @@ class User
 		std::string			getPrefix() const;
 		std::string			getNickMask() const;
 
-		// void	setPassRegistered(const bool passRegister);
+		void	setPassChecked(void);
 		// void	setNickRegistered(const bool nickRegister);
 		// void	setUserRegistered(const bool userRegister);
-		// void	setRegistered(const bool setRegister);
+		void	setRegistered(void);
 
-		// bool	getPassRegistered() const;
+		bool	getPassChecked() const;
 		// bool	getNickRegistered() const;
 		// bool	getUserRegistered() const;
-		// bool	getRegistered() const;
+		bool	getRegistered() const;
 
 		void	setBuffer(const std::string &buf);
 		void	resetBuffer();
@@ -55,6 +55,10 @@ class User
 		std::string			_nickName;
 		std::string			_hostName;
 		int					_port;
+		bool				_isPassChecked;
+		// bool				_isNickRegistered;
+		// bool				_isUserRegistered;
+		bool				_isRegistered;
 		
 	public:
 		int					clientSocket;
@@ -68,10 +72,6 @@ class User
 		
 		std::string			_buffer;
 
-		bool	_isPassChecked;
-		// bool	_isNickRegistered;
-		// bool	_isUserRegistered;
-		bool	_isRegistered;
 
 		void		_setHost();
 		void		_setPort();

@@ -27,6 +27,9 @@ int main(int argc, char *argv[])
 	Server s(port, std::string(argv[2]));
 	std::string message = argv[2];
 
+	std::cout << "TEST begin" << std::endl;
+	std::cout << (s.users.begin() == s.users.end()) << std::endl;
+	std::cout << "TEST PASSED" << std::endl;
 	// User user;
 	s.start();
 	// s.interpretCommand(message, user);

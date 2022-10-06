@@ -50,10 +50,10 @@ std::string			User::getPrefix() const
 	return prefix;
 }
 
-// bool	User::getPassRegistered() const { return _isPassRegistered; }
+bool	User::getPassChecked() const { return _isPassChecked; }
 // bool	User::getNickRegistered() const { return _isNickRegistered; }
 // bool	User::getUserRegistered() const { return _isUserRegistered; }
-// bool	User::getRegistered() const { return _isRegistered; }
+bool	User::getRegistered() const { return _isRegistered; }
 
 /*Setters*/
 void				User::_setNickname(const std::string &nick) { _nickName = nick; std::cout << "_nickName is now set to: " << _nickName << std::endl;}
@@ -62,18 +62,10 @@ void				User::_setRealname(const std::string &realname) { _realName =  realname;
 void				User::_setAddr(const struct sockaddr_in &addr) { _clientAddr = addr; }
 void				User::_setSocket(const int &socket) { clientSocket = socket; }
 
-// void	User::setPassRegistered(const bool passRegister) { _isPassRegistered = passRegister; }
+void	User::setPassChecked(void) { _isPassChecked = true; }
 // void	User::setNickRegistered(const bool nickRegister) { _isNickRegistered = nickRegister; }
 // void	User::setUserRegistered(const bool userRegister) { _isUserRegistered = userRegister; }
-// void	User::setRegistered(const bool isregister) { _isRegistered = isregister; }
-
-// void	User::_initRegister()
-// {	
-// 	_isPassRegistered = false;
-// 	_isNickRegistered = false;
-// 	_isUserRegistered = false;
-// 	_isRegistered = false;
-// }
+void	User::setRegistered(void) { _isRegistered = true; }
 
 void				User::_setHost() { _hostName = inet_ntoa(_clientAddr.sin_addr); }
 void				User::_setPort() { _port = ntohs(_clientAddr.sin_port); }
@@ -86,9 +78,9 @@ void		User::resetBuffer() { _buffer.clear(); }
 std::string	User::getBuffer() const { return _buffer; }
 
 bool		User::operator==(const User& y) {
-	if (_userName.compare(y._userName) && _realName.compare(y._realName)
-		&& _nickName.compare(y._nickName))
-		return 1;
+	if (!_userName.compare(y._userName) && !_realName.compare(y._realName)
+		&& !_nickName.compare(y._nickName))
+			return 1;
 	else
 		return 0;
 }

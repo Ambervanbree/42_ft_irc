@@ -182,6 +182,8 @@ bool    Server::handleEvents(bool *end_server){
             for(ite = users.begin(); ite != users.end(); ite++){
                 if (_fds[i].fd == (*ite).clientSocket)
                     compress_array = clientSocketEvent(i, (*ite));
+                if (users.begin() == users.end())
+                    break;
             }
         }
     }
@@ -213,7 +215,6 @@ void    Server::acceptConnections(bool *end_server) {
         User newUser(new_fd);
         users.push_back(newUser);
     }
-    // std::cout << "End of accept boucle" << std::endl;
 }
 
 bool    Server::clientSocketEvent(int i, User &user) {
@@ -288,11 +289,15 @@ void    Server::decrementFileDescriptors(){
 
 void    Server::closeOneConnection(User &user) {
     int i = 0;
+    int fd = user.clientSocket;
 
     while(_fds[i].fd != user.clientSocket)
         i++;
     users.remove(user);
-    close(user.clientSocket);
+    // std::cout << "User " << user.getNickname() << " with fd = " << user.clientSocket 
+    //     << " has been removed" << std::endl;
+    // std::cout << "taille de users = " << users.size() << std::endl;
+    close(fd);
     _fds[i].fd = -1;
     decrementFileDescriptors();
     std::cout << "[+] Connection closed" << std::endl;

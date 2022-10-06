@@ -33,9 +33,8 @@ int	existingNick(const std::string &nick, Server &server) {
 void NICK(User &user, Server &server)
 {
 	std::cout << "Command NICK" << std::endl;
-	if (user._isPassChecked == false)
+	if (user.getPassChecked() == false)
 		return;
-	std::cout << "is pass checked in NICK ?" << user._isPassChecked << std::endl;
 	if (server._command.args.empty()) {
 		std::cerr << "(431) ERR_NONICKNAMEGIVEN" << std::endl;
 		return;
