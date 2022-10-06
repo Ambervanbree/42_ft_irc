@@ -8,7 +8,7 @@ Server::Server(int port, std::string password)
 : _port(port), _nfds(0), password(password)  {}
 
 Server::~Server(void) {
-    closeConnections();
+    closeAllConnections();
 }
 
 /* ************************************************************************** */
@@ -134,7 +134,6 @@ void    Server::initConnections(void){
 void   Server::handleIncomingConnections(void){
     int     ret;
     bool    end_server = false;
-    bool    compress_array = false;
 
     while (end_server == false) {
         std::cout << "[+] Waiting on poll()..." << std::endl;
@@ -142,16 +141,14 @@ void   Server::handleIncomingConnections(void){
         // voir si pas plus logique ainsi:
         // ret = poll(_fds, MAX_FDS, TIME_OUT);
         if (ret < 0)
-            std::cerr << "poll() failed" << std::endl;
+            std::cerr << "[-] poll() failed" << std::endl;
         if (ret == 0)
             std::cout << "[-] poll() timed out." << std::endl;
-        if ((ret < 0) || (ret == 0))
-            break;
-        compress_array = handleEvents(&end_server);
-        if (compress_array) {
-            decrementFileDescriptors();
-            compress_array = false;
+        if ((ret < 0) || (ret == 0)) {
+            closeAllConnections();
+            return;
         }
+        handleEvents(&end_server);
     }
 }
 
@@ -160,13 +157,10 @@ void   Server::handleIncomingConnections(void){
     - Loop through to find the descriptors that returned POLLIN and 
     determine whether it's the listening or the active connection.
 *******************************************************************************/
-bool    Server::handleEvents(bool *end_server){       
+void    Server::handleEvents(bool *end_server) {       
     int     i;
-    std::list<User>::iterator ite;
-    // int     current_size = 0;
-    bool    compress_array = false;
+    std::list<User>::iterator it = users.begin();
 
-    // current_size = _nfds;
     for (i = 0; i < _nfds; i++){
         if(_fds[i].revents == 0)
             continue;
@@ -179,13 +173,14 @@ bool    Server::handleEvents(bool *end_server){
         if (_fds[i].fd == _serverSocket)
             listeningSocketEvent(end_server);
         else {
-            for(ite = users.begin(); ite != users.end(); ite++){
-                if (_fds[i].fd == (*ite).clientSocket)
-                    compress_array = clientSocketEvent(i, (*ite));
+            for(; it != users.end(); it++){
+                if (_fds[i].fd == (*it).clientSocket) {
+                    clientSocketEvent(i, (*it));
+                    break;
+                }
             }
         }
     }
-    return compress_array;
 }
 
 void    Server::listeningSocketEvent(bool *end_server) {
@@ -199,9 +194,9 @@ void    Server::acceptConnections(bool *end_server) {
     std::cout << "[+] Listening socket is readable" << std::endl;
     while (new_fd != -1) {
         new_fd = accept(_serverSocket, NULL, NULL);
-        if (new_fd < 0){
-            if (errno != EWOULDBLOCK){
-                std::cerr << "accept() failed" << std::endl;
+        if (new_fd < 0) {
+            if (errno != EWOULDBLOCK) {
+                std::cerr << "[-] accept() failed" << std::endl;
                 *end_server = true;
             }
             break;
@@ -213,38 +208,36 @@ void    Server::acceptConnections(bool *end_server) {
         User newUser(new_fd);
         users.push_back(newUser);
     }
-    // std::cout << "End of accept boucle" << std::endl;
 }
 
-bool    Server::clientSocketEvent(int i, User &user) {
+void    Server::clientSocketEvent(int i, User &user) {
     bool    close_conn;
     char    buffer[MAX_BUFFER];
     int     ret;
-    char    resp[60] = "J'ai bien recu ton message et je t'en remercie\n";
-    bool    compress_array = false;
+    char    resp[60] = "[+] J'ai bien recu ton message et je t'en remercie\n";
     
     std::cout << "[+] Descriptor " << _fds[i].fd << " is readable" << std::endl;
     close_conn = false;
 
-    while (true) {
+    while (_fds[i].fd > 0) {
         if (_fds[i].revents == POLLOUT) {
             memset(buffer, '\0', MAX_BUFFER);
             ret = recv(_fds[i].fd, buffer, sizeof(buffer), 0);
-            if (ret < 0){
-                if (errno != EWOULDBLOCK){
-                    std::cerr << "  recv() failed" << std::endl;
+            if (ret < 0) {
+                if (errno != EWOULDBLOCK) {
+                    std::cerr << "[-] recv() failed" << errno << std::endl;
                     close_conn = true;
                 }
                 break;
             }
-            if (ret == 0){
+            if (ret == 0) {
                 std::cout << "[+] Connection closed" << std::endl;
                 close_conn = true;
                 break;
             }
             ret = send(_fds[i].fd, resp, strlen(resp), 0);
-            if (ret < 0){
-                std::cerr << "send() failed" << std::endl;
+            if (ret < 0) {
+                std::cerr << "[-] send() failed" << std::endl;
                 close_conn = true;
                 break;
             }
@@ -253,12 +246,6 @@ bool    Server::clientSocketEvent(int i, User &user) {
         // if (_fds[i].revents == POLLIN) {
         // }
     }
-    if (close_conn){
-        close(_fds[i].fd);
-        _fds[i].fd = -1;
-        compress_array = true;
-    }
-    return compress_array;
 }
 /******************************************************************************/
 /*  decrementFileDescriptors()
@@ -285,11 +272,25 @@ void    Server::decrementFileDescriptors(){
 /*  closeConnections()
     Close sockets        
 *******************************************************************************/
-void    Server::closeConnections(void) {
-    int i;
-    for (i = 0; i < _nfds; i++){
-        if(_fds[i].fd >= 0)
-            close(_fds[i].fd);
+
+void    Server::closeOneConnection(User &user) {
+    int i = 0;
+    int fd = user.clientSocket;
+
+    while(_fds[i].fd != user.clientSocket)
+        i++;
+    users.remove(user);
+    close(fd);
+    _fds[i].fd = -1;
+    decrementFileDescriptors();
+    std::cout << "[+] Connection closed" << std::endl;
+}
+
+void    Server::closeAllConnections(void) {
+    std::list<User>::iterator ite = users.begin();
+    
+    for (; ite != users.end(); ite++){
+        closeOneConnection(*ite);
     }
 }
 
