@@ -175,8 +175,8 @@ void			Channel::setTopic(std::string newTopic, std::string nickMask){
 	// 	std::cerr << "ERR_CHANOPRIVSNEEDED (482)" << std::endl;
 	// 	return ;
 	// }
-	(void) nickMask; // TODO Will use this later, if I implement mode 't'
-	if (newTopic == ":"){
+	(void)nickMask; // TODO --> this is needed if mode 't' is implemented
+	if (newTopic == ":")
 		_topic.clear();
 		// send to channel:
 		std::cout << "[+] MODE message: Topic is cleared" << std::endl;
