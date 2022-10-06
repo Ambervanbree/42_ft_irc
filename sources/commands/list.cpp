@@ -34,11 +34,8 @@ void	allListsUser(User &user, Server &server){
 }
 
 void LIST(User &user, Server &server){
-<<<<<<< HEAD
 	if (!user.getRegistered())
 		return ;
-=======
->>>>>>> 3510727 (first version invite)
 	if (ARGUMENTS.empty())
 		allListsUser(user, server);
 	else

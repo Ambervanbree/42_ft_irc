@@ -5,7 +5,6 @@
 
 // INVITE <nickname> <channel>
 
-<<<<<<< HEAD
 #define INVITEE	server.getArgs()[0]
 #define CHANNEL	server.getArgs()[1]
 
@@ -53,25 +52,3 @@ void INVITE(User &user, Server &server){
 	a valid channel. However, if the channel does exist, the user inviting
 	should be on the channel and the user to be invited not.
 */
-=======
-void INVITE(User &user, Server &server){
-	if (server.getArgs().size() < 3){
-		std::cerr << "ERR_NEEDMOREPARAMS (461)" << std::endl;
-		return ;
-	}
-	Channel	*chan = findChannel(server.getArgs()[1], server);
-	if (chan == NULL){
-		std::cerr << "ERR_NOSUCHCHANNEL (403)" << std::endl;
-		return ;		
-	}
-	if (!chan->onChannel(user)){
-		std::cerr << "ERR_NOTONCHANNEL (442)" << std::endl;
-		return ;		
-	}
-	if (chan->onChannel(server.getArgs()[0])){
-		std::cerr << "ERR_USERONCHANNEL (443)" << std::endl;
-		return ;
-	}
-	chan->sendInvite(server.getArgs()[0], user);
-}
->>>>>>> 3510727 (first version invite)
