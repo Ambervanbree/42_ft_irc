@@ -97,9 +97,9 @@ private:
 
     void initConnections(void);
     void handleIncomingConnections(void);
-    bool handleEvents(bool *end_server);
+    void handleEvents(bool *end_server);
     void listeningSocketEvent(bool *end_server);
-    bool clientSocketEvent(int i, User &user);
+    void clientSocketEvent(int i, User &user);
     void acceptConnections(bool *end_server);
     
     void decrementFileDescriptors(void);

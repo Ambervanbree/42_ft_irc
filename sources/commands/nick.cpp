@@ -45,6 +45,6 @@ void NICK(User &user, Server &server)
 	else if (existingNick(nick, server))
 		std::cerr << "(433) ERR_NICKNAMEINUSE" << std::endl;
 	else
-		user._setNickname(nick);
+		user.setNickname(nick);
 	return;
 }

@@ -53,28 +53,28 @@ class User
 		std::string			_userName;
 		std::string			_realName;
 		std::string			_nickName;
-		std::string			_hostName;
-		int					_port;
 		bool				_isPassChecked;
 		// bool				_isNickRegistered;
 		// bool				_isUserRegistered;
 		bool				_isRegistered;
+		std::string			_hostName;
+		int					_port;
 		
 	public:
 		int					clientSocket;
 
 	public:
-		void		_setUsername(const std::string &username);
-		void		_setRealname(const std::string &username);
-		void		_setNickname(const std::string &nick);
-		void		_setAddr(const struct sockaddr_in &addr);
-		void		_setSocket(const int &socket);
+		void		setUsername(const std::string &username);
+		void		setRealname(const std::string &username);
+		void		setNickname(const std::string &nick);
+		void		setAddr(const struct sockaddr_in &addr);
+		void		setSocket(const int &socket);
 		
 		std::string			_buffer;
 
 
-		void		_setHost();
-		void		_setPort();
+		void		setHost();
+		void		setPort();
 		// void		_initRegister();
 
 		bool		operator==(const User& y);

@@ -1,15 +1,11 @@
 #include "user.hpp"
 
 User::User(const int &socket)
-	:clientSocket(socket) {
+	:_userName("dflt user"), _realName("dflt rname"), _nickName("dflt nick"),
+	_isPassChecked(false), _isRegistered(false), clientSocket(socket) {
 	std::cout << "[+] A user is born" << std::endl;
-	_setUsername("dflt user");
-	_setNickname("dflt nick");
-	_isPassChecked = false;
-	_isRegistered = false;
-	std::cout << "is pass checked is set to " << _isPassChecked << std::endl;
-	// _setHost();
-	// _setPort();
+	// setHost();
+	// setPort();
 }
 
 User::~User() {};
@@ -56,19 +52,19 @@ bool	User::getPassChecked() const { return _isPassChecked; }
 bool	User::getRegistered() const { return _isRegistered; }
 
 /*Setters*/
-void				User::_setNickname(const std::string &nick) { _nickName = nick; std::cout << "_nickName is now set to: " << _nickName << std::endl;}
-void				User::_setUsername(const std::string &user) { _userName = user; std::cout << "_userName is now set to: " << _userName << std::endl;}
-void				User::_setRealname(const std::string &realname) { _realName =  realname; std::cout << "_realName is now set to: " << _realName << std::endl;}
-void				User::_setAddr(const struct sockaddr_in &addr) { _clientAddr = addr; }
-void				User::_setSocket(const int &socket) { clientSocket = socket; }
+void				User::setNickname(const std::string &nick) { _nickName = nick; std::cout << "[+] _nickName is now set to: " << _nickName << std::endl;}
+void				User::setUsername(const std::string &user) { _userName = user; std::cout << "[+] _userName is now set to: " << _userName << std::endl;}
+void				User::setRealname(const std::string &realname) { _realName =  realname; std::cout << "[+] _realName is now set to: " << _realName << std::endl;}
+void				User::setAddr(const struct sockaddr_in &addr) { _clientAddr = addr; }
+void				User::setSocket(const int &socket) { clientSocket = socket; }
 
-void	User::setPassChecked(void) { _isPassChecked = true; }
+void	User::setPassChecked(void) { _isPassChecked = true; std::cout << "[+] pass successfully checked" << std::endl;}
 // void	User::setNickRegistered(const bool nickRegister) { _isNickRegistered = nickRegister; }
 // void	User::setUserRegistered(const bool userRegister) { _isUserRegistered = userRegister; }
 void	User::setRegistered(void) { _isRegistered = true; }
 
-void				User::_setHost() { _hostName = inet_ntoa(_clientAddr.sin_addr); }
-void				User::_setPort() { _port = ntohs(_clientAddr.sin_port); }
+void				User::setHost() { _hostName = inet_ntoa(_clientAddr.sin_addr); }
+void				User::setPort() { _port = ntohs(_clientAddr.sin_port); }
 
 
 /*Handling buffer*/

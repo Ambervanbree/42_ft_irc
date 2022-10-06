@@ -19,13 +19,13 @@ void USER(User &user, Server &server)
 	}
 	
 	std::string username = server._command.args[0];
-	server._command.trailer.erase(0, 1);
     std::string realname = server._command.trailer;
 
-	while (username.length() > USERLEN)
-		username.erase(username.end()--);
-	user._setUsername(username);
-	user._setRealname(realname);
+	if (username.size() > USERLEN)
+		user.setUsername(username.erase(USERLEN, username.size()));
+	else
+		user.setUsername(username);
+	user.setRealname(realname.erase(0, 1));
 	user.setRegistered();
 	std::cerr << "(001) RPL_WELCOME" << std::endl;
 	return;
