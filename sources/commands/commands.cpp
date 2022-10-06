@@ -196,15 +196,6 @@ void WHOWAS(std::deque<std::string> Command, User &User)
 
 /*User commands for channels:*/
 
-//INVITE <nickname> <channel>
-//-> Invite a user to a channel.
-void INVITE(std::deque<std::string> Command, User &user)
-{
-	(void)Command;
-	(void)user;
-	std::cout << "INVITE" << std::endl;
-}
-
 //KICK <channel> <user> [<comment>]
 //-> Request forced removal of a user from a channel.
 void KICK(std::deque<std::string> Command, User &user)

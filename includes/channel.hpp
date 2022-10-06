@@ -17,6 +17,7 @@ class Channel{
 		std::string					_topic;
 		std::set<User *>			_users;
 		std::set<std::string>		_banned;
+		// std::set<std::string>		_invite;
 		std::map<char, bool>		_modes;
 		std::set<std::string>		_chop; 	// channel operator
 
@@ -40,6 +41,7 @@ class Channel{
 		/* Checkers */
 
 		bool			onChannel(User &user) const;
+		bool			onChannel(std::string nickName) const;
 		bool			isBanned(std::string nickMask) const;
 		bool			isChop(std::string nickMask) const;
 		bool			correctKey(std::string key) const;

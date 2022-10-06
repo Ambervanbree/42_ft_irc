@@ -9,6 +9,7 @@ Channel::Channel(std::string name, User &user) : _name(name) {
 	_users.insert(&user);
 	std::cout << "JOIN message from " << user.getNickname() << " on new channel " << getName() << std::endl;
 	_chop.insert(user.getNickMask());
+	// TODO --> If chop sends messages associated with a channel, @ is prefixed to its nickname
 };
 
 Channel::~Channel() {};
@@ -81,6 +82,17 @@ bool			Channel::onChannel(User &user) const {
 	return (_users.find(&user) != _users.end());
 }
 
+bool			Channel::onChannel(std::string nickName) const {
+	std::set<User *>::iterator	it = _users.begin();
+	std::set<User *>::iterator	ite = _users.end();
+
+	for (; it != ite; it++){
+		if ((*it)->getNickname() == nickName)
+			return true ;
+	}
+	return false ;
+}
+
 bool			Channel::isBanned(std::string nickMask) const {
 	return (_banned.find(nickMask) != _banned.end());
 }
@@ -124,7 +136,7 @@ void			Channel::addUser(std::string key, User &user){
 	}
 	_users.insert(&user);
 	// RPL sent to channel (including user):
-	std::cout << "JOIN message from " << user.getNickname() << " on channel " << getName() << std::endl;
+	std::cout << "[+] JOIN message from " << user.getNickname() << " on channel " << getName() << std::endl;
 	// RPL sent to user:
 	std::cout << "RPL_TOPIC (332)" << std::endl;
 	std::cout << "RPL_NAMREPLY (356)" << std::endl;
@@ -141,7 +153,7 @@ void			Channel::setKey(std::string newKey, std::string nickMask) {
 		std::cerr << "ERR_CHANOPRIVSNEEDED (482)" << std::endl;
 		return ;		
 	}
-	std::cout << "Set key to: " << newKey << std::endl;
+	std::cout << "[+] MODE message: Set key to: " << newKey << std::endl;
 	_key = newKey;
 	_modes['k'] = true ;
 }
@@ -153,7 +165,7 @@ void			Channel::banUser(std::string toBan, std::string nickMask){
 	}
 	if (isBanned(toBan))
 		return ;
-	std::cout << "Banned user: " << toBan << std::endl;
+	std::cout << "[+] MODE message: Banned user: " << toBan << std::endl;
 	_banned.insert(toBan);
 	_modes['b'] = true;
 }
@@ -166,10 +178,14 @@ void			Channel::setTopic(std::string newTopic, std::string nickMask){
 	(void)nickMask; // TODO --> this is needed if mode 't' is implemented
 	if (newTopic == ":")
 		_topic.clear();
-	else
-		_topic = newTopic;
-	// send to channel:
-	std::cout << "Channel message new topic: " << _topic << std::endl;
+		// send to channel:
+		std::cout << "[+] MODE message: Topic is cleared" << std::endl;
+	}
+	else{
+		_topic = newTopic.erase(0, 1);
+		// send to channel:
+		std::cout << "[+] MODE message: New channel topic: " << _topic << std::endl;
+	}
 }
 
 /******************************************************************************/
@@ -182,7 +198,7 @@ void 			Channel::unsetKey(std::string nickMask){
 		return ;		
 	}
 	if (_modes.find('k')->second){
-		std::cout << "Key unset" << std::endl;
+		std::cout << "[+] MODE message: key unset" << std::endl;
 		_key.clear();
 		_modes['k'] = false;
 	}
@@ -196,12 +212,12 @@ void			Channel::unbanUser(std::string toUnban, std::string nickMask){
 	if (_banned.erase(toUnban)){
 		if (_banned.empty())
 			_modes['b'] = false;
-		std::cout << "[+] Unbanned user: " << toUnban << std::endl;
+		std::cout << "[+] MODE message: Unbanned user: " << toUnban << std::endl;
 	}
 }
 
 void			Channel::removeUser(User &user, std::string message){
-	std::cout << "User " << user.getNickname() << " leaving channel " << getName();
+	std::cout << "[+] PART message: User " << user.getNickname() << " leaving channel " << getName();
 	if (!message.empty())
 		std::cout << " with the message \"" << message << "\"" << std::endl;
 	else
