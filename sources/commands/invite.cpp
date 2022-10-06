@@ -17,11 +17,13 @@ void	sendInvite(User &inviter, Server &server){
 		if (it->getNickname() == INVITEE)
 			invitee = &(*it);
 	}
-	// Sent to invitee:
-	(void)invitee;
-	std::cout << "[+] INVITE message: invited to " << CHANNEL << " by " << inviter.getNickname() << std::endl;
-	// Sent to inviter:
-	std::cout << "RPL_INVITING (341)" << std::endl;
+	if (invitee != NULL){
+		// Sent to invitee:
+		std::cout << "[+] INVITE message: invited to " << CHANNEL << " by " << inviter.getNickname() << std::endl;
+		// Sent to inviter:
+		std::cout << "RPL_INVITING (341)" << std::endl;
+	}
+	return ;
 }
 
 void INVITE(User &user, Server &server){
