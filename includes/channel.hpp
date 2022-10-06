@@ -17,7 +17,7 @@ class Channel{
 		std::string					_topic;
 		std::set<User *>			_users;
 		std::set<std::string>		_banned;
-		std::set<std::string>		_invite;
+		// std::set<std::string>		_invite;
 		std::map<char, bool>		_modes;
 		std::set<std::string>		_chop; 	// channel operator
 
@@ -37,7 +37,6 @@ class Channel{
 		void			sendTopic(User &user);
 		void			sendNames(User &user);
 		void			sendList(User &user);
-		void			sendInvite(std::string toInvite, User &user);
 
 		/* Checkers */
 

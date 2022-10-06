@@ -34,6 +34,8 @@ void	allListsUser(User &user, Server &server){
 }
 
 void LIST(User &user, Server &server){
+	if (!user.getRegistered())
+		return ;
 	if (ARGUMENTS.empty())
 		allListsUser(user, server);
 	else
