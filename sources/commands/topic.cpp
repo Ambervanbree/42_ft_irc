@@ -9,8 +9,8 @@
 #define NEWTOPIC 	server._command.trailer
 
 void TOPIC(User &user, Server &server){
-	if (!user.getRegistered())
-		return ;
+	// if (!user.getRegistered())
+	// 	return ;
 	if (CHANNEL.empty()){
 		std::cerr << "ERR_NEEDMOREPARAMS (461)" << std::endl; 
 		return ;
@@ -24,7 +24,7 @@ void TOPIC(User &user, Server &server){
 		std::cerr << "ERR_NOTONCHANNEL (442)" << std::endl; 
 		return ;
 	}
-	if (!server._command.trailer.empty())
+	if (server._command.trailer.empty())
 		chan->sendTopic(user);
 	else
 		chan->setTopic(NEWTOPIC);

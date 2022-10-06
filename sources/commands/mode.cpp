@@ -49,7 +49,7 @@ void	addMode(char toSet, Mode &mode){
 void	eraseMode(char toSet, Mode &mode){
 	switch (toSet){
 		case 'k':
-			mode.chan->unsetKey(mode.nickMask);
+			mode.chan->unsetKey();
 			return ;
 		case 'b':
 			if (mode.modeArg.empty()){
@@ -138,8 +138,8 @@ void	userMode(){
 }
 
 void MODE(User &user, Server &server){
-	if (!user.getRegistered())
-		return ;
+	// if (!user.getRegistered())
+	// 	return ;
 	if (server.getArgs().empty()){
 		std::cout << "ERR_NEEDMOREPARAMS (461)" << std::endl;
 		return ;		

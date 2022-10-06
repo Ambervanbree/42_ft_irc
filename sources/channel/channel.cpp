@@ -7,7 +7,6 @@
 Channel::Channel(std::string name, User &user) : _name(name) {
 	initModes();
 	_users.insert(&user);
-	std::cout << "JOIN message from " << user.getNickname() << " on new channel " << getName() << std::endl;
 	_chop.insert(user.getNickMask());
 	// TODO --> If chop sends messages associated with a channel, @ is prefixed to its nickname
 };
@@ -27,9 +26,9 @@ void			Channel::initModes(){
 	// _modes['t'] = false; // toggle the topic settable by channel operator only flag
 
 // non toggles:
-	_modes['o'] = false; // give/take channel operator privileges
+	// _modes['o'] = false; // give/take channel operator privileges
 	// 'v'	give/take the voice privilege;
-	// 'k'	set/remove the channel key (password);
+	_modes['k'] = false; //	set/remove the channel key (password);
 	// 'l'	set/remove the user limit to channel;
 	_modes['b'] = false; // set/remove ban mask to keep users out;
 	// 'e'	set/remove an exception mask to override a ban mask;
@@ -168,12 +167,12 @@ void			Channel::setTopic(std::string newTopic){
 	if (newTopic == ":"){
 		_topic.clear();
 		// send to channel:
-		std::cout << "[+] MODE message: Topic is cleared" << std::endl;
+		std::cout << "[+] TOPIC message: Topic is cleared" << std::endl;
 	}
 	else{
 		_topic = newTopic.erase(0, 1);
 		// send to channel:
-		std::cout << "[+] MODE message: New channel topic: " << _topic << std::endl;
+		std::cout << "[+] TOPIC message: New channel topic: " << _topic << std::endl;
 	}
 }
 
@@ -181,15 +180,11 @@ void			Channel::setTopic(std::string newTopic){
 /*  Unsetters
 *******************************************************************************/
 
-void 			Channel::unsetKey(std::string nickMask){
-	if (!isChop(nickMask)){
-		std::cerr << "ERR_CHANOPRIVSNEEDED (482)" << std::endl;
-		return ;		
-	}
-	if (_modes.find('k')->second){
-		std::cout << "[+] MODE message: key unset" << std::endl;
+void 			Channel::unsetKey(){
+	if (_modes['k'] == true){
 		_key.clear();
 		_modes['k'] = false;
+		std::cout << "[+] MODE message: key unset" << std::endl;
 	}
 }
 
@@ -201,12 +196,7 @@ void			Channel::unbanUser(std::string toUnban){
 	}
 }
 
-void			Channel::removeUser(User &user, std::string message){
-	std::cout << "[+] PART message: User " << user.getNickname() << " leaving channel " << getName();
-	if (!message.empty())
-		std::cout << " with the message \"" << message << "\"" << std::endl;
-	else
-		std::cout << std::endl;
+void			Channel::removeUser(User &user){
 	_users.erase(&user);
 }
 

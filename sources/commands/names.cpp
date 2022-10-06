@@ -35,8 +35,8 @@ void	allNamesUser(User &user, Server &server){
 }
 
 void NAMES(User &user, Server &server){
-	if (!user.getRegistered())
-		return ;
+	// if (!user.getRegistered())
+	// 	return ;
 	if (ARGUMENTS.empty())
 		allNamesUser(user, server);
 	else

@@ -7,14 +7,14 @@
 #define CHANNELS 	server.getArgs()[0]
 #define KEYS 		server.getArgs()[1]
 
-void		createChannel(std::string name, User &user, Server &server){
-	server._channels.insert(std::make_pair(name, Channel(name, user)));
+Channel		*createChannel(std::string name, User &user, Server &server){
+	return &server._channels.insert(std::make_pair(name, Channel(name, user))).first->second;
 	/* TODO --> add replies: 
 		ERR_TOOMANYCHANNELS (405) 
 	*/
 }
 
-bool grammarCheckChannel(std::string name){
+bool 		grammarCheckChannel(std::string name){
 	if (name.size() > 50
 		|| name[0] != '#'
 		|| name.find(',') != std::string::npos){
@@ -24,23 +24,27 @@ bool grammarCheckChannel(std::string name){
 	return true;
 }
 
-void partFromAllChannels(User &user, Server &server){
+void 		partFromAllChannels(User &user, Server &server){
 	std::map<std::string, Channel>::iterator	it 	= server._channels.begin();
 	std::map<std::string, Channel>::iterator	ite = server._channels.end();
-	std::map<std::string, Channel>::iterator 	temp;
+	std::map<std::string, Channel>::iterator 	chan;
 
 	while (it != ite){
-		temp = it;
+		chan = it;
 		it++;
-		if (temp->second.onChannel(user))
-			removeUserFromChannel(&(temp->second), user, server, "");
+		if (chan->second.onChannel(user)){
+			removeUserFromChannel(&(chan->second), user, server);
+			// send to channel:
+			std::cout << "[+] PART message: User " << user.getNickname() << " leaving channel " 
+				<< chan->second.getName() << std::endl;
+		}
 	}
 }
 
 void JOIN(User &user, Server &server)
 {
-	if (!user.getRegistered())
-		return ;
+	// if (!user.getRegistered())
+	// 	return ;
 	std::deque<std::string>	channels;
 	std::deque<std::string>	keys;
 	char 					delimiter[] = ",";
@@ -63,19 +67,8 @@ void JOIN(User &user, Server &server)
 		if (chan != NULL)
 			chan->addUser(keys[i], user);
 		else
-			createChannel(channels[i], user, server);
+			chan = createChannel(channels[i], user, server);
+		std::cout << "[+] JOIN message from " << user.getNickname()
+			<< " on channel " << chan->getName() << std::endl;
 	}
-
-
-	/* TODO --> add channel replies: 
-		RPL_TOPIC (332)
-		RPL_TOPICWHOTIME (333)
-		RPL_NAMREPLY (353)
-		RPL_ENDOFNAMES (366)
-
-	   And error cases:
-		ERR_TOOMANYCHANNELS (405) --> limit mode
-		ERR_NOSUCHCHANNEL (403) --> not sure in what situation, 
-			since if there's no such channel, it will be created
-	*/
 }

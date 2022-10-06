@@ -56,7 +56,7 @@ void TOPIC(User &user, Server &server);
 void NAMES(User &user, Server &server);
 void LIST(User &user, Server &server);
 void INVITE(User &user, Server &server);
-// void KICK(User &user);
+void KICK(User &user, Server &server);
 
 /*Operator commands:*/
 
@@ -69,6 +69,7 @@ void INVITE(User &user, Server &server);
 
 /*Command utils:*/
 Channel*	findChannel(std::string &channelName, Server &server);
-void 		removeUserFromChannel(Channel *channel, User &user, Server &server, std::string message);
+User*		findUser(std::string &userName, Server &server);
+void 		removeUserFromChannel(Channel *channel, User &user, Server &server);
 
 #endif

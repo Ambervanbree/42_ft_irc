@@ -4,7 +4,7 @@ User::User(const int &socket)
 	:clientSocket(socket) {
 	std::cout << "[+] A user is born" << std::endl;
 	_setUsername("dflt user");
-	_setNickname("dflt nick");
+	_setNickname("nick");
 	// _setHost();
 	// _setPort();
 }

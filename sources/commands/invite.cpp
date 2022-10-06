@@ -9,14 +9,8 @@
 #define CHANNEL	server.getArgs()[1]
 
 void	sendInvite(User &inviter, Server &server){
-	std::list<User>::iterator	it	= server.users.begin();
-	std::list<User>::iterator	ite	= server.users.end();
-	User						*invitee = NULL;
+	User	*invitee = findUser(INVITEE, server);
 
-	for (; it != ite; it++){
-		if (it->getNickname() == INVITEE)
-			invitee = &(*it);
-	}
 	if (invitee != NULL){
 		// Sent to invitee:
 		std::cout << "[+] INVITE message: invited to " << CHANNEL << " by " << inviter.getNickname() << std::endl;
@@ -27,8 +21,8 @@ void	sendInvite(User &inviter, Server &server){
 }
 
 void INVITE(User &user, Server &server){
-	if (!user.getRegistered())
-		return ;
+	// if (!user.getRegistered())
+	// 	return ;
 	if (server.getArgs().size() < 2){
 		std::cerr << "ERR_NEEDMOREPARAMS (461)" << std::endl;
 		return ;
