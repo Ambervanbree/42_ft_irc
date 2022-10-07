@@ -3,9 +3,7 @@
 #include "server.hpp"
 #include "commands.hpp"
 
-//PART <channel>{,<channel>} [<reason>]
 #define CHANNELS 	server.getArgs()[0]
-#define MESSAGE 	server._command.trailer
 
 void PART(User &user, Server &server){
 	// if (!user.getRegistered())
@@ -32,11 +30,6 @@ void PART(User &user, Server &server){
 			break ;
 		}
 		removeUserFromChannel(chan, user, server);
-		// send to channel:
-		std::cout << "[+] PART message: User " << user.getNickname() << " leaving channel " << chan->getName();
-		if (MESSAGE.empty())
-			std::cout << std::endl;
-		else
-			std::cout << " with the message \"" << MESSAGE << "\"" << std::endl;
+		// PRIVMSG to channel: 	createCommandMessage(user, server);
 		}
 }

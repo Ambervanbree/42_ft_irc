@@ -148,4 +148,5 @@ void MODE(User &user, Server &server){
 		channelMode(user.getNickMask(), server);
 	else
 		userMode();
+	// PRIVMSG to channel: 	createCommandMessage(user, server);
 }
