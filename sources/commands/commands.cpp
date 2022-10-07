@@ -58,15 +58,6 @@ void SQUIT(std::deque<std::string> Command, User &User)
 
 /*User commands:*/
 
-//OPER <name> <password>
-//-> Obtain operator priviliges.
-void OPER(std::deque<std::string> Command, User &User)
-{
-	(void)Command;
-	(void)User;
-	std::cout << "OPER" << std::endl;
-}
-
 //SERVICE <nickname> <reserved> <distribution> <type> <reserved> <info>
 //-> Register a new service
 void SERVICE(std::deque<std::string> Command, User &User)

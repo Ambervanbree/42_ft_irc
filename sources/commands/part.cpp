@@ -7,9 +7,9 @@
 #define CHANNELS 	server.getArgs()[0]
 #define MESSAGE 	server._command.trailer
 
-void PART(User &user, Server &server){
-	// if (!user.getRegistered())
-	// 	return ;
+void PART(User &user, Server &server) {
+	if (!user.isRegistered())
+		return ;
 	if (server.getArgs().empty()){
 		std::cerr << "ERR_NEEDMOREPARAMS (461)" << std::endl;
 		return ;

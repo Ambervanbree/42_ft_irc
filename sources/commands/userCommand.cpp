@@ -6,14 +6,13 @@
 
 void USER(User &user, Server &server)
 {
-	std::cout << "Command USER" << std::endl;
-	if ((user.getPassChecked() == false) || (user.getNickname().compare("dflt nick") == 0))
+	if ((user.isPassChecked() == false) || (user.getNickname().compare("dflt_nick") == 0))
 		return;
 	if (server._command.args.size() < 3 || server._command.trailer.empty()) {
 		std::cerr << "(461) ERR_NEEDMOREPARAMS" << std::endl;
 		return;
 	}
-	if (user.getRegistered()) {
+	if (user.isRegistered()) {
 		std::cerr << "ERR_ALREADYREGISTERED (462)" << std::endl;
 		return;
 	}

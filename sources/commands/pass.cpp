@@ -6,11 +6,9 @@
 
 void	PASS(User &user, Server &server)
 {
-	std::cout << "PASS" << std::endl;
-	if (user.getPassChecked())
+	if (user.isPassChecked() || (server._command.args.size() == 0))
 		return;
-	(void)user;
-	if (server._command.args.size() != 0 && server._command.args[0].compare(server.password)){
+	if (server._command.args[0].compare(server.getPassword())) {
 		std::cerr << "ERR_PASSWDMISMATCH (464)" << std::endl;
 		server.closeOneConnection(user);
 	}

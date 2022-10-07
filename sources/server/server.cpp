@@ -5,7 +5,7 @@
 /* ************************************************************************** */
 
 Server::Server(int port, std::string password)
-: _port(port), _nfds(0), password(password)  {}
+: _password(password), _port(port), _nfds(0) {}
 
 Server::~Server(void) {
     closeAllConnections();
@@ -14,6 +14,10 @@ Server::~Server(void) {
 /* ************************************************************************** */
 /*                         PUBLIC MEMBER FUNCTIONS                            */
 /* ************************************************************************** */
+
+std::string &Server::getPassword(void) {
+    return _password;
+}
 
 void    Server::start(void){
 	_setCommands();

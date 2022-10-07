@@ -31,20 +31,13 @@ class User
 		std::string			getPrefix() const;
 		std::string			getNickMask() const;
 
-		void	setPassChecked(void);
-		// void	setNickRegistered(const bool nickRegister);
-		// void	setUserRegistered(const bool userRegister);
-		void	setRegistered(void);
 
-		bool	getPassChecked() const;
-		// bool	getNickRegistered() const;
-		// bool	getUserRegistered() const;
-		bool	getRegistered() const;
+		bool	isPassChecked() const;
+		bool	isRegistered() const;
+		bool	isOperator() const;
 
-		void	setBuffer(const std::string &buf);
-		void	resetBuffer();
 		std::string	getBuffer() const;
-	
+
 	private:
 		User();
 		User &operator=(const User &other);
@@ -54,28 +47,30 @@ class User
 		std::string			_realName;
 		std::string			_nickName;
 		bool				_isPassChecked;
-		// bool				_isNickRegistered;
-		// bool				_isUserRegistered;
 		bool				_isRegistered;
+		bool				_isOperator;
 		std::string			_hostName;
 		int					_port;
 		
 	public:
 		int					clientSocket;
+		std::string			_buffer;
 
 	public:
 		void		setUsername(const std::string &username);
 		void		setRealname(const std::string &username);
 		void		setNickname(const std::string &nick);
+		void		setPassChecked(void);
+		void		setRegistered(void);
+		void		setOperator(void);
 		void		setAddr(const struct sockaddr_in &addr);
 		void		setSocket(const int &socket);
 		
-		std::string			_buffer;
-
-
 		void		setHost();
 		void		setPort();
-		// void		_initRegister();
+
+		void		setBuffer(const std::string &buf);
+		void		resetBuffer();
 
 		bool		operator==(const User& y);
 };

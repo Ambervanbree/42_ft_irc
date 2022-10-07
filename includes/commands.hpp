@@ -30,7 +30,7 @@ class Channel;
 void PASS(User &User, Server &server);
 void NICK(User &User, Server &server);
 void USER(User &User, Server &server);
-// void OPER(User &User, Server &server);
+void OPER(User &User, Server &server);
 // void MODE(User &User, Server &server);
 // void SERVICE(User &User, Server &server);
 // void QUIT(User &User, Server &server);

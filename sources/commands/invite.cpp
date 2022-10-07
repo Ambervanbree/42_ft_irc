@@ -21,8 +21,8 @@ void	sendInvite(User &inviter, Server &server){
 }
 
 void INVITE(User &user, Server &server){
-	// if (!user.getRegistered())
-	// 	return ;
+	if (!user.isRegistered())
+		return ;
 	if (server.getArgs().size() < 2){
 		std::cerr << "ERR_NEEDMOREPARAMS (461)" << std::endl;
 		return ;
