@@ -20,7 +20,7 @@ SRC_FILES	=	main.cpp $(SERVER) $(COMMANDS) $(USER) $(CHANNEL) utils.cpp
 COMMANDS	=	$(addprefix commands/, join.cpp nick.cpp mode.cpp \
 				part.cpp command_utils.cpp names.cpp list.cpp topic.cpp \
 				pass.cpp invite.cpp userCommand.cpp kick.cpp oper.cpp \
-				connect.cpp)
+				kill.cpp)
 USER		=	$(addprefix user/, user.cpp)
 CHANNEL		=	$(addprefix channel/, channel.cpp)
 SERVER		=	$(addprefix server/, server.cpp server_commands.cpp)

@@ -58,8 +58,7 @@ void KICK(User &user, Server &server);
 /*Operator commands:*/
 
 void OPER(User &User, Server &server);
-void CONNECT(User &user);
-// void KILL(User &user);
+void KILL(User &user);
 // void DIE(User &user);
 // void RESTART(User &user);
 

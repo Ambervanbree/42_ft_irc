@@ -179,15 +179,6 @@ void KICK(std::deque<std::string> Command, User &user)
 
 /*Operator commands:*/
 
-//KILL <nickname> <comment>
-//-> Cause a client-server connection to be closed by the server.
-void KILL(std::deque<std::string> Command, User &user)
-{
-	(void)Command;
-	(void)user;
-	std::cout << "KILL" << std::endl;
-}
-
 //DIE (optional)
 //-> Shut down the server.
 void DIE(std::deque<std::string> Command, User &user)
