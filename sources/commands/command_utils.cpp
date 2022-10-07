@@ -28,3 +28,14 @@ void 		removeUserFromChannel(Channel *channel, User &user, Server &server){
 		server._channels.erase(channel->getName());
 	}
 }
+
+bool    isOperator(const std::string &username, Server &server) {
+    std::list<std::string>::iterator it = server.operators.begin();
+    std::list<std::string>::iterator ite = server.operators.end();
+
+    for (;it != ite; it++) {
+        if (username.compare(*it) == 0)
+            return 1;
+    }
+    return 0;
+}

@@ -47,15 +47,6 @@ void QUIT(std::deque<std::string> Command, User &User)
 	std::cout << "QUIT" << std::endl;
 }
 
-//SQUIT <server> <comment>
-//-> Break remote server link. 
-void SQUIT(std::deque<std::string> Command, User &User)
-{
-	(void)Command;
-	(void)User;
-	std::cout << "SQUIT" << std::endl;
-}
-
 /*User commands:*/
 
 //SERVICE <nickname> <reserved> <distribution> <type> <reserved> <info>
@@ -187,24 +178,6 @@ void KICK(std::deque<std::string> Command, User &user)
 }
 
 /*Operator commands:*/
-
-//SQUIT <server> <comment>
-//-> Disconnect server links.
-/*void SQUIT(std::deque<std::string> Command, User &user)
-{
-	(void)Command;
-	(void)user;
-	std::cout << "SQUIT" << std::endl;
-}*/
-
-//CONNECT <target server> <port> [ <remote server> ]
-//-> Connect to another server.
-void CONNECT(std::deque<std::string> Command, User &user)
-{
-	(void)Command;
-	(void)user;
-	std::cout << "CONNECT" << std::endl;
-}
 
 //KILL <nickname> <comment>
 //-> Cause a client-server connection to be closed by the server.

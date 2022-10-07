@@ -22,7 +22,6 @@ class Channel;
 // void ERROR(User &User, Server &server);
 // void WALLOPS(User &User, Server &server);
 // void QUIT(User &User, Server &server);
-// void SQUIT(User &User, Server &server);
 // void JOIN(User &User, Server &server);
 
 /*User commands:*/
@@ -30,7 +29,6 @@ class Channel;
 void PASS(User &User, Server &server);
 void NICK(User &User, Server &server);
 void USER(User &User, Server &server);
-void OPER(User &User, Server &server);
 // void MODE(User &User, Server &server);
 // void SERVICE(User &User, Server &server);
 // void QUIT(User &User, Server &server);
@@ -59,8 +57,8 @@ void KICK(User &user, Server &server);
 
 /*Operator commands:*/
 
-// void SQUIT(User &user);
-// void CONNECT(User &user);
+void OPER(User &User, Server &server);
+void CONNECT(User &user);
 // void KILL(User &user);
 // void DIE(User &user);
 // void RESTART(User &user);
