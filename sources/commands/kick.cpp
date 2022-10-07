@@ -18,8 +18,8 @@ void	sendKickMessage(Channel &chan, User &toKick, Server &server, User &kicker){
 		std::cout << " with the comment \"" << COMMENT << "\"" << std::endl;
 }
 
-void	kickSingleUser(Server &server, User &user, std::deque<std::string> channels, std::deque<std::string> toKick){
-	Channel	*chan = NULL;
+void	kickUserPerChannel(Server &server, User &user, std::deque<std::string> channels, std::deque<std::string> toKick){
+	Channel	*chan 		= NULL;
 	User	*userToKick;
 	
 	for (size_t i = 0; i < channels.size(); i++){
@@ -91,7 +91,7 @@ void KICK(User &user, Server &server){
 	split_args(TOKICK, delimiter, toKick);
 
 	if (channels.size() == toKick.size())
-		kickSingleUser(server, user, channels, toKick);
+		kickUserPerChannel(server, user, channels, toKick);
 	if (channels.size() == 1 && toKick.size() > 1)
 		kickMultipleUsers(server, user, channels[0], toKick);
 	return ;
