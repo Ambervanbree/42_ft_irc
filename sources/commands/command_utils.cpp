@@ -10,12 +10,12 @@ Channel*	findChannel(std::string &channelName, Server &server){
 	return NULL ;
 }
 
-User*		findUser(std::string &userName, Server &server){
+User*		findUser(std::string &nickName, Server &server){
 	std::list<User>::iterator	it	= server.users.begin();
 	std::list<User>::iterator	ite	= server.users.end();
 
 	for (; it != ite; it++){
-		if (it->getNickname() == userName)
+		if (it->getNickname() == nickName)
 			return &(*it);
 	}
 	return NULL ;
