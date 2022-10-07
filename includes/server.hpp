@@ -97,13 +97,13 @@ private:
 
     void initConnections(void);
     void handleIncomingConnections(void);
-    bool handleEvents(bool *end_server);
+    void handleEvents(bool *end_server);
     void listeningSocketEvent(bool *end_server);
-    bool clientSocketEvent(int i, User &user);
+    void clientSocketEvent(int i, User &user);
     void acceptConnections(bool *end_server);
     
     void decrementFileDescriptors(void);
-    void closeConnections(void);
+    void closeAllConnections(void);
 
 	/*Functions to set command list and launch commands*/
 	void _setCommands();
@@ -116,6 +116,7 @@ private:
 public:
     void start(void);
     void handleConnections(void);
+    void closeOneConnection(User &user);
 
 	void interpretCommand(std::string &message, User &user); /*Change to Private at the end of project*/
 

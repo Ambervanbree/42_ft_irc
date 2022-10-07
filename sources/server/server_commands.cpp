@@ -4,6 +4,7 @@ void Server::_setCommands()
 {
 	_commands["PASS"] = PASS;
 	_commands["NICK"] = NICK;
+	_commands["USER"] = USER;
 	// _commands["PING"] = PING;
 	// _commands["PONG"] = PONG;
 	// _commands["ERROR"] = ERROR;			x
@@ -11,7 +12,6 @@ void Server::_setCommands()
 	// _commands["QUIT"] = QUIT;
 	// _commands["SQUIT"] = SQUIT; 			x
 	_commands["JOIN"] = JOIN;
-	// _commands["USER"] = USER;
 	// _commands["OPER"] = OPER;
 	// _commands["SERVICE"] = SERVICE; 		x
 	// _commands["PRIVMSG"] = PRIVMSG;

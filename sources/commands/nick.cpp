@@ -1,13 +1,7 @@
 #include "user.hpp"
 #include "server.hpp"
-// #include <string>
 
-// NICK <nickname> <hopcount> <username> <host> <servertoken> <umode> <realname>
-// -> Combination of NICK (the user version), USER and MODE.
-
-/*Irssi send: 
-- registration : USER <nick> <user> <host> :<realname>
-- change nick : :<nick> USER <newnick>*/
+// NICK <nickname>
 
 int	wrongGrammar(const std::string &nick) {
 	char forbidden[] = {' ', ',', '*', '?', '!', '@', '.'};
@@ -39,7 +33,8 @@ int	existingNick(const std::string &nick, Server &server) {
 void NICK(User &user, Server &server)
 {
 	std::cout << "Command NICK" << std::endl;
-	std::cout << "Nickname before command NICK: " << user.getNickname() << std::endl;
+	if (user.getPassChecked() == false)
+		return;
 	if (server._command.args.empty()) {
 		std::cerr << "(431) ERR_NONICKNAMEGIVEN" << std::endl;
 		return;
@@ -50,7 +45,6 @@ void NICK(User &user, Server &server)
 	else if (existingNick(nick, server))
 		std::cerr << "(433) ERR_NICKNAMEINUSE" << std::endl;
 	else
-		user._setNickname(nick);
-	std::cout << "Nickname after command NICK: " << user.getNickname() << std::endl;
+		user.setNickname(nick);
 	return;
 }
