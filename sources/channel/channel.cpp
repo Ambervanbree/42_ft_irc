@@ -7,7 +7,6 @@
 Channel::Channel(std::string name, User &user) : _name(name) {
 	initModes();
 	_users.insert(&user);
-	std::cout << "JOIN message from " << user.getNickname() << " on new channel " << getName() << std::endl;
 	_chop.insert(user.getNickMask());
 	// TODO --> If chop sends messages associated with a channel, @ is prefixed to its nickname
 };
@@ -27,9 +26,9 @@ void			Channel::initModes(){
 	// _modes['t'] = false; // toggle the topic settable by channel operator only flag
 
 // non toggles:
-	_modes['o'] = false; // give/take channel operator privileges
+	// _modes['o'] = false; // give/take channel operator privileges
 	// 'v'	give/take the voice privilege;
-	// 'k'	set/remove the channel key (password);
+	_modes['k'] = false; //	set/remove the channel key (password);
 	// 'l'	set/remove the user limit to channel;
 	_modes['b'] = false; // set/remove ban mask to keep users out;
 	// 'e'	set/remove an exception mask to override a ban mask;
@@ -148,43 +147,32 @@ void			Channel::addUser(std::string key, User &user){
 	*/
 }
 
-void			Channel::setKey(std::string newKey, std::string nickMask) {
-	if (!isChop(nickMask)){
-		std::cerr << "ERR_CHANOPRIVSNEEDED (482)" << std::endl;
-		return ;		
-	}
-	std::cout << "[+] MODE message: Set key to: " << newKey << std::endl;
+void			Channel::setKey(std::string newKey) {
 	_key = newKey;
 	_modes['k'] = true ;
+	// send to channel:
+	std::cout << "[+] MODE message: Set key to: " << _key << std::endl;
 }
 
-void			Channel::banUser(std::string toBan, std::string nickMask){
-	if (!isChop(nickMask)){
-		std::cerr << "ERR_CHANOPRIVSNEEDED (482)" << std::endl;
-		return ;		
-	}
+void			Channel::banUser(std::string toBan){
 	if (isBanned(toBan))
 		return ;
-	std::cout << "[+] MODE message: Banned user: " << toBan << std::endl;
 	_banned.insert(toBan);
 	_modes['b'] = true;
+	// send to channel:
+	std::cout << "[+] MODE message: Banned user: " << toBan << std::endl;
 }
 
-void			Channel::setTopic(std::string newTopic, std::string nickMask){
-	// if (_modes['t'] == true && !isChop(nickMask)){
-	// 	std::cerr << "ERR_CHANOPRIVSNEEDED (482)" << std::endl;
-	// 	return ;
-	// }
-	(void)nickMask; // TODO --> this is needed if mode 't' is implemented
-	if (newTopic == ":")
+void			Channel::setTopic(std::string newTopic){
+	if (newTopic == ":"){
 		_topic.clear();
 		// send to channel:
-		std::cout << "[+] MODE message: Topic is cleared" << std::endl;
+		std::cout << "[+] TOPIC message: Topic is cleared" << std::endl;
 	}
 	else{
 		_topic = newTopic.erase(0, 1);
 		// send to channel:
-		std::cout << "[+] MODE message: New channel topic: " << _topic << std::endl;
+		std::cout << "[+] TOPIC message: New channel topic: " << _topic << std::endl;
 	}
 }
 
@@ -192,23 +180,15 @@ void			Channel::setTopic(std::string newTopic, std::string nickMask){
 /*  Unsetters
 *******************************************************************************/
 
-void 			Channel::unsetKey(std::string nickMask){
-	if (!isChop(nickMask)){
-		std::cerr << "ERR_CHANOPRIVSNEEDED (482)" << std::endl;
-		return ;		
-	}
-	if (_modes.find('k')->second){
-		std::cout << "[+] MODE message: key unset" << std::endl;
+void 			Channel::unsetKey(){
+	if (_modes['k'] == true){
 		_key.clear();
 		_modes['k'] = false;
+		std::cout << "[+] MODE message: key unset" << std::endl;
 	}
 }
 
-void			Channel::unbanUser(std::string toUnban, std::string nickMask){
-	if (!isChop(nickMask)){
-		std::cerr << "ERR_CHANOPRIVSNEEDED (482)" << std::endl;
-		return ;		
-	}
+void			Channel::unbanUser(std::string toUnban){
 	if (_banned.erase(toUnban)){
 		if (_banned.empty())
 			_modes['b'] = false;
@@ -216,12 +196,7 @@ void			Channel::unbanUser(std::string toUnban, std::string nickMask){
 	}
 }
 
-void			Channel::removeUser(User &user, std::string message){
-	std::cout << "[+] PART message: User " << user.getNickname() << " leaving channel " << getName();
-	if (!message.empty())
-		std::cout << " with the message \"" << message << "\"" << std::endl;
-	else
-		std::cout << std::endl;
+void			Channel::removeUser(User &user){
 	_users.erase(&user);
 }
 

@@ -4,9 +4,11 @@ User::User(const int &socket)
 	:_userName("dflt user"), _realName("dflt rname"), _nickName("dflt nick"),
 	_isPassChecked(false), _isRegistered(false), clientSocket(socket) {
 	std::cout << "[+] A user is born" << std::endl;
-	// setHost();
-	// setPort();
-}
+	_setUsername("dflt user");
+	_setNickname("dflt nick");
+	// _setHost();
+	// _setPort();
+
 
 User::~User() {};
 

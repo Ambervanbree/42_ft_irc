@@ -7,10 +7,9 @@
 #define CHANNELS 	server.getArgs()[0]
 #define MESSAGE 	server._command.trailer
 
-void PART(User &user, Server &server)
-{
-	if (!user.getRegistered())
-		return ;
+void PART(User &user, Server &server){
+	// if (!user.getRegistered())
+	// 	return ;
 	if (server.getArgs().empty()){
 		std::cerr << "ERR_NEEDMOREPARAMS (461)" << std::endl;
 		return ;
@@ -18,22 +17,26 @@ void PART(User &user, Server &server)
 
 	std::deque<std::string>	channels;
 	char 					delimiter[] = ",";
+	Channel					*chan = NULL;
 
 	split_args(CHANNELS, delimiter, channels);
 
 	for (size_t i = 0; i < channels.size(); i++){
-		Channel	*chan = findChannel(channels[i], server);
+		chan = findChannel(channels[i], server);
 		if (chan == NULL){
 			std::cerr << "ERR_NOSUCHCHANNEL (403)" << std::endl;
-			return ;
+			break ;
 		}
 		if (!chan->onChannel(user)){
 			std::cerr << "ERR_NOTONCHANNEL (442)" << std::endl;
-			return ;
+			break ;
 		}
-		if (server._command.trailer.empty())
-			removeUserFromChannel(chan, user, server, "");
+		removeUserFromChannel(chan, user, server);
+		// send to channel:
+		std::cout << "[+] PART message: User " << user.getNickname() << " leaving channel " << chan->getName();
+		if (MESSAGE.empty())
+			std::cout << std::endl;
 		else
-			removeUserFromChannel(chan, user, server, MESSAGE);
-	}
+			std::cout << " with the message \"" << MESSAGE << "\"" << std::endl;
+		}
 }
