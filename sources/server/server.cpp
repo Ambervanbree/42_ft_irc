@@ -277,7 +277,7 @@ void    Server::decrementFileDescriptors(){
     Close sockets        
 *******************************************************************************/
 
-void    Server::closeOneConnection(User &user) {
+void    Server::closeOneConnection(User &user, std::string comment) {
     int i = 0;
     int fd = user.clientSocket;
 
@@ -287,14 +287,17 @@ void    Server::closeOneConnection(User &user) {
     close(fd);
     _fds[i].fd = -1;
     decrementFileDescriptors();
-    std::cout << "[+] Connection closed" << std::endl;
+    if (comment[0] != '\0')
+        std::cout << "[+] Connection closed with comment '" << comment << "'" << std::endl;
+    else
+        std::cout << "[+] Connection closed" << std::endl;
 }
 
 void    Server::closeAllConnections(void) {
     std::list<User>::iterator ite = users.begin();
     
     for (; ite != users.end(); ite++){
-        closeOneConnection(*ite);
+        closeOneConnection(*ite, "Closing server");
     }
 }
 
