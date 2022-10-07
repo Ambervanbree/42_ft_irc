@@ -38,24 +38,6 @@ void WALLOPS(std::deque<std::string> Command, User &User)
 	std::cout << "WALLOPS" << std::endl;
 }
 
-//QUIT [<Quit Message>]
-//-> Close the connection of a client and send quit message.
-void QUIT(std::deque<std::string> Command, User &User)
-{
-	(void)Command;
-	(void)User;
-	std::cout << "QUIT" << std::endl;
-}
-
-//SQUIT <server> <comment>
-//-> Break remote server link. 
-void SQUIT(std::deque<std::string> Command, User &User)
-{
-	(void)Command;
-	(void)User;
-	std::cout << "SQUIT" << std::endl;
-}
-
 /*User commands:*/
 
 //SERVICE <nickname> <reserved> <distribution> <type> <reserved> <info>
@@ -67,14 +49,6 @@ void SERVICE(std::deque<std::string> Command, User &User)
 	std::cout << "SERVICE" << std::endl;
 }
 
-//QUIT [ <Quit Message> ]
-//-> Client session is terminated.
-/*void QUIT(std::deque<std::string> Command, User &User)
-{
-	(void)Command;
-	(void)User;
-	std::cout << "QUIT" << std::endl;
-}*/
 
 //PRIVMSG <msgtarget> <text to be sent>
 //-> Send a private message to another user or to a channel.
@@ -187,33 +161,6 @@ void KICK(std::deque<std::string> Command, User &user)
 }
 
 /*Operator commands:*/
-
-//SQUIT <server> <comment>
-//-> Disconnect server links.
-/*void SQUIT(std::deque<std::string> Command, User &user)
-{
-	(void)Command;
-	(void)user;
-	std::cout << "SQUIT" << std::endl;
-}*/
-
-//CONNECT <target server> <port> [ <remote server> ]
-//-> Connect to another server.
-void CONNECT(std::deque<std::string> Command, User &user)
-{
-	(void)Command;
-	(void)user;
-	std::cout << "CONNECT" << std::endl;
-}
-
-//KILL <nickname> <comment>
-//-> Cause a client-server connection to be closed by the server.
-void KILL(std::deque<std::string> Command, User &user)
-{
-	(void)Command;
-	(void)user;
-	std::cout << "KILL" << std::endl;
-}
 
 //DIE (optional)
 //-> Shut down the server.

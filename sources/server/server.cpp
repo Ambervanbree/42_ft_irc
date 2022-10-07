@@ -51,22 +51,20 @@ void    Server::makeServerSocket(void){
 
     _serverSocket = socket(AF_INET, SOCK_STREAM, 0);
     if (_serverSocket < 0) {
-        std::cerr << "socket() failed" << std::endl;
+        std::cerr << "[-] socket() failed" << std::endl;
         exit(-1);
     }
     ret = setsockopt(_serverSocket, SOL_SOCKET, SO_REUSEADDR, (char *)&on, sizeof(on));
     // ---> A ESSAYER pour simplification
     // ret = setsockopt(_serverSocket, SOL_SOCKET, SO_REUSEADDR, on, sizeof(on));
     if (ret < 0){
-        std::cerr << "setsockopt() failed" << std::endl;
+        std::cerr << "[-] setsockopt() failed" << std::endl;
         close(_serverSocket);
         exit(-1);
     }
-    // ---> ESSAYER sans fcntl car pas sure que ce soit necessaire de le faire 
-    // sur linux
     ret = fcntl(_serverSocket, F_SETFL, O_NONBLOCK);
     if (ret < 0){
-        std::cerr << "fcntl() failed" << std::endl;
+        std::cerr << "[-] fcntl() failed" << std::endl;
         close(_serverSocket);
         exit(-1);
     }
@@ -75,7 +73,7 @@ void    Server::makeServerSocket(void){
 /******************************************************************************/
 /*  binding()
     - initializes the sockaddr_in structure (_serverAddr) with memset
-    - binds the socket
+    - binds an address that clients can use to find the server
 *******************************************************************************/
 void    Server::binding(void){
     int ret;
@@ -96,7 +94,7 @@ void    Server::binding(void){
 
 /******************************************************************************/
 /*  listening()
-    - make the server listen
+    - make the server listen for incoming client connexion
 *******************************************************************************/
 void    Server::listening(void){
     int ret;
@@ -177,7 +175,7 @@ void    Server::handleEvents(bool *end_server) {
         if (_fds[i].fd == _serverSocket)
             listeningSocketEvent(end_server);
         else {
-            for(; it != users.end(); it++){
+            for(it = users.begin(); it != users.end(); it++){
                 if (_fds[i].fd == (*it).clientSocket) {
                     clientSocketEvent(i, (*it));
                     break;
@@ -224,7 +222,7 @@ void    Server::clientSocketEvent(int i, User &user) {
     close_conn = false;
 
     while (_fds[i].fd > 0) {
-        if (_fds[i].revents == POLLOUT) {
+        // if (_fds[i].revents == POLLOUT) {
             memset(buffer, '\0', MAX_BUFFER);
             ret = recv(_fds[i].fd, buffer, sizeof(buffer), 0);
             if (ret < 0) {
@@ -246,7 +244,7 @@ void    Server::clientSocketEvent(int i, User &user) {
                 break;
             }
             _handleBuffer(buffer, user);
-        }
+        // }
         // if (_fds[i].revents == POLLIN) {
         // }
     }
