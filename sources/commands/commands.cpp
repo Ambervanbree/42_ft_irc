@@ -49,7 +49,6 @@ void SERVICE(std::deque<std::string> Command, User &User)
 	std::cout << "SERVICE" << std::endl;
 }
 
-
 //PRIVMSG <msgtarget> <text to be sent>
 //-> Send a private message to another user or to a channel.
 void PRIVMSG(std::deque<std::string> Command, User &User)
