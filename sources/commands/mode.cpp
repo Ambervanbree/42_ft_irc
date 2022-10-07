@@ -135,7 +135,7 @@ void	userMode(){
 }
 
 void MODE(User &user, Server &server){
-	if (!user.getRegistered())
+	if (!user.isRegistered())
 		return ;
 	if (server.getArgs().empty()){
 		std::cout << "ERR_NEEDMOREPARAMS (461)" << std::endl;

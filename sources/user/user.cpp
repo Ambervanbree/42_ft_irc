@@ -1,8 +1,9 @@
 #include "user.hpp"
 
 User::User(const int &socket)
-	:_userName("dflt user"), _realName("dflt rname"), _nickName("dflt nick"),
-	_isPassChecked(false), _isRegistered(false), clientSocket(socket) {
+	:_userName("dflt_user"), _realName("dflt_rname"), _nickName("dflt_nick"),
+	_isPassChecked(false), _isRegistered(false), _isOperator(false),
+	clientSocket(socket) {
 	std::cout << "[+] A user is born" << std::endl;
 	// setHost();
 	// setPort();
@@ -24,9 +25,8 @@ User::User(const User &other)
 		_port = other._port;
 		_clientAddr = other._clientAddr;
 		_isPassChecked = other._isPassChecked;
-		// _isNickRegistered = other._isNickRegistered;
-		// _isUserRegistered = other._isUserRegistered;
 		_isRegistered = other._isRegistered;
+		_isOperator = other._isOperator;
 	}
 }
 
@@ -46,22 +46,21 @@ std::string			User::getPrefix() const
 	return prefix;
 }
 
-bool	User::getPassChecked() const { return _isPassChecked; }
-// bool	User::getNickRegistered() const { return _isNickRegistered; }
-// bool	User::getUserRegistered() const { return _isUserRegistered; }
-bool	User::getRegistered() const { return _isRegistered; }
+bool	User::isPassChecked() const { return _isPassChecked; }
+bool	User::isRegistered() const { return _isRegistered; }
+bool	User::isOperator() const { return _isOperator; }
 
 /*Setters*/
 void				User::setNickname(const std::string &nick) { _nickName = nick; std::cout << "[+] _nickName is now set to: " << _nickName << std::endl;}
 void				User::setUsername(const std::string &user) { _userName = user; std::cout << "[+] _userName is now set to: " << _userName << std::endl;}
 void				User::setRealname(const std::string &realname) { _realName =  realname; std::cout << "[+] _realName is now set to: " << _realName << std::endl;}
+
 void				User::setAddr(const struct sockaddr_in &addr) { _clientAddr = addr; }
 void				User::setSocket(const int &socket) { clientSocket = socket; }
 
 void	User::setPassChecked(void) { _isPassChecked = true; std::cout << "[+] pass successfully checked" << std::endl;}
-// void	User::setNickRegistered(const bool nickRegister) { _isNickRegistered = nickRegister; }
-// void	User::setUserRegistered(const bool userRegister) { _isUserRegistered = userRegister; }
 void	User::setRegistered(void) { _isRegistered = true; }
+void	User::setOperator(void) { _isOperator = true; std::cout << "[+] _Operator is now set to true" << std::endl;}
 
 void				User::setHost() { _hostName = inet_ntoa(_clientAddr.sin_addr); }
 void				User::setPort() { _port = ntohs(_clientAddr.sin_port); }

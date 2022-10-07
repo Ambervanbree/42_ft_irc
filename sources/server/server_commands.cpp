@@ -2,17 +2,19 @@
 
 void Server::_setCommands()
 {
-	_commands["PASS"] = PASS;
 	_commands["NICK"] = NICK;
+	_commands["PASS"] = PASS;
 	_commands["USER"] = USER;
+	_commands["OPER"] = OPER;
+	// _commands["SQUIT"] = SQUIT; 			x
+	// _commands["CONNECT"] = CONNECT;
+	// _commands["KILL"] = KILL;
 	// _commands["PING"] = PING;
 	// _commands["PONG"] = PONG;
 	// _commands["ERROR"] = ERROR;			x
 	// _commands["WALLOPS"] = WALLOPS; 		x
 	// _commands["QUIT"] = QUIT;
-	// _commands["SQUIT"] = SQUIT; 			x
 	_commands["JOIN"] = JOIN;
-	// _commands["OPER"] = OPER;
 	_commands["MODE"] = MODE;
 	// _commands["SERVICE"] = SERVICE; 		x
 	// _commands["PRIVMSG"] = PRIVMSG;
@@ -32,8 +34,6 @@ void Server::_setCommands()
 	_commands["LIST"] = LIST;
 	_commands["INVITE"] = INVITE;
 	// _commands["KICK"] = KICK;
-	// _commands["CONNECT"] = CONNECT;
-	// _commands["KILL"] = KILL;
 	// _commands["DIE"] = DIE;
 	// _commands["RESTART"] = RESTART; 		?
 }
@@ -59,13 +59,13 @@ void Server::_messageToCommandStruct(std::string message){
 	for (unsigned int i = 0; i < _command.cmd_name.size(); i++)
 		_command.cmd_name[i] = std::toupper(_command.cmd_name[i]);
 
-	std::cerr << "\n------ Command struct details -----\n";
-	std::cerr << "Prefix: " << _command.prefix << std::endl;
-	std::cerr << "Command_name: " << _command.cmd_name << std::endl;
-	std::cerr << "Args:\n";
-	for (unsigned int i = 0; i < _command.args.size(); i++)
-		std::cerr << _command.args[i] << "\n";
-	std::cerr << "Trailer: " << _command.trailer << std::endl <<std::endl;
+	// std::cerr << "\n------ Command struct details -----\n";
+	// std::cerr << "Prefix: " << _command.prefix << std::endl;
+	// std::cerr << "Command_name: " << _command.cmd_name << std::endl;
+	// std::cerr << "Args:\n";
+	// for (unsigned int i = 0; i < _command.args.size(); i++)
+		// std::cerr << _command.args[i] << "\n";
+	// std::cerr << "Trailer: " << _command.trailer << std::endl <<std::endl;
 }
 
 void Server::_clearCommandStruct(){

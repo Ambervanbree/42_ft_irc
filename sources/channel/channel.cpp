@@ -176,7 +176,7 @@ void			Channel::setTopic(std::string newTopic, std::string nickMask){
 	// 	return ;
 	// }
 	(void)nickMask; // TODO --> this is needed if mode 't' is implemented
-	if (newTopic == ":")
+	if (newTopic == ":") {
 		_topic.clear();
 		// send to channel:
 		std::cout << "[+] MODE message: Topic is cleared" << std::endl;

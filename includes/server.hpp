@@ -70,6 +70,7 @@ private:
 /* ************************************************************************** */
 
 private:
+    std::string         _password;
     int                 _port;
     int                 _serverSocket;
     struct sockaddr_in  _serverAddr;
@@ -84,7 +85,7 @@ private:
 	Command							_command;
 	std::map<std::string, Channel>	_channels;
 	std::list<User>					users;
-    std::string                     password;
+    std::list<std::string>          operators;
     
 /* ************************************************************************** */
 /*                              MEMBER FUNCTIONS                              */
@@ -106,9 +107,9 @@ private:
     void closeAllConnections(void);
 
 	/*Functions to set command list and launch commands*/
-	void _setCommands();
+	void _setCommands(void);
 	void _messageToCommandStruct(std::string message);
-	void _clearCommandStruct();
+	void _clearCommandStruct(void);
 	void _launchCommand(User &user);
 	void _splitBuffer(std::string buffer);
 	void _handleBuffer(char *buffer, User &user);
@@ -120,10 +121,12 @@ public:
 
 	void interpretCommand(std::string &message, User &user); /*Change to Private at the end of project*/
 
-	std::string 			&getPrefix();
-	std::string				&getCommand();
-	std::deque<std::string>	&getArgs();
-	std::string				&getTrailer();
+    std::string				&getPassword(void);
+
+	std::string 			&getPrefix(void);
+	std::string				&getCommand(void);
+	std::deque<std::string>	&getArgs(void);
+	std::string				&getTrailer(void);
 };
 
 #endif

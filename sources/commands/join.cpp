@@ -39,7 +39,7 @@ void partFromAllChannels(User &user, Server &server){
 
 void JOIN(User &user, Server &server)
 {
-	if (!user.getRegistered())
+	if (!user.isRegistered())
 		return ;
 	std::deque<std::string>	channels;
 	std::deque<std::string>	keys;
