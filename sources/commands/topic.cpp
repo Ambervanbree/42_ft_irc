@@ -24,8 +24,8 @@ void TOPIC(User &user, Server &server){
 		std::cerr << "ERR_NOTONCHANNEL (442)" << std::endl; 
 		return ;
 	}
-	if (!server._command.trailer.empty())
+	if (server._command.trailer.empty())
 		chan->sendTopic(user);
 	else
-		chan->setTopic(NEWTOPIC, user.getNickMask());
+		chan->setTopic(NEWTOPIC);
 }

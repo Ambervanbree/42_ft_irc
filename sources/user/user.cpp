@@ -5,8 +5,8 @@ User::User(const int &socket)
 	_isPassChecked(false), _isRegistered(false), _isOperator(false),
 	clientSocket(socket) {
 	std::cout << "[+] A user is born" << std::endl;
-	// setHost();
-	// setPort();
+	// _setHost();
+	// _setPort();
 }
 
 User::~User() {};

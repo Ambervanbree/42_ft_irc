@@ -24,7 +24,7 @@ void	addMode(char toSet, Mode &mode){
 				return ;
 			}
 			else if (mode.argNr < 3){
-				mode.chan->setKey(mode.modeArg[mode.argNr], mode.nickMask);
+				mode.chan->setKey(mode.modeArg[mode.argNr]);
 				mode.argNr++;
 			}
 			return ;
@@ -35,7 +35,7 @@ void	addMode(char toSet, Mode &mode){
 				return ;
 			}
 			if (mode.argNr < 3){
-				mode.chan->banUser(mode.modeArg[mode.argNr], mode.nickMask);
+				mode.chan->banUser(mode.modeArg[mode.argNr]);
 				mode.argNr++;
 			}
 			return ;
@@ -49,7 +49,7 @@ void	addMode(char toSet, Mode &mode){
 void	eraseMode(char toSet, Mode &mode){
 	switch (toSet){
 		case 'k':
-			mode.chan->unsetKey(mode.nickMask);
+			mode.chan->unsetKey();
 			return ;
 		case 'b':
 			if (mode.modeArg.empty()){
@@ -57,7 +57,7 @@ void	eraseMode(char toSet, Mode &mode){
 				return ;
 			}
 			if (mode.argNr < 3){
-				mode.chan->unbanUser(mode.modeArg[mode.argNr], mode.nickMask);
+				mode.chan->unbanUser(mode.modeArg[mode.argNr]);
 				mode.argNr++;
 			}
 			return ;
@@ -93,10 +93,9 @@ void	parseModeString(Mode &mode){
 	}
 }
 
-void	fillModeStruct(Mode &mode, std::string nickMask, Channel *channel, Server &server){
+void	fillModeStruct(Mode &mode, Channel *channel, Server &server){
 	mode.chan			= channel;
 	mode.modeString 	= MODESTRING;
-	mode.nickMask 		= nickMask;
 	mode.argNr			= 0;
 	size_t args 		= server.getArgs().size() - 2;
 	std::string			temp;
@@ -117,6 +116,10 @@ void	channelMode(std::string nickMask, Server &server){
 		std::cerr << "ERR_NOSUCHCHANNEL (403)" << std::endl;
 		return ;	
 	}
+	if (!chan->isChop(nickMask)){
+		std::cerr << "ERR_CHANOPRIVSNEEDED (482)" << std::endl;
+		return ;		
+	}
 	if (server.getArgs().size() < 2){
 		std::cout << "RPL_CHANNELMODEIS (324)" << std::endl;
 		return ;
@@ -124,7 +127,7 @@ void	channelMode(std::string nickMask, Server &server){
 
 	Mode	mode;
 
-	fillModeStruct(mode, nickMask, chan, server);
+	fillModeStruct(mode, chan, server);
 	parseModeString(mode);
 }
 

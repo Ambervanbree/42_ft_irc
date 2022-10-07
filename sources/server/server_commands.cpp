@@ -15,7 +15,6 @@ void Server::_setCommands()
 	// _commands["WALLOPS"] = WALLOPS; 		x
 	// _commands["QUIT"] = QUIT;
 	_commands["JOIN"] = JOIN;
-	_commands["MODE"] = MODE;
 	// _commands["SERVICE"] = SERVICE; 		x
 	// _commands["PRIVMSG"] = PRIVMSG;
 	// _commands["NOTICE"] = NOTICE;
@@ -28,12 +27,15 @@ void Server::_setCommands()
 	// _commands["WHO"] = WHO; 				?
 	// _commands["WHOWAS"] = WHOWAS; 		x
 	// _commands["WHOIS"] = WHOIS;
+	_commands["MODE"] = MODE;
 	_commands["PART"] = PART;
 	_commands["TOPIC"] = TOPIC;
 	_commands["NAMES"] = NAMES;
 	_commands["LIST"] = LIST;
 	_commands["INVITE"] = INVITE;
-	// _commands["KICK"] = KICK;
+	_commands["KICK"] = KICK;
+	// _commands["CONNECT"] = CONNECT;
+	// _commands["KILL"] = KILL;
 	// _commands["DIE"] = DIE;
 	// _commands["RESTART"] = RESTART; 		?
 }
