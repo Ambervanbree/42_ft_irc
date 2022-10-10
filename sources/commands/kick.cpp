@@ -7,11 +7,8 @@
 #define TOKICK	 	server.getArgs()[1]
 #define COMMENT 	server._command.trailer
 
-void	sendKickMessage(Channel &chan, User &toKick, Server &server, User &kicker){
-	std::string	message = createCommandMessage(kicker, server);
-	if (COMMENT.empty())
-		message.append(":" + toKick.getNickname());
-	chan.sendChannelMessage(message);
+void	sendKickMessage(Channel &chan, Server &server, User &kicker){
+	chan.sendChannelMessage(createCommandMessage(kicker, server));
 }
 
 void	kickUserPerChannel(Server &server, User &user, std::deque<std::string> channels, std::deque<std::string> toKick){
@@ -34,7 +31,7 @@ void	kickUserPerChannel(Server &server, User &user, std::deque<std::string> chan
 				std::cerr << "ERR_USERNOTINCHANNEL (441)" << std::endl;
 			else{
 				removeUserFromChannel(chan, user, server);
-				sendKickMessage(*chan, *userToKick, server, user);
+				sendKickMessage(*chan, server, user);
 			}
 		}
 	}
@@ -66,7 +63,7 @@ void	kickMultipleUsers(Server &server, User &user, std::string channel, std::deq
 			std::cerr << "ERR_USERNOTINCHANNEL (441)" << std::endl;
 		else{
 			removeUserFromChannel(chan, user, server);
-			sendKickMessage(*chan, *userToKick, server, user);
+			sendKickMessage(*chan, server, user);
 		}
 	}
 }

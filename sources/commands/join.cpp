@@ -61,8 +61,12 @@ void JOIN(User &user, Server &server)
 		if (!grammarCheckChannel(channels[i]))
 			return ;
 		Channel	*chan = findChannel(channels[i], server);
-		if (chan != NULL)
-			chan->addUser(keys[i], user);
+		if (chan != NULL){
+			if (!chan->hasChop())
+				return ;
+			else
+				chan->addUser(keys[i], user);
+		}
 		else
 			chan = createChannel(channels[i], user, server);
 		chan->sendChannelMessage(createCommandMessage(user, server));
