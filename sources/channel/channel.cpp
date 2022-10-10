@@ -60,6 +60,21 @@ void			Channel::sendList(User &user){
 	std::cout << "RPL_LISTEND (323)" << std::endl;
 }
 
+void			Channel::sendChannelMessage(std::string message){
+	std::set<User *>::iterator		uit = _users.begin();
+	std::set<User *>::iterator		uite = _users.end();
+	std::set<std::string>::iterator	cit = _chop.end();
+
+	for (; uit != uite; uit++){
+		if (_chop.find((*uit)->getNickMask()) != cit)
+			std::cout << message << " from " << "@" << (*uit)->getNickname() << std::endl;
+			// send PRIVMSG with nickname ("@" + (*uit)->getNickame())
+		else
+			std::cout << message << " from" << (*uit)->getNickname() << std::endl;
+			// send PRIVMSG with (*uit)->getNickame()
+	}
+}
+
 /******************************************************************************/
 /*  Checkers
 *******************************************************************************/
@@ -131,7 +146,6 @@ void			Channel::setTopic(std::string newTopic){
 		_topic.clear();
 	else
 		_topic = newTopic.erase(0, 1);
-	// PRIVMSG to channel: sendTopic(user);
 }
 
 /******************************************************************************/

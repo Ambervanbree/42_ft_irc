@@ -11,8 +11,7 @@ void	sendKickMessage(Channel &chan, User &toKick, Server &server, User &kicker){
 	std::string	message = createCommandMessage(kicker, server);
 	if (COMMENT.empty())
 		message.append(":" + toKick.getNickname());
-	(void)chan;
-	// PRIVMSG to channel: 	message
+	chan.sendChannelMessage(message);
 }
 
 void	kickUserPerChannel(Server &server, User &user, std::deque<std::string> channels, std::deque<std::string> toKick){

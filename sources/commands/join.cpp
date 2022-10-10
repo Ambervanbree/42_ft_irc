@@ -33,7 +33,7 @@ void 		partFromAllChannels(User &user, Server &server){
 		if (chan->second.onChannel(user)){
 			removeUserFromChannel(&(chan->second), user, server);
 			std::string message = ":" + user.getNickname() + " PART " + chan->second.getName();
-			// PRIVMSG to channel: 	message
+			chan->second.sendChannelMessage(message);
 		}
 	}
 }
@@ -65,7 +65,7 @@ void JOIN(User &user, Server &server)
 			chan->addUser(keys[i], user);
 		else
 			chan = createChannel(channels[i], user, server);
-		// PRIVMSG to channel: 	createCommandMessage(user, server);
+		chan->sendChannelMessage(createCommandMessage(user, server));
 		if (!chan->getTopic().empty())
 			chan->sendTopic(user);
 		chan->sendNames(user);

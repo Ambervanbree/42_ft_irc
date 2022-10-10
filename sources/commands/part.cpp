@@ -30,6 +30,6 @@ void PART(User &user, Server &server){
 			break ;
 		}
 		removeUserFromChannel(chan, user, server);
-		// PRIVMSG to channel: 	createCommandMessage(user, server);
-		}
+		chan->sendChannelMessage(createCommandMessage(user, server));
+	}
 }

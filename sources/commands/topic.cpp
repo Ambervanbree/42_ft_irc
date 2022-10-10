@@ -3,8 +3,6 @@
 #include "server.hpp"
 #include "commands.hpp"
 
-// TOPIC <channel> [ <topic> ]
-
 #define CHANNEL	 	server.getArgs()
 #define NEWTOPIC 	server._command.trailer
 
@@ -32,5 +30,6 @@ void TOPIC(User &user, Server &server){
 			return ;
 		}
 		chan->setTopic(NEWTOPIC);
+		chan->sendChannelMessage(createCommandMessage(user, server));
 	}
 }

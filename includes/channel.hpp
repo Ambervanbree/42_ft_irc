@@ -11,19 +11,19 @@ class Server;
 
 class Channel{
 	private:
-		std::string					_name; 
+		std::string					_name;
 		std::string					_key;
 		std::string					_topic;
 		std::set<User *>			_users;
 		std::set<std::string>		_banned;
 		std::map<char, bool>		_modes;
 		std::set<std::string>		_chop; 		// channel operator
-
+	
 	public:
 		/* Initialisation */
 
-		Channel(std::string name, User &user);
-		~Channel(void);
+						Channel(std::string name, User &user);
+						~Channel(void);
 		void			initModes(void);
 
 		/* Getters */
@@ -39,6 +39,7 @@ class Channel{
 		void			sendTopic(User &user);
 		void			sendNames(User &user);
 		void			sendList(User &user);
+		void			sendChannelMessage(std::string message);
 
 		/* Checkers */
 
