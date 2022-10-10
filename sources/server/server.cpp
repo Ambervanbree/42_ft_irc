@@ -240,23 +240,31 @@ void    Server::_serverSocketEvent(void) {
         - message reception
 *******************************************************************************/
 void    Server::_clientSocketEvent(int i, User &user) {
-    bool    close_conn = false;
     char    buffer[MAX_BUFFER];
     int     ret;
+    bool    close_conn;
 
-    while (close_conn == false && _fds[i].fd > 0) {
-        memset(buffer, '\0', MAX_BUFFER);
-        ret = recv(_fds[i].fd, buffer, sizeof(buffer), 0);
-        if (ret < 0) {
-            if (errno != EWOULDBLOCK) {
-                std::cerr << "[-] recv() failed" << errno << std::endl;
+    while (close_conn == false && _fds[i].fd > 0)
+    {
+        if (_fds[i].revents == POLLIN) {
+            memset(buffer, '\0', MAX_BUFFER);
+            ret = recv(_fds[i].fd, buffer, sizeof(buffer), 0);
+            if (ret < 0) {
+                if (errno != EWOULDBLOCK) {
+                    std::cerr << "[-] recv() failed" << errno << std::endl;
+                    close_conn = true;
+                }
+            }
+            if (ret == 0)
                 close_conn = true;
+            if (close_conn == false)
+            {
+                _handleBuffer(buffer, user);
+                ret = _sendMessage(user.getSocket());
+                if (ret < 0)
+                    close_conn = true;
             }
         }
-        if (ret == 0)
-            close_conn = true;
-        if (close_conn == false)
-            _handleBuffer(buffer, user);
     }
     if (close_conn == true)
         closeOneConnection(user);

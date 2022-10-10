@@ -6,14 +6,19 @@
 
 void USER(User &user, Server &server)
 {
+	std::string toSend;
 	if ((user.isPassChecked() == false) || (user.getNickname().compare("dflt_nick") == 0))
 		return;
 	if (server._command.args.size() < 3 || server._command.trailer.empty()) {
-		std::cerr << "(461) ERR_NEEDMOREPARAMS" << std::endl;
+		toSend = ERR_NEEDMOREPARAMS(user.getNickname(), server.getCommand());
+		std::cerr << toSend << std::endl;
+		server.addReplies(user, toSend);
 		return;
 	}
 	if (user.isRegistered()) {
-		std::cerr << "ERR_ALREADYREGISTERED (462)" << std::endl;
+		toSend = ERR_ALREADYTREGISTERED(user.getNickname());
+		std::cerr << toSend << std::endl;
+		server.addReplies(user, toSend);
 		return;
 	}
 	
@@ -26,8 +31,8 @@ void USER(User &user, Server &server)
 		user.setUsername(username);
 	user.setRealname(realname.erase(0, 1));
 	user.setRegistered();
-	std::cerr << "(001) RPL_WELCOME" << std::endl;
-	std::cerr << RPL_WELCOME(user.getNickname(), user.getNickMask());
-	std::cerr << std::endl;
+	toSend = RPL_WELCOME(user.getNickname());
+	std::cerr << toSend << std::endl; 
+	server.addReplies(user, toSend);
 	return;
 }
