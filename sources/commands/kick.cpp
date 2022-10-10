@@ -3,19 +3,15 @@
 #include "server.hpp"
 #include "commands.hpp"
 
-//KICK <channel> <user> [<comment>]
-
 #define CHANNELS 	server.getArgs()[0]
 #define TOKICK	 	server.getArgs()[1]
 #define COMMENT 	server._command.trailer
 
 void	sendKickMessage(Channel &chan, User &toKick, Server &server, User &kicker){
-	// send to channel:
-	std::cout << "[+] KICK message: User " << toKick.getNickname() << " kicked of " << chan.getName();
+	std::string	message = createCommandMessage(kicker, server);
 	if (COMMENT.empty())
-		std::cout << " by " << kicker.getNickname() << std::endl;
-	else
-		std::cout << " with the comment \"" << COMMENT << "\"" << std::endl;
+		message.append(":" + toKick.getNickname());
+	chan.sendChannelMessage(message);
 }
 
 void	kickUserPerChannel(Server &server, User &user, std::deque<std::string> channels, std::deque<std::string> toKick){

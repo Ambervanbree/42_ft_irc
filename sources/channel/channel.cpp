@@ -9,37 +9,27 @@ Channel::Channel(std::string name, User &user) : _name(name) {
 	_users.insert(&user);
 	_chop.insert(user.getNickMask());
 	// TODO --> If chop sends messages associated with a channel, @ is prefixed to its nickname
+	// TOTO --> Prefix '@' or '#' should maybe be saved in a separate variable? 
 };
 
 Channel::~Channel() {};
 
 void			Channel::initModes(){
-	// TODO --> verify which modes are not necessary
-	// _modes['a'] = false; // toggle the anonymous channel flag;
-	// _modes['i'] = false; // toggle the invite-only channel flag;;
-	// _modes['m'] = false; // toggle the moderated channel
-	// _modes['n'] = false; // toggle the no messages to channel from clients on the outside
-	// _modes['q'] = false; // toggle the quiet channel flag
-	// _modes['p'] = false; // toggle the private channel flag
-	// _modes['s'] = false; // toggle the secret channel flag
-	// _modes['r'] = false; // toggle the server reop flag
-	// _modes['t'] = false; // toggle the topic settable by channel operator only flag
-
-// non toggles:
-	// _modes['o'] = false; // give/take channel operator privileges
-	// 'v'	give/take the voice privilege;
-	_modes['k'] = false; //	set/remove the channel key (password);
-	// 'l'	set/remove the user limit to channel;
-	_modes['b'] = false; // set/remove ban mask to keep users out;
-	// 'e'	set/remove an exception mask to override a ban mask;
-	// 'I'	set/remove an invitation mask to automatically override the invite-only flag;
+	_modes['k'] = false; 	//	set/remove the channel key (password)
+	_modes['b'] = false; 	//	set/remove ban mask to keep users out
+	_modes['t'] = true; 	//	topic settable by chanop only
+	_modes['o'] = true; 	//	set/remove chanop priviliges of users (TODO)
 }
 
 /******************************************************************************/
 /*  Getters
 *******************************************************************************/
 
-std::string		Channel::getName() const {return _name; }
+std::string				Channel::getName() const {return _name; }
+std::string				Channel::getTopic() const {return _topic; }
+std::set<User *>		Channel::getUsers() const {return _users; }
+std::set<std::string>	Channel::getBanned() const {return _banned; }
+std::map<char, bool>	Channel::getModes() const {return _modes; }
 
 /******************************************************************************/
 /*  Message requests
@@ -48,14 +38,11 @@ std::string		Channel::getName() const {return _name; }
 void			Channel::sendTopic(User &user){
 	(void)user; 
 	// RPL sent to user:
-	if (_topic.empty()){
+	if (_topic.empty())
 		std::cout << "RPL_NOTOPIC (331)" << std::endl;
-		return ;
-	}
 	else{
 		std::cout << "RPL_TOPIC (332)" << std::endl;
 		std::cout << "RPL_TOPICWHOTIME (333)" << std::endl;
-		return ;
 	}
 }
 
@@ -71,6 +58,21 @@ void			Channel::sendList(User &user){
 	// RPL sent to user:
 	std::cout << "RPL_LIST (322)" << std::endl;
 	std::cout << "RPL_LISTEND (323)" << std::endl;
+}
+
+void			Channel::sendChannelMessage(std::string message){
+	std::set<User *>::iterator		uit = _users.begin();
+	std::set<User *>::iterator		uite = _users.end();
+	std::set<std::string>::iterator	cit = _chop.end();
+
+	for (; uit != uite; uit++){
+		if (_chop.find((*uit)->getNickMask()) != cit)
+			std::cout << message << " from " << "@" << (*uit)->getNickname() << std::endl;
+			// send PRIVMSG with nickname ("@" + (*uit)->getNickame())
+		else
+			std::cout << message << " from" << (*uit)->getNickname() << std::endl;
+			// send PRIVMSG with (*uit)->getNickame()
+	}
 }
 
 /******************************************************************************/
@@ -101,12 +103,8 @@ bool			Channel::isChop(std::string nickMask) const {
 }
 
 bool			Channel::correctKey(std::string key) const {
-	/* 	
-		If key mode is set, mode argument will be cross referenced with the
-		given key, else it will be ignored, so true is returned.
-	*/
-
 	if (!_key.empty() && (_key != key)){
+		std::cerr << "ERR_BADCHANNELKEY (475)" << std::endl;
 		return false;
 	}
 	return true;
@@ -121,37 +119,19 @@ bool			Channel::isEmpty() const {
 *******************************************************************************/
 
 void			Channel::addUser(std::string key, User &user){
-	if (onChannel(user)){
+	if (onChannel(user))
 		std::cerr << "ERR_USERONCHANNEL (443)" << std::endl;
-		return ;
-	}
-	if (isBanned(user.getNickMask())){
+	else if (isBanned(user.getNickMask()))
 		std::cerr << "ERR_BANNEDFROMCHAN (474)" << std::endl;
-		return ; 
-	}
-	if (_modes['k'] == true && !correctKey(key)){
+	else if (_modes['k'] == true && !correctKey(key))
 		std::cerr << "ERR_BADCHANNELKEY (475)" << std::endl;
-		return ;
-	}
-	_users.insert(&user);
-	// RPL sent to channel (including user):
-	std::cout << "[+] JOIN message from " << user.getNickname() << " on channel " << getName() << std::endl;
-	// RPL sent to user:
-	std::cout << "RPL_TOPIC (332)" << std::endl;
-	std::cout << "RPL_NAMREPLY (356)" << std::endl;
-	return ;
-
-	/* TODO --> add possible error replies: 
-		ERR_INVITEONLYCHAN (473)  -> invite mode
-		ERR_CHANNELISFULL (471)   -> limit mode
-	*/
+	else
+		_users.insert(&user);
 }
 
 void			Channel::setKey(std::string newKey) {
 	_key = newKey;
 	_modes['k'] = true ;
-	// send to channel:
-	std::cout << "[+] MODE message: Set key to: " << _key << std::endl;
 }
 
 void			Channel::banUser(std::string toBan){
@@ -159,21 +139,13 @@ void			Channel::banUser(std::string toBan){
 		return ;
 	_banned.insert(toBan);
 	_modes['b'] = true;
-	// send to channel:
-	std::cout << "[+] MODE message: Banned user: " << toBan << std::endl;
 }
 
 void			Channel::setTopic(std::string newTopic){
-	if (newTopic == ":"){
+	if (newTopic == ":")
 		_topic.clear();
-		// send to channel:
-		std::cout << "[+] TOPIC message: Topic is cleared" << std::endl;
-	}
-	else{
+	else
 		_topic = newTopic.erase(0, 1);
-		// send to channel:
-		std::cout << "[+] TOPIC message: New channel topic: " << _topic << std::endl;
-	}
 }
 
 /******************************************************************************/
@@ -184,7 +156,6 @@ void 			Channel::unsetKey(){
 	if (_modes['k'] == true){
 		_key.clear();
 		_modes['k'] = false;
-		std::cout << "[+] MODE message: key unset" << std::endl;
 	}
 }
 
@@ -192,7 +163,6 @@ void			Channel::unbanUser(std::string toUnban){
 	if (_banned.erase(toUnban)){
 		if (_banned.empty())
 			_modes['b'] = false;
-		std::cout << "[+] MODE message: Unbanned user: " << toUnban << std::endl;
 	}
 }
 

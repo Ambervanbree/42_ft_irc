@@ -28,3 +28,12 @@ void 		removeUserFromChannel(Channel *channel, User &user, Server &server){
 		server._channels.erase(channel->getName());
 	}
 }
+
+std::string	createCommandMessage(User &user, Server &server){
+	std::string message = ":" + user.getNickname() + " " + server.getCommand() + " ";
+	for (size_t i = 0; i < server.getArgs().size(); i++)
+		message.append(server.getArgs()[i] + " ");
+	if (!server.getTrailer().empty())
+		message.append("\"" + server.getTrailer() + "\"");
+	return message ;
+}

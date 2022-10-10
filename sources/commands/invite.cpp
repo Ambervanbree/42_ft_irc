@@ -3,8 +3,6 @@
 #include "server.hpp"
 #include "commands.hpp"
 
-// INVITE <nickname> <channel>
-
 #define INVITEE	server.getArgs()[0]
 #define CHANNEL	server.getArgs()[1]
 
@@ -12,10 +10,9 @@ void	sendInvite(User &inviter, Server &server){
 	User	*invitee = findUser(INVITEE, server);
 
 	if (invitee != NULL){
-		// Sent to invitee:
-		std::cout << "[+] INVITE message: invited to " << CHANNEL << " by " << inviter.getNickname() << std::endl;
-		// Sent to inviter:
-		std::cout << "RPL_INVITING (341)" << std::endl;
+		(void)inviter;
+		// PRIVMSG to invitee: createCommandMessage(inviter, server);
+		// PRIVMSG to inviter: RPL_INVITING (341)
 	}
 	return ;
 }

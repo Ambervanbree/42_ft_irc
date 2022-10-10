@@ -34,7 +34,7 @@ void Server::_setCommands()
 	_commands["LIST"] = LIST;
 	_commands["INVITE"] = INVITE;
 	_commands["KICK"] = KICK;
-	// _commands["CONNECT"] = CONNECT;
+	// _commands["CONNECT"] = CONNECT;		x
 	// _commands["KILL"] = KILL;
 	// _commands["DIE"] = DIE;
 	// _commands["RESTART"] = RESTART; 		?
