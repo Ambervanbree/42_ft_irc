@@ -2,6 +2,7 @@
 #include "user.hpp"
 #include "server.hpp"
 #include "commands.hpp"
+#include <fstream>
 
 # define RESET   "\033[0m"
 # define GREEN	 "\033[32m"
@@ -13,21 +14,21 @@
 # define BOLD    "\e[1m"
 # define ITALIC	 "\e[3m"
 
-void	createMOTD(std::string &message){
-	message.append(CYAN).append(BOLD);
-	message.append("Welcome to the ACC Power IRC Network\n\n");
-	message.append("Server Information:\n");
-	message.append(RESET);
-	message.append("Server Hostname: 	localhost\n");
-	message.append("Default port:		6667\n");
-	message.append("Contact:		doesntexist@gmail.com\n\n");
-	message.append(BOLD).append(CYAN);
-	message.append("Some Inspiration:\n");
-	message.append(RESET).append(ITALIC);
-	message.append("Learn as if you will live forever, live like you will die tomorrow.\n");
-	message.append(RESET);
-	message.append("- Mahatma Ghandi\n");
-	message.append(RESET);
+void	sendMOTD(User &user){
+	std::ifstream	MOTDfile;
+	std::string		line;
+
+	MOTDfile.open("other/motd.txt");
+	if (MOTDfile.is_open()){
+		while (MOTDfile.good()){
+			std::getline(MOTDfile, line);
+			std::cout << line << std::endl;
+			//PRIVMSG to user: line + "\n";
+		}
+		MOTDfile.close();
+	}
+	else
+		std::cerr << "ERR_NOMOTD (422)" << std::endl;
 }
 
 void MOTD(User &user, Server &server){
@@ -39,8 +40,5 @@ void MOTD(User &user, Server &server){
 			return ;
 		}
 	}
-	std::string message;
-	createMOTD(message);
-	(void)user;
-	std::cout << message << std::endl;
+	sendMOTD(user);
 }
