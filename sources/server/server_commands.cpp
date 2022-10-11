@@ -13,7 +13,7 @@ void Server::_setCommands()
 	// _commands["PONG"] = PONG;
 	// _commands["ERROR"] = ERROR;			x
 	// _commands["WALLOPS"] = WALLOPS; 		x
-	// _commands["QUIT"] = QUIT;
+	_commands["QUIT"] = QUIT;
 	_commands["JOIN"] = JOIN;
 	// _commands["SERVICE"] = SERVICE; 		x
 	// _commands["PRIVMSG"] = PRIVMSG;
