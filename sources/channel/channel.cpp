@@ -8,8 +8,6 @@ Channel::Channel(std::string name, User &user) : _name(name) {
 	initModes();
 	_users.insert(&user);
 	_chop.insert(user.getNickMask());
-	// TODO --> If chop sends messages associated with a channel, @ is prefixed to its nickname
-	// TOTO --> Prefix '@' or '#' should maybe be saved in a separate variable? 
 };
 
 Channel::~Channel() {};
@@ -18,7 +16,7 @@ void			Channel::initModes(){
 	_modes['k'] = false; 	//	set/remove the channel key (password)
 	_modes['b'] = false; 	//	set/remove ban mask to keep users out
 	_modes['t'] = true; 	//	topic settable by chanop only
-	_modes['o'] = true; 	//	set/remove chanop priviliges of users (TODO)
+	_modes['o'] = true; 	//	set/remove chanop priviliges of users
 }
 
 /******************************************************************************/
@@ -110,8 +108,16 @@ bool			Channel::correctKey(std::string key) const {
 	return true;
 }
 
-bool			Channel::isEmpty() const {
+bool			Channel::isEmpty(void) const {
 	return (_users.size() == 0);
+}
+
+bool			Channel::hasChop(void) const{
+	std::map<char, bool>::const_iterator	it = _modes.find('k');
+
+	if (it != _modes.end() && it->second == true)
+		return true ;
+	return false ;
 }
 
 /******************************************************************************/
@@ -135,8 +141,6 @@ void			Channel::setKey(std::string newKey) {
 }
 
 void			Channel::banUser(std::string toBan){
-	if (isBanned(toBan))
-		return ;
 	_banned.insert(toBan);
 	_modes['b'] = true;
 }
@@ -146,6 +150,11 @@ void			Channel::setTopic(std::string newTopic){
 		_topic.clear();
 	else
 		_topic = newTopic.erase(0, 1);
+}
+
+void			Channel::addChop(std::string newChop){
+	_chop.insert(newChop);
+	_modes['o'] = true;
 }
 
 /******************************************************************************/
@@ -170,6 +179,12 @@ void			Channel::removeUser(User &user){
 	_users.erase(&user);
 }
 
+void			Channel::removeChop(std::string toRemove){
+	if (_chop.erase(toRemove)){
+		if (_chop.empty())
+			_modes['o'] = false;
+	}
+}
 
 /******************************************************************************/
 /*  Non member overload

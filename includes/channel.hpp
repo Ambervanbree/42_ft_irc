@@ -48,7 +48,8 @@ class Channel{
 		bool			isBanned(std::string nickMask) const;
 		bool			isChop(std::string nickMask) const;
 		bool			correctKey(std::string key) const;
-		bool			isEmpty() const;
+		bool			isEmpty(void) const;
+		bool			hasChop(void) const;
 
 		/* Setters */
 
@@ -56,12 +57,14 @@ class Channel{
 		void			setKey(std::string key);
 		void			banUser(std::string toBan);
 		void			setTopic(std::string newTopic);
+		void			addChop(std::string toBan);
 
 		/* Unsetters */
 
 		void 			unsetKey(void);
 		void			unbanUser(std::string toUnban);
 		void			removeUser(User &user);
+		void			removeChop(std::string toRemove);
 };
 
 #endif

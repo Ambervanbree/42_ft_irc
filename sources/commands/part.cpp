@@ -21,15 +21,14 @@ void PART(User &user, Server &server) {
 
 	for (size_t i = 0; i < channels.size(); i++){
 		chan = findChannel(channels[i], server);
-		if (chan == NULL){
+		if (chan == NULL)
 			std::cerr << "ERR_NOSUCHCHANNEL (403)" << std::endl;
-			break ;
-		}
-		if (!chan->onChannel(user)){
+		else if (!chan->onChannel(user))
 			std::cerr << "ERR_NOTONCHANNEL (442)" << std::endl;
-			break ;
+		else{
+			removeUserFromChannel(chan, user, server);
+			chan->sendChannelMessage(createCommandMessage(user, server));			
 		}
-		removeUserFromChannel(chan, user, server);
-		chan->sendChannelMessage(createCommandMessage(user, server));
+
 	}
 }
