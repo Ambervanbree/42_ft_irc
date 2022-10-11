@@ -18,7 +18,7 @@ void Server::_setCommands()
 	// _commands["SERVICE"] = SERVICE; 		x
 	// _commands["PRIVMSG"] = PRIVMSG;
 	// _commands["NOTICE"] = NOTICE;
-	// _commands["MOTD"] = MOTD;
+	_commands["MOTD"] = MOTD;
 	// _commands["LUSERS"] = LUSERS; 		x
 	// _commands["VERSION"] = VERSION; 		x
 	// _commands["STATS"] = STATS; 			x

@@ -94,15 +94,6 @@ void NOTICE(std::deque<std::string> Command, User &User)
 	std::cout << "NOTICE" << std::endl;
 }
 
-//MOTD [ <target> ]
-//-> Message of the day from a server.
-void MOTD(std::deque<std::string> Command, User &User)
-{
-	(void)Command;
-	(void)User;
-	std::cout << "MOTD" << std::endl;
-}
-
 //LUSERS [ <mask> [ <target> ] ]
 //-> Get statistics on the size of the IRC network. 
 void LUSERS(std::deque<std::string> Command, User &User)
