@@ -8,9 +8,13 @@ Channel::Channel(std::string name, User &user) : _name(name) {
 	initModes();
 	_users.insert(&user);
 	_chop.insert(user.getNickMask());
+	std::cout << "[+] Channel " << name << " created" << std::endl;
+	// TODO --> If chop sends messages associated with a channel, @ is prefixed to its nickname
 };
 
-Channel::~Channel() {};
+Channel::~Channel() {
+	std::cout << "[+] Channel " << _name << " deleted" << std::endl;
+};
 
 void			Channel::initModes(){
 	_modes['k'] = false; 	//	set/remove the channel key (password)
