@@ -8,8 +8,6 @@ Channel::Channel(std::string name, User &user) : _name(name) {
 	initModes();
 	_users.insert(&user);
 	_chop.insert(user.getNickMask());
-	// TODO --> If chop sends messages associated with a channel, @ is prefixed to its nickname
-	// TOTO --> Prefix '@' or '#' should maybe be saved in a separate variable? 
 };
 
 Channel::~Channel() {};

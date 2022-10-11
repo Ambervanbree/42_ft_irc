@@ -177,34 +177,7 @@ void WHOWAS(std::deque<std::string> Command, User &User)
 
 /*User commands for channels:*/
 
-//KICK <channel> <user> [<comment>]
-//-> Request forced removal of a user from a channel.
-void KICK(std::deque<std::string> Command, User &user)
-{
-	(void)Command;
-	(void)user;
-	std::cout << "KICK" << std::endl;
-}
-
 /*Operator commands:*/
-
-//SQUIT <server> <comment>
-//-> Disconnect server links.
-/*void SQUIT(std::deque<std::string> Command, User &user)
-{
-	(void)Command;
-	(void)user;
-	std::cout << "SQUIT" << std::endl;
-}*/
-
-//CONNECT <target server> <port> [ <remote server> ]
-//-> Connect to another server.
-void CONNECT(std::deque<std::string> Command, User &user)
-{
-	(void)Command;
-	(void)user;
-	std::cout << "CONNECT" << std::endl;
-}
 
 //KILL <nickname> <comment>
 //-> Cause a client-server connection to be closed by the server.
