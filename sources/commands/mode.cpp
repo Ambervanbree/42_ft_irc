@@ -6,25 +6,25 @@
 #define TARGET	 	server.getArgs()[0]
 #define MODESTRING 	server.getArgs()[1]
 
-// 	MODE <target> [<modestring> [<mode arguments>]]
-
 struct Mode{
 	Channel					*chan;
 	std::string				nickMask;
 	std::string				modeString;
+	std::string				outString;
 	std::deque<std::string>	modeArg;
+	std::deque<std::string>	outArg;
 	int						argNr;
 };
 
 void	addMode(char toSet, Mode &mode){
 	switch (toSet){
 		case 'k':
-			if (mode.modeArg.empty()){
+			if (mode.modeArg.empty())
 				std::cout << "ERR_NEEDMOREPARAMS (461)" << std::endl;
-				return ;
-			}
 			else if (mode.argNr < 3){
 				mode.chan->setKey(mode.modeArg[mode.argNr]);
+				mode.outString += toSet;
+				mode.outArg.push_back((mode.modeArg[mode.argNr]));
 				mode.argNr++;
 			}
 			return ;
@@ -36,9 +36,25 @@ void	addMode(char toSet, Mode &mode){
 			}
 			if (mode.argNr < 3){
 				mode.chan->banUser(mode.modeArg[mode.argNr]);
+				mode.outString += toSet;
+				mode.outArg.push_back((mode.modeArg[mode.argNr]));
 				mode.argNr++;
 			}
 			return ;
+		case 'o':
+			if (mode.modeArg.empty())
+				std::cout << "ERR_NEEDMOREPARAMS (461)" << std::endl;
+			else if (mode.argNr < 3){
+				if (!mode.chan->onChannel(mode.modeArg[mode.argNr]))
+					std::cout << "ERR_USERNOTINCHANNEL (441)" << std::endl;
+				else{
+					mode.chan->addChop(mode.modeArg[mode.argNr]);
+					mode.outString += toSet;
+					mode.outArg.push_back((mode.modeArg[mode.argNr]));
+					mode.argNr++;					
+				}
+			}
+			return ;			
 		default:
 			std::cerr << "ERR_UNKNOWNMODE (472)" << std::endl;
 			std::cout << "RPL_CHANNELMODEIS (324)" << std::endl;
@@ -50,14 +66,25 @@ void	eraseMode(char toSet, Mode &mode){
 	switch (toSet){
 		case 'k':
 			mode.chan->unsetKey();
+			mode.outString += toSet;
 			return ;
 		case 'b':
-			if (mode.modeArg.empty()){
+			if (mode.modeArg.empty())
 				std::cout << "ERR_NEEDMOREPARAMS (461)" << std::endl;
-				return ;
-			}
-			if (mode.argNr < 3){
+			else if (mode.argNr < 3){
 				mode.chan->unbanUser(mode.modeArg[mode.argNr]);
+				mode.outString += toSet;
+				mode.outArg.push_back((mode.modeArg[mode.argNr]));
+				mode.argNr++;
+			}
+			return ;
+		case 'o':
+			if (mode.modeArg.empty())
+				std::cout << "ERR_NEEDMOREPARAMS (461)" << std::endl;
+			else if (mode.argNr < 3){
+				mode.chan->removeChop(mode.modeArg[mode.argNr]);
+				mode.outString += toSet;
+				mode.outArg.push_back((mode.modeArg[mode.argNr]));
 				mode.argNr++;
 			}
 			return ;
@@ -78,11 +105,13 @@ void	parseModeString(Mode &mode){
 	for (; it != ite; ){
 		switch (*(it++)){
 			case '+':
+				mode.outString += *it;
 				while (!(*it == '+' || *it == '-' || it == ite)){
 					addMode(*it, mode);
 					it++;
 				}
 			case '-':
+				mode.outString += *it;
 				while (!(*it == '+' || *it == '-' || it == ite)){
 					eraseMode(*it, mode);
 					it++;
@@ -91,6 +120,7 @@ void	parseModeString(Mode &mode){
 		if (it == ite)
 			return ;
 	}
+	return ;
 }
 
 void	fillModeStruct(Mode &mode, Channel *channel, Server &server){
@@ -109,14 +139,14 @@ void	fillModeStruct(Mode &mode, Channel *channel, Server &server){
 	}
 }
 
-void	channelMode(std::string nickMask, Server &server){
+void	channelMode(User &user, Server &server){
 	Channel		*chan = findChannel(TARGET, server);
 
 	if (chan == NULL){
 		std::cerr << "ERR_NOSUCHCHANNEL (403)" << std::endl;
 		return ;	
 	}
-	if (!chan->isChop(nickMask)){
+	if (!chan->isChop(user.getNickMask())){
 		std::cerr << "ERR_CHANOPRIVSNEEDED (482)" << std::endl;
 		return ;		
 	}
@@ -129,11 +159,18 @@ void	channelMode(std::string nickMask, Server &server){
 
 	fillModeStruct(mode, chan, server);
 	parseModeString(mode);
+
+	std::string message = ":" + user.getNickname() + " MODE " + mode.outString;
+	for (size_t i = 0; i < mode.outArg.size(); i++)
+		message.append(mode.outArg[i] + " ");
+	chan->sendChannelMessage(message);
 }
 
-void	userMode(){
+void	userMode(User &user, Server &server){
 	std::cerr << "ERR_UMODEUNKNOWNFLAG (501)" << std::endl;
-	std::cerr << "RPL_UMODEIS (221)" << std::endl;
+	
+	std::string message = createCommandMessage(user, server);
+	// PRIVMSG to user
 	return ;
 }
 
@@ -144,8 +181,8 @@ void MODE(User &user, Server &server){
 		std::cout << "ERR_NEEDMOREPARAMS (461)" << std::endl;
 		return ;		
 	}
-	if (TARGET[0] == '#')
-		channelMode(user.getNickMask(), server);
+	if (TARGET[0] == '#' || TARGET[0] == '&')
+		channelMode(user, server);
 	else
-		userMode();
+		userMode(user, server);
 }

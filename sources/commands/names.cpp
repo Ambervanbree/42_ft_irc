@@ -3,8 +3,6 @@
 #include "server.hpp"
 #include "commands.hpp"
 
-// NAMES [ <channel> ]
-
 #define ARGUMENTS	 	server.getArgs()
 
 void	channelNames(User &user, Server &server){
@@ -35,10 +33,15 @@ void	allNamesUser(User &user, Server &server){
 }
 
 void NAMES(User &user, Server &server){
-	if (!user.isRegistered())
-		return ;
+	// if (!user.isRegistered())
+	// 	return ;
 	if (ARGUMENTS.empty())
 		allNamesUser(user, server);
 	else
 		channelNames(user, server);
 }
+
+/*
+	According to the RFC there is no error reply 
+	for bad channel names.
+*/

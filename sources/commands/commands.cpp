@@ -68,15 +68,6 @@ void NOTICE(std::deque<std::string> Command, User &User)
 	std::cout << "NOTICE" << std::endl;
 }
 
-//MOTD [ <target> ]
-//-> Message of the day from a server.
-void MOTD(std::deque<std::string> Command, User &User)
-{
-	(void)Command;
-	(void)User;
-	std::cout << "MOTD" << std::endl;
-}
-
 //LUSERS [ <mask> [ <target> ] ]
 //-> Get statistics on the size of the IRC network. 
 void LUSERS(std::deque<std::string> Command, User &User)
@@ -150,15 +141,6 @@ void WHOWAS(std::deque<std::string> Command, User &User)
 }
 
 /*User commands for channels:*/
-
-//KICK <channel> <user> [<comment>]
-//-> Request forced removal of a user from a channel.
-void KICK(std::deque<std::string> Command, User &user)
-{
-	(void)Command;
-	(void)user;
-	std::cout << "KICK" << std::endl;
-}
 
 /*Operator commands:*/
 

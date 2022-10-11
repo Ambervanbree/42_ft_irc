@@ -1,0 +1,22 @@
+
+
+  /$$$$$   /$$$$$   /$$$$$    /$$$$$$                                            
+ /$$_  $$ /$$_  $$ /$$_  $$  | $$_  $$                                           
+| $$ \ $$| $$ \__/| $$ \__/  | $$ \ $$ /$$$$$  /$$  /$$  /$$  /$$$$$   /$$$$$ 
+| $$$$$$$| $$     | $$       | $$$$$$//$$_  $$| $$ | $$ | $$ /$$_  $$ /$$_  $$
+| $$_  $$| $$     | $$       | $$___/| $$ \ $$| $$ | $$ | $$| $$$$$$$| $$ \__/
+| $$ | $$| $$   $$| $$   $$  | $$    | $$ | $$| $$ | $$ | $$| $$____/| $$    
+| $$ | $$|  $$$$$/|  $$$$$/  | $$    |  $$$$$/|  $$$$$/$$$$/|  $$$$$$| $$     
+|__/ |__/ \_____/  \_____/   |__/     \_____/  \_____/\___/  \______/|__/     
+
+Welcome to the ACC Power IRC Network
+
+SERVER INFORMATION
+Server Hostname:        localhost
+Default port:           6667
+Contact:                doesntexist@gmail.com
+
+SOME INSPIRATION
+Learn as if you will live forever, live like you will die tomorrow.
+- Mahatma Ghandi
+

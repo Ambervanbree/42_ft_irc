@@ -3,19 +3,12 @@
 #include "server.hpp"
 #include "commands.hpp"
 
-//KICK <channel> <user> [<comment>]
-
 #define CHANNELS 	server.getArgs()[0]
 #define TOKICK	 	server.getArgs()[1]
 #define COMMENT 	server._command.trailer
 
-void	sendKickMessage(Channel &chan, User &toKick, Server &server, User &kicker){
-	// send to channel:
-	std::cout << "[+] KICK message: User " << toKick.getNickname() << " kicked of " << chan.getName();
-	if (COMMENT.empty())
-		std::cout << " by " << kicker.getNickname() << std::endl;
-	else
-		std::cout << " with the comment \"" << COMMENT << "\"" << std::endl;
+void	sendKickMessage(Channel &chan, Server &server, User &kicker){
+	chan.sendChannelMessage(createCommandMessage(kicker, server));
 }
 
 void	kickUserPerChannel(Server &server, User &user, std::deque<std::string> channels, std::deque<std::string> toKick){
@@ -38,7 +31,7 @@ void	kickUserPerChannel(Server &server, User &user, std::deque<std::string> chan
 				std::cerr << "ERR_USERNOTINCHANNEL (441)" << std::endl;
 			else{
 				removeUserFromChannel(chan, user, server);
-				sendKickMessage(*chan, *userToKick, server, user);
+				sendKickMessage(*chan, server, user);
 			}
 		}
 	}
@@ -70,7 +63,7 @@ void	kickMultipleUsers(Server &server, User &user, std::string channel, std::deq
 			std::cerr << "ERR_USERNOTINCHANNEL (441)" << std::endl;
 		else{
 			removeUserFromChannel(chan, user, server);
-			sendKickMessage(*chan, *userToKick, server, user);
+			sendKickMessage(*chan, server, user);
 		}
 	}
 }
