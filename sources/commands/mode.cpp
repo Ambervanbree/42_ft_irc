@@ -45,10 +45,14 @@ void	addMode(char toSet, Mode &mode){
 			if (mode.modeArg.empty())
 				std::cout << "ERR_NEEDMOREPARAMS (461)" << std::endl;
 			else if (mode.argNr < 3){
-				mode.chan->addChop(mode.modeArg[mode.argNr]);
-				mode.outString += toSet;
-				mode.outArg.push_back((mode.modeArg[mode.argNr]));
-				mode.argNr++;
+				if (!mode.chan->onChannel(mode.modeArg[mode.argNr]))
+					std::cout << "ERR_USERNOTINCHANNEL (441)" << std::endl;
+				else{
+					mode.chan->addChop(mode.modeArg[mode.argNr]);
+					mode.outString += toSet;
+					mode.outArg.push_back((mode.modeArg[mode.argNr]));
+					mode.argNr++;					
+				}
 			}
 			return ;			
 		default:
@@ -162,9 +166,11 @@ void	channelMode(User &user, Server &server){
 	chan->sendChannelMessage(message);
 }
 
-void	userMode(){
+void	userMode(User &user, Server &server){
 	std::cerr << "ERR_UMODEUNKNOWNFLAG (501)" << std::endl;
-	std::cerr << "RPL_UMODEIS (221)" << std::endl;
+	
+	std::string message = createCommandMessage(user, server);
+	// PRIVMSG to user
 	return ;
 }
 
@@ -178,5 +184,5 @@ void MODE(User &user, Server &server){
 	if (TARGET[0] == '#' || TARGET[0] == '&')
 		channelMode(user, server);
 	else
-		userMode();
+		userMode(user, server);
 }
