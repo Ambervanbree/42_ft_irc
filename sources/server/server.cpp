@@ -8,7 +8,7 @@ Server::Server(int port, std::string password)
 : _password(password), _port(port), _nfds(0) {}
 
 Server::~Server(void) {
-    closeAllConnections();
+    quitServer();
 }
 
 /* ************************************************************************** */
@@ -19,16 +19,48 @@ std::string &Server::getPassword(void) {
     return _password;
 }
 
+/******************************************************************************/
+/*  start()
+    - Initializes commands
+    - Creates server socket
+    - Binds the server socket
+    - Makes it listen
+    - Initilizes the file descriptors structure
+
+*******************************************************************************/
 void    Server::start(void){
 	_setCommands();
-    makeServerSocket();
-    binding();
-    listening();
+    _makeServerSocket();
+    _bind();
+    _listen();
+    _initFileDescriptorsStruct();
 }
 
-void    Server::handleConnections(void){
-    initConnections();
-    handleIncomingConnections();
+/******************************************************************************/
+/*  handleConnections()
+    - Loop waiting for incoming connects (for server socket) or for incoming 
+    data on any of the connected sockets.
+    - Call poll() and wait TIME_OUT for it to complete.
+    - Check to see if the poll call failed.
+    - Check to see if the TIME_OUT expired.
+
+*******************************************************************************/
+void   Server::handleConnections(void){
+    int     ret;
+    bool    end_server = false;
+
+    while (end_server == false) {
+        ret = poll(_fds, _nfds, TIME_OUT);
+        if (ret < 0)
+            std::cerr << "[-] poll() failed" << std::endl;
+        if (ret == 0)
+            std::cout << "[-] poll() timed out." << std::endl;
+        if ((ret < 0) || (ret == 0)) {
+            quitServer();
+            return;
+        }
+        _handleEvents(&end_server);
+    }
 }
 
 /* ************************************************************************** */
@@ -36,16 +68,16 @@ void    Server::handleConnections(void){
 /* ************************************************************************** */
 
 /******************************************************************************/
-/*  makeServerSocket()
+/*  _makeServerSocket()
     - socket() function creates the server socket that will recieve incoming
     connections
     - setsockopt() function allows the server socket to be reusable (so_reuseaddr
     poption)
     - fcntl() function sets the server socket to be nonblocking. 
     All of the sockets for the incoming connections will also be nonblocking 
-    since they will inherit that state from the listening server socket.
+    since they will inherit that state from the _listen server socket.
 *******************************************************************************/
-void    Server::makeServerSocket(void){
+void    Server::_makeServerSocket(void){
     int ret;
     int on = 1;
 
@@ -71,11 +103,11 @@ void    Server::makeServerSocket(void){
 }
 
 /******************************************************************************/
-/*  binding()
+/*  _bind()
     - initializes the sockaddr_in structure (_serverAddr) with memset
     - binds an address that clients can use to find the server
 *******************************************************************************/
-void    Server::binding(void){
+void    Server::_bind(void){
     int ret;
 
     memset(&_serverAddr, 0, sizeof(_serverAddr));
@@ -84,7 +116,6 @@ void    Server::binding(void){
     _serverAddr.sin_addr.s_addr = inet_addr("127.0.0.1");
     _serverAddr.sin_port = htons(_port);
     ret = bind(_serverSocket, (const struct sockaddr *) &_serverAddr, sizeof(_serverAddr));
-    // std::cout << "[+] The server socket has fd nb " << _serverSocket << std::endl;
     if (ret < 0){
         std::cerr << "bind() failed" << std::endl;
         close(_serverSocket);
@@ -93,75 +124,61 @@ void    Server::binding(void){
 }
 
 /******************************************************************************/
-/*  listening()
+/*  _listen()
     - make the server listen for incoming client connexion
 *******************************************************************************/
-void    Server::listening(void){
+void    Server::_listen(void){
     int ret;
     ret = listen(_serverSocket, MAX_CONNECTS);
     if (ret == 0)
-        std::cout << "[+] Server is listening" << std::endl;
+        std::cout << "[+] Server is _listen" << std::endl;
     else
         std::cerr << "listen() failed" << std::endl;
 }
 
 /******************************************************************************/
-/*  initConnections()
+/*  _initFileDescriptorsStruct()
     - Initializes the pollfd structure _fds
-    - Sets up the initial listening socket 
-    - _fds[0].fd = server/listening socket
+    - Sets up the initial _listen socket 
+    - _fds[0].fd = server/_listen socket
     - _fds[0].events = events we are interested in managing
             POLLIN event = There is data to read
             POLLOUT event = Writing is now possible
 
     !!! We might have to add other events !!!
 *******************************************************************************/
-void    Server::initConnections(void){
+void    Server::_initFileDescriptorsStruct(void){
     _nfds = 0;
     memset(_fds, _nfds , sizeof(_fds));
-    _fds[_nfds].fd = _serverSocket;
+    _addtoStruct(_serverSocket);
+}
+
+/******************************************************************************/
+/*  _addtoStruct()
+    - Initializes the pollfd structure _fds
+    - Sets up the initial _listen socket 
+    - _fds[0].fd = server/_listen socket
+    - _fds[0].events = events we are interested in managing
+            POLLIN event = There is data to read
+            POLLOUT event = Writing is now possible
+
+    !!! We might have to add other events !!!
+*******************************************************************************/
+void    Server::_addtoStruct(int fd) {
+    _fds[_nfds].fd = fd;
     // _fds[_nfds].events = POLLIN | POLLOUT;
     _fds[_nfds].events = POLLIN;
     _fds[_nfds].revents = 0;
     _nfds++;
 }
 
-/******************************************************************************/
-/*  handleIncomingConnections()
-    - Loop waiting for incoming connects (for server socket) or for incoming 
-    data on any of the connected sockets.
-    - Call poll() and wait TIME_OUT for it to complete.
-    - Check to see if the poll call failed.
-    - Check to see if the TIME_OUT expired.
-
-*******************************************************************************/
-void   Server::handleIncomingConnections(void){
-    int     ret;
-    bool    end_server = false;
-
-    while (end_server == false) {
-        // std::cout << "[+] Waiting on poll()..." << std::endl;
-        ret = poll(_fds, _nfds, TIME_OUT);
-        // voir si pas plus logique ainsi:
-        // ret = poll(_fds, MAX_FDS, TIME_OUT);
-        if (ret < 0)
-            std::cerr << "[-] poll() failed" << std::endl;
-        if (ret == 0)
-            std::cout << "[-] poll() timed out." << std::endl;
-        if ((ret < 0) || (ret == 0)) {
-            closeAllConnections();
-            return;
-        }
-        handleEvents(&end_server);
-    }
-}
 
 /******************************************************************************/
-/*  handleEvents()
+/*  _handleEvents()
     - Loop through to find the descriptors that returned POLLIN and 
-    determine whether it's the listening or the active connection.
+    determine whether it's the _listen or the active connection.
 *******************************************************************************/
-void    Server::handleEvents(bool *end_server) {       
+void    Server::_handleEvents(bool *end_server) {       
     int     i;
     std::list<User>::iterator it = users.begin();
 
@@ -169,17 +186,17 @@ void    Server::handleEvents(bool *end_server) {
         if(_fds[i].revents == 0)
             continue;
     // verifier si c'est vraiment necessaire parce que ca bloque IRSSI
-        // if((_fds[i].revents != POLLIN) && (_fds[i].revents != POLLOUT)){
-        //     std::cout << "Error! revents = " << _fds[i].revents << std::endl;
-        //     *end_server = true;
-        //     break;
-        // }
+        if(_fds[i].revents != POLLIN){
+            std::cout << "Error! revents = " << _fds[i].revents << std::endl;
+            *end_server = true;
+            break;
+        }
         if (_fds[i].fd == _serverSocket)
-            listeningSocketEvent(end_server);
+            _serverSocketEvent(end_server);
         else {
             for(it = users.begin(); it != users.end(); it++){
                 if (_fds[i].fd == (*it).clientSocket) {
-                    clientSocketEvent(i, (*it));
+                    _clientSocketEvent(i, (*it));
                     break;
                 }
             }
@@ -187,16 +204,19 @@ void    Server::handleEvents(bool *end_server) {
     }
 }
 
-void    Server::listeningSocketEvent(bool *end_server) {
-    acceptConnections(end_server);
-    // others;
-}
-
-void    Server::acceptConnections(bool *end_server) {
+/******************************************************************************/
+/*  _serverSocketEvent()
+    - Handle serversocket (= listeningsocket) events, here :
+        - connection of a new client
+    - Accepts the connexion
+    - Make the client socket file descriptor non blocking (can make other
+    actions while socket is waiting for an event)
+    - Creates the new fd in the fd structure
+    - Creates a new user
+*******************************************************************************/
+void    Server::_serverSocketEvent(bool *end_server) {
     int new_fd = 0;
-    int ret = 0;
 
-    // std::cout << "[+] Listening socket is readable" << std::endl;
     while (new_fd != -1) {
         new_fd = accept(_serverSocket, NULL, NULL);
         if (new_fd < 0) {
@@ -207,68 +227,67 @@ void    Server::acceptConnections(bool *end_server) {
             break;
         }
         std::cout << "[+] New incoming connection - " << new_fd << std::endl;
-        ret = fcntl(new_fd, F_SETFL, O_NONBLOCK);
-        if (ret < 0){
+        if (fcntl(new_fd, F_SETFL, O_NONBLOCK) < 0){
             std::cerr << "[-] fcntl() failed" << std::endl;
             close(new_fd);
             exit(-1);
         }
-        _fds[_nfds].fd = new_fd;
-        _fds[_nfds].events = POLLIN;
-        // _fds[_nfds].events = POLLIN | POLLOUT;
-        _fds[_nfds].revents = 0;
-        _nfds++;
+        _addtoStruct(new_fd);
         User newUser(new_fd);
         users.push_back(newUser);
     }
 }
 
-void    Server::clientSocketEvent(int i, User &user) {
-    bool    close_conn;
+/******************************************************************************/
+/*  _clientSocketEvent()
+    - Handle _clientSocket events, here :
+        - message reception
+*******************************************************************************/
+void    Server::_clientSocketEvent(int i, User &user) {
+    bool    close_conn = false;
     char    buffer[MAX_BUFFER];
     int     ret;
-    // char    resp[60] = "[+] J'ai bien recu ton message et je t'en remercie\n";
-    
-    // std::cout << "[+] Descriptor " << _fds[i].fd << " is readable" << std::endl;
-    close_conn = false;
 
     while (_fds[i].fd > 0) {
-        // if (_fds[i].revents == POLLOUT) {
-            memset(buffer, '\0', MAX_BUFFER);
-            ret = recv(_fds[i].fd, buffer, sizeof(buffer), 0);
-            if (ret < 0) {
-                if (errno != EWOULDBLOCK) {
-                    std::cerr << "[-] recv() failed" << errno << std::endl;
-                    close_conn = true;
-                }
-                break;
-            }
-            if (ret == 0) {
-                std::cout << "[+] Connection closed" << std::endl;
+        memset(buffer, '\0', MAX_BUFFER);
+        ret = recv(_fds[i].fd, buffer, sizeof(buffer), 0);
+        if (ret < 0) {
+            if (errno != EWOULDBLOCK) {
+                std::cerr << "[-] recv() failed" << errno << std::endl;
                 close_conn = true;
-                break;
             }
-            // ret = send(_fds[i].fd, resp, strlen(resp), 0);
-            // if (ret < 0) {
-            //     std::cerr << "[-] send() failed" << std::endl;
-            //     close_conn = true;
-            //     break;
-            // }
-            // std::cout << "[+] Message was sent" << std::endl;
-            _handleBuffer(buffer, user);
-        // }
-        // if (_fds[i].revents == POLLIN) {
-        // }
+            break;
+        }
+        if (ret == 0) {
+            std::cout << "[+] Connection closed" << std::endl;
+            close_conn = true;
+            break;
+        }
+        _handleBuffer(buffer, user);
     }
 }
+
 /******************************************************************************/
-/*  decrementFileDescriptors()
-    If the compress_array flag was turned on, we need to squeeze together
-    the array and decrement the number of file descriptors. We do not need
-    to move back the events and revents fields because the events will always
-    be POLLIN in this case, and revents is output.          
+/*  closeConnections()
+    Closes client socket        
 *******************************************************************************/
-void    Server::decrementFileDescriptors(){
+void    Server::closeOneConnection(User &user) {
+    int i = 1;
+
+    while(_fds[i].fd != user.clientSocket)
+        i++;
+    users.remove(user);
+    close(_fds[i].fd);
+    _fds[i].fd = -1;
+    _updateFdsStructure();
+    std::cout << "[+] Connection closed" << std::endl;
+}
+
+/******************************************************************************/
+/*  _updateFdsStructure()
+    Update the _fds array and decrement the number of file descriptors _nfds
+*******************************************************************************/
+void    Server::_updateFdsStructure(){
     int i;
     int j;
 
@@ -283,36 +302,19 @@ void    Server::decrementFileDescriptors(){
 }
 
 /******************************************************************************/
-/*  closeConnections()
-    Close sockets        
+/*  quitServer()
+    - closes all the connexions
+    - closes the server
 *******************************************************************************/
-
-void    Server::closeOneConnection(User &user) {
-    int i = 0;
-    int fd = user.clientSocket;
-
-    while(_fds[i].fd != user.clientSocket)
-        i++;
-    users.remove(user);
-    close(fd);
-    _fds[i].fd = -1;
-    decrementFileDescriptors();
-    std::cout << "[+] Connection closed" << std::endl;
-    // if (_nfds == 1) {
-    //     close(_fds[0].fd);
-    //     _fds[0].fd = -1;
-    //     _nfds--;
-    // }
-}
-
-void    Server::closeAllConnections(void) {
+void    Server::quitServer(void) {
     std::list<User>::iterator ite = users.begin();
+    int serverSocket = _fds[0].fd;
     
-    for (; ite != users.end(); ite++){
+    for (; ite != users.end(); ite++)
         closeOneConnection(*ite);
-    }
+    _fds[0].fd = -1;
+    close(serverSocket);
 }
-
 
 std::string 			&Server::getPrefix() {return _command.prefix; }
 std::string				&Server::getCommand() {return _command.cmd_name; }
