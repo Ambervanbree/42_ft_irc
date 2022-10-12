@@ -112,6 +112,8 @@ public:
     void handleConnections(void);
     void closeOneConnection(User &user);
 
+	void sendMessage(User &recipient, std::string message);
+
 	void interpretCommand(std::string &message, User &user); /*Change to Private at the end of project*/
 
     std::string				&getPassword(void);

@@ -33,7 +33,7 @@ void 		partFromAllChannels(User &user, Server &server){
 		if (chan->second.onChannel(user)){
 			removeUserFromChannel(&(chan->second), user, server);
 			std::string message = ":" + user.getNickname() + " PART " + chan->second.getName();
-			chan->second.sendChannelMessage(user, message);
+			chan->second.sendChannelMessage(user, server, message);
 		}
 	}
 }
@@ -68,7 +68,7 @@ void JOIN(User &user, Server &server){
 		}
 		else
 			chan = createChannel(channels[i], user, server);
-		chan->sendChannelMessage(user, createCommandMessage(server));
+		chan->sendChannelMessage(user, server, createCommandMessage(server));
 		if (!chan->getTopic().empty())
 			chan->sendTopic(user);
 		chan->sendNames(user);

@@ -15,18 +15,23 @@ void	channelMessage(User &user, Server &server){
 	else if (chan->isBanned(user.getNickMask()))
 		return ;
 	else
-		chan->sendChannelMessage(user, server.getTrailer().erase(0, 1));
+		chan->sendChannelMessage(user, server, server.getTrailer().erase(0, 1));
 }
 
 void	singleMessage(User &user, Server &server){
 	(void)user;
 	(void)server;
-	// find user, create message, send it to user
+	User	*recipient = findUser(TARGET, server);
+
+	if (recipient == NULL)
+		std::cerr << "nope" << std::endl;
+	else
+		server.sendMessage(*recipient, server.getTrailer());
 }
 
 void PRIVMSG(User &user, Server &server){
-	if (!user.isRegistered())
-		return ;
+	// if (!user.isRegistered())
+	// 	return ;
 	if (server.getArgs().empty()){
 		std::cout << "ERR_NEEDMOREPARAMS (461)" << std::endl;
 		return ;		

@@ -163,7 +163,7 @@ void	channelMode(User &user, Server &server){
 	std::string message = ":" + user.getNickname() + " MODE " + mode.outString;
 	for (size_t i = 0; i < mode.outArg.size(); i++)
 		message.append(mode.outArg[i] + " ");
-	chan->sendChannelMessage(user, message);
+	chan->sendChannelMessage(user, server, message);
 }
 
 void	userMode(User &user, Server &server){
@@ -175,8 +175,8 @@ void	userMode(User &user, Server &server){
 }
 
 void MODE(User &user, Server &server){
-	if (!user.isRegistered())
-		return ;
+	// if (!user.isRegistered())
+	// 	return ;
 	if (server.getArgs().empty()){
 		std::cout << "ERR_NEEDMOREPARAMS (461)" << std::endl;
 		return ;		

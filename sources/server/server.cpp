@@ -268,6 +268,13 @@ void    Server::_clientSocketEvent(int i, User &user) {
 }
 
 /******************************************************************************/
+/*  sendMessage()
+*******************************************************************************/
+void	 Server::sendMessage(User &recipient, std::string message) {
+	send(recipient.clientSocket, message.c_str(), sizeof(message), 0);
+}
+
+/******************************************************************************/
 /*  closeConnections()
     Closes client socket        
 *******************************************************************************/

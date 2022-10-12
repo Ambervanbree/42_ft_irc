@@ -62,20 +62,20 @@ void			Channel::sendList(User &user){
 	std::cout << "RPL_LISTEND (323)" << std::endl;
 }
 
-void			Channel::sendChannelMessage(User &user, std::string message){
+void			Channel::sendChannelMessage(User &user, Server &server, std::string message){
 	std::string userstring = ":";
 
 	if (_chop.find(user.getNickMask()) != _chop.end())
 		userstring.append("@");
 	userstring.append(user.getNickname());
 	message.insert(0, userstring);
+	message.append("\n");
 
 	std::set<User *>::iterator	it = _users.begin();
 	std::set<User *>::iterator	ite = _users.end();
 
 	for (; it != ite; it++){
-		// send message to client
-		// it->sendMessage(message);
+		server.sendMessage(user, message);
 	}
 }
 

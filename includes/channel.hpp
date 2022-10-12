@@ -39,7 +39,7 @@ class Channel{
 		void			sendTopic(User &user);
 		void			sendNames(User &user);
 		void			sendList(User &user);
-		void			sendChannelMessage(User &user, std::string message);
+		void			sendChannelMessage(User &user, Server &server, std::string message);
 
 		/* Checkers */
 

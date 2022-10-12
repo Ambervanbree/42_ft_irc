@@ -23,10 +23,8 @@ User*		findUser(std::string &userName, Server &server){
 
 void 		removeUserFromChannel(Channel *channel, User &user, Server &server){
 	channel->removeUser(user);
-	if (channel->isEmpty()){
-		std::cout << "[+] Channel " << channel->getName() << " erased\n";
+	if (channel->isEmpty())
 		server._channels.erase(channel->getName());
-	}
 }
 
 std::string	createCommandMessage(Server &server){

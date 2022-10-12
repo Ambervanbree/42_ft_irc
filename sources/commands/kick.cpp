@@ -8,7 +8,7 @@
 #define COMMENT 	server._command.trailer
 
 void	sendKickMessage(Channel &chan, Server &server, User &kicker){
-	chan.sendChannelMessage(kicker, createCommandMessage(server));
+	chan.sendChannelMessage(kicker, server, createCommandMessage(server));
 }
 
 void	kickUserPerChannel(Server &server, User &user, std::deque<std::string> channels, std::deque<std::string> toKick){
