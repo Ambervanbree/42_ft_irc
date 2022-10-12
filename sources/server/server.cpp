@@ -8,7 +8,7 @@ Server::Server(int port, std::string password)
 : _password(password), _port(port), _nfds(0) {}
 
 Server::~Server(void) {
-    closeAllConnections();
+    quitServer();
 }
 
 /* ************************************************************************** */
@@ -149,7 +149,7 @@ void   Server::handleIncomingConnections(void){
         if (ret == 0)
             std::cout << "[-] poll() timed out." << std::endl;
         if ((ret < 0) || (ret == 0)) {
-            closeAllConnections();
+            quitServer();
             return;
         }
         handleEvents(&end_server);
@@ -262,13 +262,10 @@ void    Server::clientSocketEvent(int i, User &user) {
     }
 }
 /******************************************************************************/
-/*  decrementFileDescriptors()
-    If the compress_array flag was turned on, we need to squeeze together
-    the array and decrement the number of file descriptors. We do not need
-    to move back the events and revents fields because the events will always
-    be POLLIN in this case, and revents is output.          
+/*  updateFdsStructure()
+    Update the _fds array and decrement the number of file descriptors _nfds
 *******************************************************************************/
-void    Server::decrementFileDescriptors(){
+void    Server::updateFdsStructure(){
     int i;
     int j;
 
@@ -288,29 +285,26 @@ void    Server::decrementFileDescriptors(){
 *******************************************************************************/
 
 void    Server::closeOneConnection(User &user) {
-    int i = 0;
-    int fd = user.clientSocket;
+    int i = 1;
 
     while(_fds[i].fd != user.clientSocket)
         i++;
     users.remove(user);
-    close(fd);
+    close(_fds[i].fd);
     _fds[i].fd = -1;
-    decrementFileDescriptors();
     std::cout << "[+] Connection closed" << std::endl;
-    // if (_nfds == 1) {
-    //     close(_fds[0].fd);
-    //     _fds[0].fd = -1;
-    //     _nfds--;
-    // }
 }
 
-void    Server::closeAllConnections(void) {
+void    Server::quitServer(void) {
     std::list<User>::iterator ite = users.begin();
+    int serverSocket = _fds[0].fd;
     
     for (; ite != users.end(); ite++){
         closeOneConnection(*ite);
     }
+    _fds[0].fd = -1;
+    updateFdsStructure();
+    close(serverSocket);
 }
 
 

@@ -103,8 +103,7 @@ private:
     void clientSocketEvent(int i, User &user);
     void acceptConnections(bool *end_server);
     
-    void decrementFileDescriptors(void);
-    void closeAllConnections(void);
+    void quitServer(void);
 
 	/*Functions to set command list and launch commands*/
 	void _setCommands(void);
@@ -118,6 +117,7 @@ public:
     void start(void);
     void handleConnections(void);
     void closeOneConnection(User &user);
+    void updateFdsStructure(void);
 
 	void interpretCommand(std::string &message, User &user); /*Change to Private at the end of project*/
 
