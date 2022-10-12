@@ -115,11 +115,11 @@ void Server::_handleBuffer(char *buffer, User &user)
 	if (newBuffer[newBuffer.size() - 1] == '\n')
 	{
 		_splitBuffer(std::string(newBuffer));
+		user.resetBuffer();
 		while (_bufferCommand.size())
 		{
 			interpretCommand(_bufferCommand[0], user);
 			_bufferCommand.pop_front();
 		}
-		user.resetBuffer();
 	}
 }

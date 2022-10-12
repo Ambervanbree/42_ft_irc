@@ -38,10 +38,10 @@ typedef     void (*command)(User &user, Server &server);
 
 struct Command
 {
-	std::string				prefix;
-	std::string 			cmd_name;
-	std::deque<std::string>	args;
-	std::string				trailer;
+	std::string				    prefix;
+	std::string 			    cmd_name;
+	std::vector<std::string>	args;
+	std::string				    trailer;
 };
 
 class Server {
@@ -72,6 +72,7 @@ private:
     int                 _timeout;
     int                 _nfds;
     struct  pollfd      _fds[MAX_FDS];
+    bool                _end_server;
 	
 	std::map<std::string, command>	_commands;
 	std::deque<std::string>			_bufferCommand;
@@ -92,11 +93,10 @@ private:
     void _listen(void);
     void _initFileDescriptorsStruct(void);
     void _addtoStruct(int fd);
-    void _handleEvents(bool *end_server);
-    void _serverSocketEvent(bool *end_server);
+    void _handleEvents(void);
+    void _serverSocketEvent(void);
     void _clientSocketEvent(int i, User &user);
-    
-    void quitServer(void);
+    void _quitServer(void);
 
 	/*Functions to set command list and launch commands*/
 	void _setCommands(void);
@@ -116,10 +116,10 @@ public:
 
     std::string				&getPassword(void);
 
-	std::string 			&getPrefix(void);
-	std::string				&getCommand(void);
-	std::deque<std::string>	&getArgs(void);
-	std::string				&getTrailer(void);
+	std::string 			    &getPrefix(void);
+	std::string				    &getCommand(void);
+	std::vector<std::string>	&getArgs(void);
+	std::string				    &getTrailer(void);
 };
 
 #endif
