@@ -107,18 +107,17 @@ void Server::_splitBuffer(std::string buffer)
 
 void Server::_handleBuffer(char *buffer, User &user)
 {
-	// user.setBuffer(std::string(buffer));
-	// std::string newBuffer = user.getBuffer();
-	std::string newBuffer = buffer;
+	user.setBuffer(std::string(buffer));
+	std::string newBuffer = user.getBuffer();
 	
 	if (newBuffer[newBuffer.size() - 1] == '\n')
 	{
 		_splitBuffer(std::string(newBuffer));
+		user.resetBuffer();
 		while (_bufferCommand.size())
 		{
 			interpretCommand(_bufferCommand[0], user);
 			_bufferCommand.pop_front();
 		}
-		// user.resetBuffer();
 	}
 }

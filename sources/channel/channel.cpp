@@ -136,8 +136,10 @@ void			Channel::addUser(std::string key, User &user){
 		std::cerr << "ERR_BANNEDFROMCHAN (474)" << std::endl;
 	else if (_modes['k'] == true && !correctKey(key))
 		std::cerr << "ERR_BADCHANNELKEY (475)" << std::endl;
-	else
+	else{
 		_users.insert(&user);
+		std::cout << "[+] " << user.getNickname() << "has been added to " << _name << std::endl;
+	}
 }
 
 void			Channel::setKey(std::string newKey) {
