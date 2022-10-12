@@ -100,11 +100,11 @@ void Server::_splitBuffer(std::string buffer)
 	if (buffer.size() > 1 && buffer[buffer.size() - 2] != '\r')
 		delimiter = "\n";
 	split_on_string(buffer, delimiter, _bufferCommand);
-	for (unsigned int i = 0; i < _bufferCommand.size(); i++)
-	{
-		std::cerr << "[+] split buffer [" << i << "] " << _bufferCommand[i];
-		std::cerr << " -> len: " << _bufferCommand[i].size() << std::endl;
-	}
+	// for (unsigned int i = 0; i < _bufferCommand.size(); i++)
+	// {
+	// 	std::cerr << "[+] split buffer [" << i << "] " << _bufferCommand[i];
+	// 	std::cerr << " -> len: " << _bufferCommand[i].size() << std::endl;
+	// }
 }
 
 void Server::_handleBuffer(char *buffer, User &user)
