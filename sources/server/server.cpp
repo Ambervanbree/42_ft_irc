@@ -84,7 +84,7 @@ void    Server::binding(void){
     _serverAddr.sin_addr.s_addr = inet_addr("127.0.0.1");
     _serverAddr.sin_port = htons(_port);
     ret = bind(_serverSocket, (const struct sockaddr *) &_serverAddr, sizeof(_serverAddr));
-        std::cout << "[+] The server socket has fd nb " << _serverSocket << std::endl;
+    // std::cout << "[+] The server socket has fd nb " << _serverSocket << std::endl;
     if (ret < 0){
         std::cerr << "bind() failed" << std::endl;
         close(_serverSocket);
@@ -140,7 +140,7 @@ void   Server::handleIncomingConnections(void){
     bool    end_server = false;
 
     while (end_server == false) {
-        std::cout << "[+] Waiting on poll()..." << std::endl;
+        // std::cout << "[+] Waiting on poll()..." << std::endl;
         ret = poll(_fds, _nfds, TIME_OUT);
         // voir si pas plus logique ainsi:
         // ret = poll(_fds, MAX_FDS, TIME_OUT);
@@ -152,7 +152,6 @@ void   Server::handleIncomingConnections(void){
             closeAllConnections();
             return;
         }
-        std::cout << "POLL Ret = " << ret << std::endl;
         handleEvents(&end_server);
     }
 }
@@ -167,7 +166,6 @@ void    Server::handleEvents(bool *end_server) {
     std::list<User>::iterator it = users.begin();
 
     for (i = 0; i < _nfds; i++){
-        std::cout << " i = " << i << " and _fds[i].revents = " << _fds[i].revents << std::endl;
         if(_fds[i].revents == 0)
             continue;
     // verifier si c'est vraiment necessaire parce que ca bloque IRSSI
@@ -196,9 +194,9 @@ void    Server::listeningSocketEvent(bool *end_server) {
 
 void    Server::acceptConnections(bool *end_server) {
     int new_fd = 0;
-    int ret;
+    int ret = 0;
 
-    std::cout << "[+] Listening socket is readable" << std::endl;
+    // std::cout << "[+] Listening socket is readable" << std::endl;
     while (new_fd != -1) {
         new_fd = accept(_serverSocket, NULL, NULL);
         if (new_fd < 0) {
@@ -231,7 +229,7 @@ void    Server::clientSocketEvent(int i, User &user) {
     int     ret;
     // char    resp[60] = "[+] J'ai bien recu ton message et je t'en remercie\n";
     
-    std::cout << "[+] Descriptor " << _fds[i].fd << " is readable" << std::endl;
+    // std::cout << "[+] Descriptor " << _fds[i].fd << " is readable" << std::endl;
     close_conn = false;
 
     while (_fds[i].fd > 0) {
@@ -274,10 +272,7 @@ void    Server::decrementFileDescriptors(){
     int i;
     int j;
 
-    std::cout << "IN DECREMENT FD" << std::endl;
-    std::cout << "nfds = " << _nfds << std::endl;
     for (i = 0; i < _nfds; i++){
-        std::cout << "i = " << i << "_fds[i].fd = " << _fds[i].fd << std::endl;
         if (_fds[i].fd == -1){
             for(j = i; j < _nfds; j++)
                 _fds[j].fd = _fds[j+1].fd;
