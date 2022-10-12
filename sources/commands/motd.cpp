@@ -8,6 +8,7 @@ void	sendMOTD(User &user){
 	std::ifstream	MOTDfile;
 	std::string		line;
 
+	(void)user;
 	MOTDfile.open("other/motd.txt");
 	if (MOTDfile.is_open()){
 		(void)user;

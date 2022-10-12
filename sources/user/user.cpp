@@ -73,7 +73,7 @@ void		User::resetBuffer() { _buffer.clear(); }
 std::string	User::getBuffer() const { return _buffer; }
 
 bool		User::operator==(const User& y) {
-	if (!_userName.compare(y._userName) && !_realName.compare(y._realName)
+	if ((clientSocket == y.clientSocket) && !_userName.compare(y._userName) && !_realName.compare(y._realName)
 		&& !_nickName.compare(y._nickName))
 			return 1;
 	else
