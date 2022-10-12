@@ -22,12 +22,12 @@ void	channelList(User &user, Server &server){
 }
 
 void	allListsUser(User &user, Server &server){
-	std::map<std::string, Channel>::iterator	it = server._channels.begin();
-	std::map<std::string, Channel>::iterator	ite = server._channels.end();
+	std::map<std::string, Channel *>::iterator	it = server._channels.begin();
+	std::map<std::string, Channel *>::iterator	ite = server._channels.end();
 
 	for (; it != ite; it++){
-		if (it->second.onChannel(user))
-			it->second.sendList(user);
+		if (it->second->onChannel(user))
+			it->second->sendList(user);
 	}
 }
 

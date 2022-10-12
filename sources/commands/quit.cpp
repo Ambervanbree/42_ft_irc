@@ -6,7 +6,7 @@
 void	QUIT(User &user, Server &server)
 {
 	server.closeOneConnection(user);
-    std::cerr << user.getNickMask() << " " << server._command.cmd_name;
+    // std::cerr << user.getNickMask() << " " << server._command.cmd_name;
 	if (!server._command.trailer.size())
         std::cerr << " " << server._command.trailer;
     std::cerr << std::endl;

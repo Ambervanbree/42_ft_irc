@@ -107,8 +107,9 @@ void Server::_splitBuffer(std::string buffer)
 
 void Server::_handleBuffer(char *buffer, User &user)
 {
-	user.setBuffer(std::string(buffer));
-	std::string newBuffer = user.getBuffer();
+	// user.setBuffer(std::string(buffer));
+	// std::string newBuffer = user.getBuffer();
+	std::string newBuffer = buffer;
 	
 	if (newBuffer[newBuffer.size() - 1] == '\n')
 	{
@@ -118,6 +119,6 @@ void Server::_handleBuffer(char *buffer, User &user)
 			interpretCommand(_bufferCommand[0], user);
 			_bufferCommand.pop_front();
 		}
-		user.resetBuffer();
+		// user.resetBuffer();
 	}
 }

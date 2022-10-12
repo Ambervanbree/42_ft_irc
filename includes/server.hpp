@@ -77,10 +77,10 @@ private:
 	std::deque<std::string>			_bufferCommand;
   
   public:
-	Command							_command;
-	std::map<std::string, Channel>	_channels;
-	std::list<User>					users;
-    std::list<std::string>          operators;
+	Command								_command;
+	std::map<std::string, Channel *>	_channels;
+	std::list<User>						users;
+    std::list<std::string>          	operators;
     
 /* ************************************************************************** */
 /*                              MEMBER FUNCTIONS                              */

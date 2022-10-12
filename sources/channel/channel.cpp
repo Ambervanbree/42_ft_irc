@@ -9,7 +9,6 @@ Channel::Channel(std::string name, User &user) : _name(name) {
 	_users.insert(&user);
 	_chop.insert(user.getNickMask());
 	std::cout << "[+] Channel " << name << " created" << std::endl;
-	// TODO --> If chop sends messages associated with a channel, @ is prefixed to its nickname
 };
 
 Channel::~Channel() {
@@ -67,7 +66,7 @@ void			Channel::sendChannelMessage(User &user, Server &server, std::string messa
 
 	if (_chop.find(user.getNickMask()) != _chop.end())
 		userstring.append("@");
-	userstring.append(user.getNickname());
+	userstring.append(user.getNickname() + " ");
 	message.insert(0, userstring);
 	message.append("\n");
 

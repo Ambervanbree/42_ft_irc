@@ -23,12 +23,12 @@ void	channelNames(User &user, Server &server){
 }
 
 void	allNamesUser(User &user, Server &server){
-	std::map<std::string, Channel>::iterator	it = server._channels.begin();
-	std::map<std::string, Channel>::iterator	ite = server._channels.end();
+	std::map<std::string, Channel *>::iterator	it = server._channels.begin();
+	std::map<std::string, Channel *>::iterator	ite = server._channels.end();
 
 	for (; it != ite; it++){
-		if (it->second.onChannel(user))
-			it->second.sendNames(user);
+		if (it->second->onChannel(user))
+			it->second->sendNames(user);
 	}
 }
 

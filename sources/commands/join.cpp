@@ -8,7 +8,11 @@
 #define KEYS 		server.getArgs()[1]
 
 Channel		*createChannel(std::string name, User &user, Server &server){
-	return &server._channels.insert(std::make_pair(name, Channel(name, user))).first->second;
+	std::cout << "I'm in create channel" << std::endl;
+	Channel	*channel = new Channel(name, user);
+	server._channels.insert(std::make_pair(name, channel));
+	return channel;
+	// return &server._channels.insert(std::make_pair(name, new Channel(name, user))).first->second;
 }
 
 bool 		grammarCheckChannel(std::string name){
@@ -23,17 +27,17 @@ bool 		grammarCheckChannel(std::string name){
 }
 
 void 		partFromAllChannels(User &user, Server &server){
-	std::map<std::string, Channel>::iterator	it 	= server._channels.begin();
-	std::map<std::string, Channel>::iterator	ite = server._channels.end();
-	std::map<std::string, Channel>::iterator 	chan;
+	std::map<std::string, Channel *>::iterator	it 	= server._channels.begin();
+	std::map<std::string, Channel *>::iterator	ite = server._channels.end();
+	std::map<std::string, Channel *>::iterator 	chan;
 
 	while (it != ite){
 		chan = it;
 		it++;
-		if (chan->second.onChannel(user)){
-			removeUserFromChannel(&(chan->second), user, server);
-			std::string message = ":" + user.getNickname() + " PART " + chan->second.getName();
-			chan->second.sendChannelMessage(user, server, message);
+		if (chan->second->onChannel(user)){
+			removeUserFromChannel(chan->second, user, server);
+			std::string message = ":" + user.getNickname() + " PART " + chan->second->getName();
+			chan->second->sendChannelMessage(user, server, message);
 		}
 	}
 }
