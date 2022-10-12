@@ -7,7 +7,6 @@ void Server::_setCommands()
 	_commands["USER"] = USER;
 	_commands["OPER"] = OPER;
 	// _commands["SQUIT"] = SQUIT; 			x
-	// _commands["CONNECT"] = CONNECT;		x
 	// _commands["KILL"] = KILL;
 	// _commands["PING"] = PING;
 	// _commands["PONG"] = PONG;
@@ -16,7 +15,7 @@ void Server::_setCommands()
 	// _commands["QUIT"] = QUIT;
 	_commands["JOIN"] = JOIN;
 	// _commands["SERVICE"] = SERVICE; 		x
-	// _commands["PRIVMSG"] = PRIVMSG;
+	_commands["PRIVMSG"] = PRIVMSG;
 	// _commands["NOTICE"] = NOTICE;
 	_commands["MOTD"] = MOTD;
 	// _commands["LUSERS"] = LUSERS; 		x
@@ -34,7 +33,6 @@ void Server::_setCommands()
 	_commands["LIST"] = LIST;
 	_commands["INVITE"] = INVITE;
 	_commands["KICK"] = KICK;
-	// _commands["CONNECT"] = CONNECT;		x
 	// _commands["KILL"] = KILL;
 	// _commands["DIE"] = DIE;
 	// _commands["RESTART"] = RESTART; 		?

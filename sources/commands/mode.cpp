@@ -163,13 +163,13 @@ void	channelMode(User &user, Server &server){
 	std::string message = ":" + user.getNickname() + " MODE " + mode.outString;
 	for (size_t i = 0; i < mode.outArg.size(); i++)
 		message.append(mode.outArg[i] + " ");
-	chan->sendChannelMessage(message);
+	chan->sendChannelMessage(user, message);
 }
 
 void	userMode(User &user, Server &server){
 	std::cerr << "ERR_UMODEUNKNOWNFLAG (501)" << std::endl;
-	
-	std::string message = createCommandMessage(user, server);
+	std::string message = createCommandMessage(server);
+	(void)user;
 	// PRIVMSG to user
 	return ;
 }

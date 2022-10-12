@@ -27,7 +27,7 @@ void PART(User &user, Server &server) {
 			std::cerr << "ERR_NOTONCHANNEL (442)" << std::endl;
 		else{
 			removeUserFromChannel(chan, user, server);
-			chan->sendChannelMessage(createCommandMessage(user, server));			
+			chan->sendChannelMessage(user, createCommandMessage(server));			
 		}
 
 	}

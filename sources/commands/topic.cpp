@@ -29,7 +29,7 @@ void TOPIC(User &user, Server &server){
 			std::cerr << "ERR_CHANOPRIVSNEEDED (482)" << std::endl; 
 		else{
 			chan->setTopic(NEWTOPIC);
-			chan->sendChannelMessage(createCommandMessage(user, server));			
+			chan->sendChannelMessage(user, createCommandMessage(server));			
 		}
 
 	}

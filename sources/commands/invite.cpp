@@ -11,7 +11,7 @@ void	sendInvite(User &inviter, Server &server){
 
 	if (invitee != NULL){
 		(void)inviter;
-		// PRIVMSG to invitee: createCommandMessage(inviter, server);
+		// PRIVMSG to invitee: createCommandMessage(server);
 		// PRIVMSG to inviter: RPL_INVITING (341)
 	}
 	return ;

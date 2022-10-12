@@ -58,18 +58,20 @@ void			Channel::sendList(User &user){
 	std::cout << "RPL_LISTEND (323)" << std::endl;
 }
 
-void			Channel::sendChannelMessage(std::string message){
-	std::set<User *>::iterator		uit = _users.begin();
-	std::set<User *>::iterator		uite = _users.end();
-	std::set<std::string>::iterator	cit = _chop.end();
+void			Channel::sendChannelMessage(User &user, std::string message){
+	std::string userstring = ":";
 
-	for (; uit != uite; uit++){
-		if (_chop.find((*uit)->getNickMask()) != cit)
-			std::cout << message << " from " << "@" << (*uit)->getNickname() << std::endl;
-			// send PRIVMSG with nickname ("@" + (*uit)->getNickame())
-		else
-			std::cout << message << " from" << (*uit)->getNickname() << std::endl;
-			// send PRIVMSG with (*uit)->getNickame()
+	if (_chop.find(user.getNickMask()) != _chop.end())
+		userstring.append("@");
+	userstring.append(user.getNickname());
+	message.insert(0, userstring);
+
+	std::set<User *>::iterator	it = _users.begin();
+	std::set<User *>::iterator	ite = _users.end();
+
+	for (; it != ite; it++){
+		// send message to client
+		// it->sendMessage(message);
 	}
 }
 

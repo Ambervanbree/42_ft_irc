@@ -10,6 +10,7 @@ void	sendMOTD(User &user){
 
 	MOTDfile.open("other/motd.txt");
 	if (MOTDfile.is_open()){
+		(void)user;
 		// PRIVMSG to user: RPL_MOTDSTART (375)
 		while (MOTDfile.good()){
 			std::getline(MOTDfile, line);
