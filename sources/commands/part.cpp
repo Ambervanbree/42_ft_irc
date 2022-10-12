@@ -3,9 +3,7 @@
 #include "server.hpp"
 #include "commands.hpp"
 
-//PART <channel>{,<channel>} [<reason>]
 #define CHANNELS 	server.getArgs()[0]
-#define MESSAGE 	server._command.trailer
 
 void PART(User &user, Server &server) {
 	if (!user.isRegistered())
@@ -23,20 +21,14 @@ void PART(User &user, Server &server) {
 
 	for (size_t i = 0; i < channels.size(); i++){
 		chan = findChannel(channels[i], server);
-		if (chan == NULL){
+		if (chan == NULL)
 			std::cerr << "ERR_NOSUCHCHANNEL (403)" << std::endl;
-			break ;
-		}
-		if (!chan->onChannel(user)){
+		else if (!chan->onChannel(user))
 			std::cerr << "ERR_NOTONCHANNEL (442)" << std::endl;
-			break ;
+		else{
+			removeUserFromChannel(chan, user, server);
+			chan->sendChannelMessage(createCommandMessage(user, server));			
 		}
-		removeUserFromChannel(chan, user, server);
-		// send to channel:
-		std::cout << "[+] PART message: User " << user.getNickname() << " leaving channel " << chan->getName();
-		if (MESSAGE.empty())
-			std::cout << std::endl;
-		else
-			std::cout << " with the message \"" << MESSAGE << "\"" << std::endl;
-		}
+
+	}
 }

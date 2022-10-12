@@ -3,8 +3,6 @@
 #include "server.hpp"
 #include "commands.hpp"
 
-// TOPIC <channel> [ <topic> ]
-
 #define CHANNEL	 	server.getArgs()
 #define NEWTOPIC 	server._command.trailer
 
@@ -26,6 +24,13 @@ void TOPIC(User &user, Server &server){
 	}
 	if (server._command.trailer.empty())
 		chan->sendTopic(user);
-	else
-		chan->setTopic(NEWTOPIC);
+	else{
+		if (!chan->isChop(user.getNickMask()))
+			std::cerr << "ERR_CHANOPRIVSNEEDED (482)" << std::endl; 
+		else{
+			chan->setTopic(NEWTOPIC);
+			chan->sendChannelMessage(createCommandMessage(user, server));			
+		}
+
+	}
 }

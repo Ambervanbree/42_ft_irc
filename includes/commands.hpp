@@ -21,7 +21,6 @@ class Channel;
 // void PONG(User &User, Server &server);
 // void ERROR(User &User, Server &server);
 // void WALLOPS(User &User, Server &server);
-// void QUIT(User &User, Server &server);
 // void SQUIT(User &User, Server &server);
 // void JOIN(User &User, Server &server);
 
@@ -31,12 +30,12 @@ void PASS(User &User, Server &server);
 void NICK(User &User, Server &server);
 void USER(User &User, Server &server);
 void OPER(User &User, Server &server);
+void QUIT(User &User, Server &server);
 // void MODE(User &User, Server &server);
 // void SERVICE(User &User, Server &server);
-// void QUIT(User &User, Server &server);
 // void PRIVMSG(User &User, Server &server);
 // void NOTICE(User &User, Server &server);
-// void MOTD(User &User, Server &server);
+void MOTD(User &User, Server &server);
 // void LUSERS(User &User, Server &server);
 // void VERSION(User &User, Server &server);
 // void STATS(User &User, Server &server);
@@ -70,5 +69,6 @@ void KICK(User &user, Server &server);
 Channel*	findChannel(std::string &channelName, Server &server);
 User*		findUser(std::string &userName, Server &server);
 void 		removeUserFromChannel(Channel *channel, User &user, Server &server);
+std::string	createCommandMessage(User &user, Server &server);
 
 #endif

@@ -9,15 +9,13 @@
 
 Channel		*createChannel(std::string name, User &user, Server &server){
 	return &server._channels.insert(std::make_pair(name, Channel(name, user))).first->second;
-	/* TODO --> add replies: 
-		ERR_TOOMANYCHANNELS (405) 
-	*/
 }
 
 bool 		grammarCheckChannel(std::string name){
 	if (name.size() > 50
-		|| name[0] != '#'
-		|| name.find(',') != std::string::npos){
+		|| !(name[0] == '&' || name[0] == '#')
+		|| name.find(',') != std::string::npos
+		|| name.find(7) != std::string::npos){
 		std::cerr << "ERR_BADCHANMASK (476)" << std::endl;
 		return false;
 	}
@@ -34,17 +32,15 @@ void 		partFromAllChannels(User &user, Server &server){
 		it++;
 		if (chan->second.onChannel(user)){
 			removeUserFromChannel(&(chan->second), user, server);
-			// send to channel:
-			std::cout << "[+] PART message: User " << user.getNickname() << " leaving channel " 
-				<< chan->second.getName() << std::endl;
+			std::string message = ":" + user.getNickname() + " PART " + chan->second.getName();
+			chan->second.sendChannelMessage(message);
 		}
 	}
 }
 
-void JOIN(User &user, Server &server)
-{
-	if (!user.isRegistered())
-		return ;
+void JOIN(User &user, Server &server){
+// 	if (!user.isRegistered())
+// 		return ;
 	std::deque<std::string>	channels;
 	std::deque<std::string>	keys;
 	char 					delimiter[] = ",";
@@ -64,11 +60,17 @@ void JOIN(User &user, Server &server)
 		if (!grammarCheckChannel(channels[i]))
 			return ;
 		Channel	*chan = findChannel(channels[i], server);
-		if (chan != NULL)
-			chan->addUser(keys[i], user);
+		if (chan != NULL){
+			if (!chan->hasChop())
+				return ;
+			else
+				chan->addUser(keys[i], user);
+		}
 		else
 			chan = createChannel(channels[i], user, server);
-		std::cout << "[+] JOIN message from " << user.getNickname()
-			<< " on channel " << chan->getName() << std::endl;
+		chan->sendChannelMessage(createCommandMessage(user, server));
+		if (!chan->getTopic().empty())
+			chan->sendTopic(user);
+		chan->sendNames(user);
 	}
 }
