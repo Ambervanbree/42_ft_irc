@@ -32,7 +32,7 @@ void USER(User &User, Server &server);
 void OPER(User &User, Server &server);
 void PRIVMSG(User &User, Server &server);
 void QUIT(User &User, Server &server);
-// void SERVICE(User &User, Server &server);
+void PRIVMSG(User &User, Server &server);
 // void NOTICE(User &User, Server &server);
 void MOTD(User &User, Server &server);
 // void LUSERS(User &User, Server &server);
