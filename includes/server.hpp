@@ -21,19 +21,14 @@
 # include <list>
 # include "commands.hpp"
 # include "channel.hpp"
-// # include "user.hpp"
-
 
 // maximum length of the queue of pending connections
 # define MAX_CONNECTS   5
 // maximum number of connections
 # define MAX_FDS        1024
-/*  maximum command size
-    "messages shall not exceed 512 characters in length, counting all 
-    characters including the trailing CR-LF (=\n). Thus, there are 510 
-    characters maximum allowed for the command and its parameters."    */
+// maximum command size
 # define MAX_BUFFER     510
-// timeout of 3 minutes (3 * 60 * 1000) miliseconds
+// timeout in miliseconds
 # define TIME_OUT       180000
 
 class Channel;
@@ -92,16 +87,14 @@ private:
 /* ************************************************************************** */
 
 private:
-    void makeServerSocket(void);
-    void binding(void);
-    void listening(void);
-
-    void initConnections(void);
-    void handleIncomingConnections(void);
-    void handleEvents(bool *end_server);
-    void listeningSocketEvent(bool *end_server);
-    void clientSocketEvent(int i, User &user);
-    void acceptConnections(bool *end_server);
+    void _makeServerSocket(void);
+    void _bind(void);
+    void _listen(void);
+    void _initFileDescriptorsStruct(void);
+    void _addtoStruct(int fd);
+    void _handleEvents(bool *end_server);
+    void _serverSocketEvent(bool *end_server);
+    void _clientSocketEvent(int i, User &user);
     
     void quitServer(void);
 
@@ -112,12 +105,12 @@ private:
 	void _launchCommand(User &user);
 	void _splitBuffer(std::string buffer);
 	void _handleBuffer(char *buffer, User &user);
+    void _updateFdsStructure(void);
 
 public:
     void start(void);
     void handleConnections(void);
     void closeOneConnection(User &user);
-    void updateFdsStructure(void);
 
 	void interpretCommand(std::string &message, User &user); /*Change to Private at the end of project*/
 
