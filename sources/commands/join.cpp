@@ -36,7 +36,7 @@ void 		partFromAllChannels(User &user, Server &server){
 		it++;
 		if (chan->second->onChannel(user)){
 			removeUserFromChannel(chan->second, user, server);
-			std::string message = ":" + user.getNickname() + " PART " + chan->second->getName();
+			std::string message = "PART " + chan->second->getName();
 			chan->second->sendChannelMessage(user, server, message);
 		}
 	}

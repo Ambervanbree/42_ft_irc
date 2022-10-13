@@ -68,10 +68,10 @@ void			Channel::sendChannelMessage(User &user, Server &server, std::string messa
 	std::string userstring = ":";
 
 	if (_chop.find(user.getNickMask()) != _chop.end())
-		userstring.append("@");
-	userstring.append(user.getNickname() + " ");
+		userstring += "@";
+	userstring += user.getNickname();
 	message.insert(0, userstring);
-	message.append("\n");
+	message += "\n";
 
 	std::set<User *>::iterator	it = _users.begin();
 	std::set<User *>::iterator	ite = _users.end();

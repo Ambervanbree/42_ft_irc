@@ -7,16 +7,19 @@
 void	sendMOTD(Server &server, User &user){
 	std::ifstream	MOTDfile;
 	std::string		line;
+	std::string		MOTDbuffer;
 
+	(void)server;
+	(void)user;
 	MOTDfile.open("other/motd.txt");
 	if (MOTDfile.is_open()){
-		server.sendMessage(user, "RPL_MOTDSTART (375)\n");
+		std::cout << "RPL_MOTDSTART (375)" << std::endl;
 		while (MOTDfile.good()){
 			std::getline(MOTDfile, line);
-			line.append("\n");
-			server.sendMessage(user, line);
+			MOTDbuffer += line + "\n";
 		}
-		server.sendMessage(user, "RPL_ENDOFMOTD (376)\n");
+		std::cout << "RPL_MOTD (372)" << std::endl;
+		std::cout << "RPL_ENDOFMOTD (376)" << std::endl;
 		MOTDfile.close();
 	}
 	else

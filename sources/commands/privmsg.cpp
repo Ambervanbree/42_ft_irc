@@ -8,12 +8,12 @@
 void	channelMessage(User &user, Server &server){
 	Channel *chan = findChannel(TARGET, server);
 
-	if (chan == NULL)
+	if (chan == NULL || (chan != NULL && !chan->onChannel(user)))
 		std::cerr << "ERR_CANNOTSENDTOCHAN (404)" << std::endl;
 	else if (chan->isBanned(user.getNickMask()))
 		return ;
 	else
-		chan->sendChannelMessage(user, server, server.getTrailer().erase(0, 1));
+		chan->sendChannelMessage(user, server, server.getTrailer().insert(0, " "));
 }
 
 void	singleMessage(User &user, Server &server){
@@ -22,8 +22,7 @@ void	singleMessage(User &user, Server &server){
 	if (recipient == NULL)
 		std::cerr << "ERR_NOSUCHNICK (401)" << std::endl;
 	else{
-		std::string message = ":" + user.getNickname() + " ";
-		message.append(server.getTrailer().append("\n"));
+		std::string message = ":" + user.getNickname() + " " + server.getTrailer() + "\n";
 		server.sendMessage(*recipient, message);
 	}
 }
