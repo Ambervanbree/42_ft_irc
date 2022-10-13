@@ -8,11 +8,11 @@
 #define KEYS 		server.getArgs()[1]
 
 Channel		*createChannel(std::string name, User &user, Server &server){
-	std::cout << "I'm in create channel" << std::endl;
 	Channel	*channel = new Channel(name, user);
+
 	server._channels.insert(std::make_pair(name, channel));
-	return channel;
-	// return &server._channels.insert(std::make_pair(name, new Channel(name, user))).first->second;
+	
+	return channel ;
 }
 
 bool 		grammarCheckChannel(std::string name){
@@ -65,8 +65,10 @@ void JOIN(User &user, Server &server){
 			return ;
 		Channel	*chan = findChannel(channels[i], server);
 		if (chan != NULL){
-			if (!chan->hasChop())
+			if (!chan->hasChop()){
+				std::cout << "[-] Chan no chop" << std::endl;
 				return ;
+			}
 			else
 				chan->addUser(keys[i], user);
 		}
@@ -75,6 +77,8 @@ void JOIN(User &user, Server &server){
 		chan->sendChannelMessage(user, server, createCommandMessage(server));
 		if (!chan->getTopic().empty())
 			chan->sendTopic(user);
-		chan->sendNames(user);
+		// chan->getNames(); will return the list of names on the channel
+		// RPL send to user:
+		std::cout << "RPL_NAMREPLY (353)" << std::endl;
 	}
 }

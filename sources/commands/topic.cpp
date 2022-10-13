@@ -26,11 +26,10 @@ void TOPIC(User &user, Server &server){
 		chan->sendTopic(user);
 	else{
 		if (!chan->isChop(user.getNickMask()))
-			std::cerr << "ERR_CHANOPRIVSNEEDED (482)" << std::endl; 
+			std::cerr << "ERR_CHANOPRIVSNEEDED (482)" << std::endl;
 		else{
 			chan->setTopic(NEWTOPIC);
-			chan->sendChannelMessage(user, server, createCommandMessage(server));			
+			chan->sendChannelMessage(user, server, createCommandMessage(server));	
 		}
-
 	}
 }

@@ -5,8 +5,6 @@
 
 #define TARGET	 	server.getArgs()[0]
 
-//PRIVMSG <msgtarget> <text to be sent>
-
 void	channelMessage(User &user, Server &server){
 	Channel *chan = findChannel(TARGET, server);
 
@@ -24,9 +22,9 @@ void	singleMessage(User &user, Server &server){
 	if (recipient == NULL)
 		std::cerr << "ERR_NOSUCHNICK (401)" << std::endl;
 	else{
-			std::string message = ":" + user.getNickname() + " ";
-			message.append(server.getTrailer().append("\n"));
-			server.sendMessage(*recipient, message);
+		std::string message = ":" + user.getNickname() + " ";
+		message.append(server.getTrailer().append("\n"));
+		server.sendMessage(*recipient, message);
 	}
 }
 

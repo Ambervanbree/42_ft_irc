@@ -169,8 +169,7 @@ void	channelMode(User &user, Server &server){
 void	userMode(User &user, Server &server){
 	std::cerr << "ERR_UMODEUNKNOWNFLAG (501)" << std::endl;
 	std::string message = createCommandMessage(server);
-	(void)user;
-	// PRIVMSG to user
+	server.sendMessage(user, message);
 	return ;
 }
 

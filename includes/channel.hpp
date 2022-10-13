@@ -33,12 +33,12 @@ class Channel{
 		std::set<User *>		getUsers(void) const;
 		std::set<std::string>	getBanned(void) const;
 		std::map<char, bool>	getModes(void) const;
+		std::string				getNames(void);
+		std::string				getList(void);
 
 		/* Message requests */
 
 		void			sendTopic(User &user);
-		void			sendNames(User &user);
-		void			sendList(User &user);
 		void			sendChannelMessage(User &user, Server &server, std::string message);
 
 		/* Checkers */

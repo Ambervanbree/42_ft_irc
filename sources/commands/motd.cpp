@@ -8,7 +8,6 @@ void	sendMOTD(Server &server, User &user){
 	std::ifstream	MOTDfile;
 	std::string		line;
 
-	(void)user;
 	MOTDfile.open("other/motd.txt");
 	if (MOTDfile.is_open()){
 		server.sendMessage(user, "RPL_MOTDSTART (375)\n");

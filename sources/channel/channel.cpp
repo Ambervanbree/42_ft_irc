@@ -32,6 +32,22 @@ std::set<User *>		Channel::getUsers() const {return _users; }
 std::set<std::string>	Channel::getBanned() const {return _banned; }
 std::map<char, bool>	Channel::getModes() const {return _modes; }
 
+std::string			Channel::getNames(void){
+	std::string namesRPL("Nicknames listening to chan " + getName() + ":\n");
+
+	std::set<User *>::iterator 	it = _users.begin();
+	std::set<User *>::iterator 	ite = _users.end();
+
+	for (; it != ite; it++)
+		namesRPL += (*it)->getNickname() + "\n";
+	return namesRPL ;
+}
+
+std::string			Channel::getList(void){
+	std::string listRPL(getName() + " " + getTopic() + "\n");
+	return listRPL ;	
+}
+
 /******************************************************************************/
 /*  Message requests
 *******************************************************************************/
@@ -42,23 +58,10 @@ void			Channel::sendTopic(User &user){
 	if (_topic.empty())
 		std::cout << "RPL_NOTOPIC (331)" << std::endl;
 	else{
+		// getTopic() returns topic
 		std::cout << "RPL_TOPIC (332)" << std::endl;
 		std::cout << "RPL_TOPICWHOTIME (333)" << std::endl;
 	}
-}
-
-void			Channel::sendNames(User &user){
-	(void)user;
-	// RPL sent to user:
-	std::cout << "RPL_NAMREPLY (353)" << std::endl;
-	std::cout << "RPL_ENDOFNAMES (366)" << std::endl;			
-}
-
-void			Channel::sendList(User &user){
-	(void)user;
-	// RPL sent to user:
-	std::cout << "RPL_LIST (322)" << std::endl;
-	std::cout << "RPL_LISTEND (323)" << std::endl;
 }
 
 void			Channel::sendChannelMessage(User &user, Server &server, std::string message){
@@ -74,7 +77,7 @@ void			Channel::sendChannelMessage(User &user, Server &server, std::string messa
 	std::set<User *>::iterator	ite = _users.end();
 
 	for (; it != ite; it++){
-		server.sendMessage(user, message);
+		server.sendMessage(**it, message);
 	}
 }
 
@@ -118,7 +121,7 @@ bool			Channel::isEmpty(void) const {
 }
 
 bool			Channel::hasChop(void) const{
-	std::map<char, bool>::const_iterator	it = _modes.find('k');
+	std::map<char, bool>::const_iterator	it = _modes.find('o');
 
 	if (it != _modes.end() && it->second == true)
 		return true ;
@@ -138,7 +141,7 @@ void			Channel::addUser(std::string key, User &user){
 		std::cerr << "ERR_BADCHANNELKEY (475)" << std::endl;
 	else{
 		_users.insert(&user);
-		std::cout << "[+] " << user.getNickname() << "has been added to " << _name << std::endl;
+		std::cout << "[+] " << user.getNickname() << " has been added to " << _name << std::endl;
 	}
 }
 
