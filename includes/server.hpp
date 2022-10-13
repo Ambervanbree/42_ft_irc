@@ -21,6 +21,8 @@
 # include <list>
 # include "commands.hpp"
 # include "channel.hpp"
+# include "replies.hpp"
+
 
 // maximum length of the queue of pending connections
 # define MAX_CONNECTS   5
@@ -76,6 +78,7 @@ private:
 	
 	std::map<std::string, command>	_commands;
 	std::deque<std::string>			_bufferCommand;
+    std::deque<Replies>             _bufferReplies;
   
   public:
 	Command							_command;
@@ -106,6 +109,9 @@ private:
 	void _splitBuffer(std::string buffer);
 	void _handleBuffer(char *buffer, User &user);
     void _updateFdsStructure(void);
+    
+    /*Functions to send a message to a client*/
+    int _sendMessage(int socket);
 
 public:
     void start(void);
@@ -116,10 +122,12 @@ public:
 
     std::string				&getPassword(void);
 
-	std::string 			    &getPrefix(void);
-	std::string				    &getCommand(void);
+	std::string 			&getPrefix(void);
+	std::string				&getCommand(void);
 	std::vector<std::string>	&getArgs(void);
-	std::string				    &getTrailer(void);
+	std::string				&getTrailer(void);
+
+    void                    addReplies(User &user, const std::string &message);
 };
 
 #endif
