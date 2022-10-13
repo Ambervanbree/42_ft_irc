@@ -50,6 +50,15 @@ void SERVICE(std::deque<std::string> Command, User &User)
 }
 
 
+//PRIVMSG <msgtarget> <text to be sent>
+//-> Send a private message to another user or to a channel.
+void PRIVMSG(std::deque<std::string> Command, User &User)
+{
+	(void)Command;
+	(void)User;
+	std::cout << "PRIVMSG" << std::endl;
+}
+
 //NOTICE <msgtarget> <text>
 //-> Same as PRIVMSG, but no automatic replies will be sent in response.
 void NOTICE(std::deque<std::string> Command, User &User)
@@ -134,15 +143,6 @@ void WHOWAS(std::deque<std::string> Command, User &User)
 /*User commands for channels:*/
 
 /*Operator commands:*/
-
-//KILL <nickname> <comment>
-//-> Cause a client-server connection to be closed by the server.
-void KILL(std::deque<std::string> Command, User &user)
-{
-	(void)Command;
-	(void)user;
-	std::cout << "KILL" << std::endl;
-}
 
 //DIE (optional)
 //-> Shut down the server.

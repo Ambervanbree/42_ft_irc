@@ -1,3 +1,4 @@
+#include <csignal>
 #include "server.hpp"
 #include "channel.hpp"
 #include "user.hpp"
@@ -18,18 +19,21 @@ static int check_arg(int argc, char **argv)
 	return port;
 }
 
+void signalHandler(int signum) {
+	(void) signum;
+	return;
+}
+
 int main(int argc, char *argv[]) 
 {
 	int port = check_arg(argc, argv);
 	if (port == -1)
 		return 1;
-	    
+	
+	signal(SIGINT, signalHandler);
+
 	Server s(port, std::string(argv[2]));
-	// std::string message = argv[2];
-	// User user;
 	s.start();
-	// s.interpretCommand(message, user);
 	s.handleConnections();
-    
 	return 0;
 }

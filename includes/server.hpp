@@ -21,6 +21,8 @@
 # include <list>
 # include "commands.hpp"
 # include "channel.hpp"
+# include "replies.hpp"
+
 
 // maximum length of the queue of pending connections
 # define MAX_CONNECTS   5
@@ -38,10 +40,10 @@ typedef     void (*command)(User &user, Server &server);
 
 struct Command
 {
-	std::string				prefix;
-	std::string 			cmd_name;
-	std::deque<std::string>	args;
-	std::string				trailer;
+	std::string				    prefix;
+	std::string 			    cmd_name;
+	std::vector<std::string>	args;
+	std::string				    trailer;
 };
 
 class Server {
@@ -72,9 +74,11 @@ private:
     int                 _timeout;
     int                 _nfds;
     struct  pollfd      _fds[MAX_FDS];
+    bool                _end_server;
 	
 	std::map<std::string, command>	_commands;
 	std::deque<std::string>			_bufferCommand;
+    std::deque<Replies>             _bufferReplies;
   
   public:
 	Command								_command;
@@ -106,6 +110,9 @@ private:
 	void _splitBuffer(std::string buffer);
 	void _handleBuffer(char *buffer, User &user);
     void _updateFdsStructure(void);
+    
+    /*Functions to send a message to a client*/
+    int _sendMessage(int socket);
 
 public:
     void start(void);
@@ -120,8 +127,10 @@ public:
 
 	std::string 			&getPrefix(void);
 	std::string				&getCommand(void);
-	std::deque<std::string>	&getArgs(void);
+	std::vector<std::string>	&getArgs(void);
 	std::string				&getTrailer(void);
+
+    void                    addReplies(User &user, const std::string &message);
 };
 
 #endif

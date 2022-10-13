@@ -82,7 +82,7 @@ void Server::_launchCommand(User &user)
 	if (it != _commands.end())
 		it->second(user, *this);
 	else
-		std::cerr << "No command found\n";
+		std::cerr << "ERR_UNKNOWNCOMMAND (421)\n";
 }
 
 void Server::interpretCommand(std::string &message, User &user)
@@ -120,4 +120,30 @@ void Server::_handleBuffer(char *buffer, User &user)
 			_bufferCommand.pop_front();
 		}
 	}
+}
+
+void Server::addReplies(User &user, const std::string &message)
+{
+	Replies to_add;
+
+	to_add.socket = user.getSocket();
+	to_add.message = message;
+	_bufferReplies.push_back(to_add);
+}
+
+int Server::_sendMessage(int socket)
+{
+	int ret;
+	if (socket == _bufferReplies[0].socket)
+	{
+		ret = send(socket, _bufferReplies[0].message.c_str(), _bufferReplies[0].message.size(), 0);
+		if (ret < 0)
+		{
+			std::cerr << "[-] send() failed: " << errno << std::endl;
+			return (ret);
+		}
+		_bufferReplies.pop_front();
+		return (1);
+	}
+	return (2);
 }
