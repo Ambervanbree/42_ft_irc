@@ -110,7 +110,7 @@ private:
 public:
     void start(void);
     void handleConnections(void);
-    void closeOneConnection(User &user);
+    void closeOneConnection(User &user, std::string comment);
 
 	void interpretCommand(std::string &message, User &user); /*Change to Private at the end of project*/
 
