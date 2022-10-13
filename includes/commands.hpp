@@ -57,7 +57,7 @@ void KICK(User &user, Server &server);
 /*Operator commands:*/
 
 void OPER(User &User, Server &server);
-void KILL(User &user);
+void KILL(User &user, Server &server);
 // void DIE(User &user);
 // void RESTART(User &user);
 
@@ -65,6 +65,7 @@ void KILL(User &user);
 /*Command utils:*/
 Channel*	findChannel(std::string &channelName, Server &server);
 User*		findUser(std::string &userName, Server &server);
+bool        isOperator(const std::string &username, Server &server);
 void 		removeUserFromChannel(Channel *channel, User &user, Server &server);
 std::string	createCommandMessage(User &user, Server &server);
 

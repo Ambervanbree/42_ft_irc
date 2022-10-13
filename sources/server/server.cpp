@@ -84,8 +84,6 @@ void    Server::_makeServerSocket(void){
         exit(-1);
     }
     ret = setsockopt(_serverSocket, SOL_SOCKET, SO_REUSEADDR, (char *)&on, sizeof(on));
-    // ---> A ESSAYER pour simplification
-    // ret = setsockopt(_serverSocket, SOL_SOCKET, SO_REUSEADDR, on, sizeof(on));
     if (ret < 0){
         std::cerr << "[-] setsockopt() failed" << std::endl;
         close(_serverSocket);
