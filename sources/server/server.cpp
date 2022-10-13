@@ -242,7 +242,7 @@ void    Server::_serverSocketEvent(void) {
 void    Server::_clientSocketEvent(int i, User &user) {
     char    buffer[MAX_BUFFER];
     int     ret;
-    bool    close_conn;
+    bool    close_conn = false;
 
     while (close_conn == false && _fds[i].fd > 0)
     {
