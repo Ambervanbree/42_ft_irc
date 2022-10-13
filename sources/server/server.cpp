@@ -250,6 +250,7 @@ void    Server::_clientSocketEvent(int i, User &user) {
                 std::cerr << "[-] recv() failed" << errno << std::endl;
                 close_conn = true;
             }
+            break;
         }
         if (ret == 0)
             close_conn = true;
