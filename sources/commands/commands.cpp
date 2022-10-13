@@ -49,25 +49,6 @@ void SERVICE(std::deque<std::string> Command, User &User)
 	std::cout << "SERVICE" << std::endl;
 }
 
-
-//PRIVMSG <msgtarget> <text to be sent>
-//-> Send a private message to another user or to a channel.
-void PRIVMSG(std::deque<std::string> Command, User &User)
-{
-	(void)Command;
-	(void)User;
-	std::cout << "PRIVMSG" << std::endl;
-}
-
-//NOTICE <msgtarget> <text>
-//-> Same as PRIVMSG, but no automatic replies will be sent in response.
-void NOTICE(std::deque<std::string> Command, User &User)
-{
-	(void)Command;
-	(void)User;
-	std::cout << "NOTICE" << std::endl;
-}
-
 //LUSERS [ <mask> [ <target> ] ]
 //-> Get statistics on the size of the IRC network. 
 void LUSERS(std::deque<std::string> Command, User &User)

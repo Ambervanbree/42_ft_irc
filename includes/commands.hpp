@@ -20,7 +20,6 @@ class Channel;
 // void ERROR(User &User, Server &server);
 // void WALLOPS(User &User, Server &server);
 // void SQUIT(User &User, Server &server);
-// void JOIN(User &User, Server &server);
 
 /*User commands:*/
 
@@ -31,13 +30,8 @@ void OPER(User &User, Server &server);
 void PRIVMSG(User &User, Server &server);
 void QUIT(User &User, Server &server);
 void PRIVMSG(User &User, Server &server);
-// void NOTICE(User &User, Server &server);
+void NOTICE(User &User, Server &server);
 void MOTD(User &User, Server &server);
-// void LUSERS(User &User, Server &server);
-// void VERSION(User &User, Server &server);
-// void STATS(User &User, Server &server);
-// void TIME(User &User, Server &server);
-// void INFO(User &User, Server &server);
 // void WHO(User &User, Server &server);
 // void WHOIS(User &User, Server &server);
 // void WHOWAS(User &User, Server &server);
