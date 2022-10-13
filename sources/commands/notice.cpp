@@ -28,8 +28,6 @@ void	singleNotice(User &user, Server &server){
 }
 
 void NOTICE(User &user, Server &server){
-	(void)user;
-	(void)server;
 	if (!user.isRegistered() 
 		|| server.getArgs().empty()
 		|| server.getArgs().size() > 1
