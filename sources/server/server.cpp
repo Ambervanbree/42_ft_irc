@@ -72,7 +72,7 @@ void   Server::handleConnections(void){
     poption)
     - fcntl() function sets the server socket to be nonblocking. 
     All of the sockets for the incoming connections will also be nonblocking 
-    since they will inherit that state from the listening server socket.
+    since they will inherit that state from the _listen server socket.
 *******************************************************************************/
 void    Server::_makeServerSocket(void){
     int ret;
@@ -128,7 +128,7 @@ void    Server::_listen(void){
     int ret;
     ret = listen(_serverSocket, MAX_CONNECTS);
     if (ret == 0)
-        std::cout << "[+] Server is listening" << std::endl;
+        std::cout << "[+] Server is _listen" << std::endl;
     else
         std::cerr << "listen() failed" << std::endl;
 }
@@ -136,8 +136,8 @@ void    Server::_listen(void){
 /******************************************************************************/
 /*  _initFileDescriptorsStruct()
     - Initializes the pollfd structure _fds
-    - Sets up the initial listening socket 
-    - _fds[0].fd = server/listening socket
+    - Sets up the initial _listen socket 
+    - _fds[0].fd = server/_listen socket
     - _fds[0].events = events we are interested in managing
             POLLIN event = There is data to read
             POLLOUT event = Writing is now possible
@@ -173,7 +173,7 @@ void    Server::_addtoStruct(int fd) {
 /******************************************************************************/
 /*  _handleEvents()
     - Loop through to find the descriptors that returned POLLIN and 
-    determine whether it's the listening or the active connection.
+    determine whether it's the _listen or the active connection.
 *******************************************************************************/
 void    Server::_handleEvents(void) {       
     int     i;
@@ -268,6 +268,14 @@ void    Server::_clientSocketEvent(int i, User &user) {
     }
     if (close_conn == true)
         closeOneConnection(user);
+}
+
+/******************************************************************************/
+/*  sendMessage()
+*******************************************************************************/
+void 	Server::sendMessage(User &recipient, std::string message) {
+	std::cout << "sending: " << message << std::endl;
+	send(recipient.clientSocket, message.c_str(), message.size(), 0);
 }
 
 /******************************************************************************/

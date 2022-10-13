@@ -81,10 +81,10 @@ private:
     std::deque<Replies>             _bufferReplies;
   
   public:
-	Command							_command;
-	std::map<std::string, Channel>	_channels;
-	std::list<User>					users;
-    std::list<std::string>          operators;
+	Command								_command;
+	std::map<std::string, Channel *>	_channels;
+	std::list<User>						users;
+    std::list<std::string>          	operators;
     
 /* ************************************************************************** */
 /*                              MEMBER FUNCTIONS                              */
@@ -96,10 +96,11 @@ private:
     void _listen(void);
     void _initFileDescriptorsStruct(void);
     void _addtoStruct(int fd);
-    void _handleEvents(void);
-    void _serverSocketEvent(void);
+    void _handleEvents(bool *end_server);
+    void _serverSocketEvent(bool *end_server);
     void _clientSocketEvent(int i, User &user);
-    void _quitServer(void);
+    
+    void quitServer(void);
 
 	/*Functions to set command list and launch commands*/
 	void _setCommands(void);
@@ -117,6 +118,8 @@ public:
     void start(void);
     void handleConnections(void);
     void closeOneConnection(User &user);
+
+	void sendMessage(User &recipient, std::string message);
 
 	void interpretCommand(std::string &message, User &user); /*Change to Private at the end of project*/
 

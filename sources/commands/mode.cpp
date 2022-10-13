@@ -103,15 +103,14 @@ void	parseModeString(Mode &mode){
 		return ;
 
 	for (; it != ite; ){
+		mode.outString += *it;
 		switch (*(it++)){
 			case '+':
-				mode.outString += *it;
 				while (!(*it == '+' || *it == '-' || it == ite)){
 					addMode(*it, mode);
 					it++;
 				}
 			case '-':
-				mode.outString += *it;
 				while (!(*it == '+' || *it == '-' || it == ite)){
 					eraseMode(*it, mode);
 					it++;
@@ -160,23 +159,22 @@ void	channelMode(User &user, Server &server){
 	fillModeStruct(mode, chan, server);
 	parseModeString(mode);
 
-	std::string message = ":" + user.getNickname() + " MODE " + mode.outString;
+	std::string message = "MODE " + mode.outString + " ";
 	for (size_t i = 0; i < mode.outArg.size(); i++)
-		message.append(mode.outArg[i] + " ");
-	chan->sendChannelMessage(message);
+		message += mode.outArg[i] + " ";
+	chan->sendChannelMessage(user, server, message);
 }
 
 void	userMode(User &user, Server &server){
+	(void)user;
+	(void)server;
 	std::cerr << "ERR_UMODEUNKNOWNFLAG (501)" << std::endl;
-	
-	std::string message = createCommandMessage(user, server);
-	// PRIVMSG to user
 	return ;
 }
 
 void MODE(User &user, Server &server){
-	if (!user.isRegistered())
-		return ;
+	// if (!user.isRegistered())
+	// 	return ;
 	if (server.getArgs().empty()){
 		std::cout << "ERR_NEEDMOREPARAMS (461)" << std::endl;
 		return ;		

@@ -8,7 +8,11 @@
 #define KEYS 		server.getArgs()[1]
 
 Channel		*createChannel(std::string name, User &user, Server &server){
-	return &server._channels.insert(std::make_pair(name, Channel(name, user))).first->second;
+	Channel	*channel = new Channel(name, user);
+
+	server._channels.insert(std::make_pair(name, channel));
+	
+	return channel ;
 }
 
 bool 		grammarCheckChannel(std::string name){
@@ -23,17 +27,17 @@ bool 		grammarCheckChannel(std::string name){
 }
 
 void 		partFromAllChannels(User &user, Server &server){
-	std::map<std::string, Channel>::iterator	it 	= server._channels.begin();
-	std::map<std::string, Channel>::iterator	ite = server._channels.end();
-	std::map<std::string, Channel>::iterator 	chan;
+	std::map<std::string, Channel *>::iterator	it 	= server._channels.begin();
+	std::map<std::string, Channel *>::iterator	ite = server._channels.end();
+	std::map<std::string, Channel *>::iterator 	chan;
 
 	while (it != ite){
 		chan = it;
 		it++;
-		if (chan->second.onChannel(user)){
-			removeUserFromChannel(&(chan->second), user, server);
-			std::string message = ":" + user.getNickname() + " PART " + chan->second.getName();
-			chan->second.sendChannelMessage(message);
+		if (chan->second->onChannel(user)){
+			removeUserFromChannel(chan->second, user, server);
+			std::string message = "PART " + chan->second->getName();
+			chan->second->sendChannelMessage(user, server, message);
 		}
 	}
 }
@@ -61,16 +65,20 @@ void JOIN(User &user, Server &server){
 			return ;
 		Channel	*chan = findChannel(channels[i], server);
 		if (chan != NULL){
-			if (!chan->hasChop())
+			if (!chan->hasChop()){
+				std::cout << "[-] Chan no chop" << std::endl;
 				return ;
+			}
 			else
 				chan->addUser(keys[i], user);
 		}
 		else
 			chan = createChannel(channels[i], user, server);
-		chan->sendChannelMessage(createCommandMessage(user, server));
+		chan->sendChannelMessage(user, server, createCommandMessage(server));
 		if (!chan->getTopic().empty())
 			chan->sendTopic(user);
-		chan->sendNames(user);
+		// chan->getNames(); will return the list of names on the channel
+		// RPL send to user:
+		std::cout << "RPL_NAMREPLY (353)" << std::endl;
 	}
 }

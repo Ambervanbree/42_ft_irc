@@ -3,10 +3,10 @@
 #include <list>
 
 Channel*	findChannel(std::string &channelName, Server &server){
-	std::map<std::string, Channel>::iterator	it = server._channels.find(channelName);
+	std::map<std::string, Channel *>::iterator	it = server._channels.find(channelName);
 
 	if (it != server._channels.end())
-		return &(it->second);
+		return (it->second);
 	return NULL ;
 }
 
@@ -22,18 +22,19 @@ User*		findUser(std::string &userName, Server &server){
 }
 
 void 		removeUserFromChannel(Channel *channel, User &user, Server &server){
+	
 	channel->removeUser(user);
 	if (channel->isEmpty()){
-		std::cout << "[+] Channel " << channel->getName() << " erased\n";
+		delete channel;
 		server._channels.erase(channel->getName());
 	}
 }
 
-std::string	createCommandMessage(User &user, Server &server){
-	std::string message = ":" + user.getNickname() + " " + server.getCommand() + " ";
+std::string	createCommandMessage(Server &server){
+	std::string message = " " + server.getCommand() + " ";
 	for (size_t i = 0; i < server.getArgs().size(); i++)
-		message.append(server.getArgs()[i] + " ");
+		message += server.getArgs()[i] + " ";
 	if (!server.getTrailer().empty())
-		message.append("\"" + server.getTrailer() + "\"");
+		message += "\"" + server.getTrailer() + "\"";
 	return message ;
 }

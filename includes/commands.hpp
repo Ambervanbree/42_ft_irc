@@ -5,8 +5,6 @@
 # include <vector>
 # include <string>
 # include <iostream>
-// # include "channel.hpp"
-// # include "user.hpp"
 # include "utils.hpp"
 
 class Server;
@@ -30,10 +28,9 @@ void PASS(User &User, Server &server);
 void NICK(User &User, Server &server);
 void USER(User &User, Server &server);
 void OPER(User &User, Server &server);
+void PRIVMSG(User &User, Server &server);
 void QUIT(User &User, Server &server);
-// void MODE(User &User, Server &server);
-// void SERVICE(User &User, Server &server);
-// void PRIVMSG(User &User, Server &server);
+void PRIVMSG(User &User, Server &server);
 // void NOTICE(User &User, Server &server);
 void MOTD(User &User, Server &server);
 // void LUSERS(User &User, Server &server);
@@ -58,8 +55,6 @@ void KICK(User &user, Server &server);
 
 /*Operator commands:*/
 
-// void SQUIT(User &user);
-// void CONNECT(User &user);
 // void KILL(User &user);
 // void DIE(User &user);
 // void RESTART(User &user);
@@ -69,6 +64,6 @@ void KICK(User &user, Server &server);
 Channel*	findChannel(std::string &channelName, Server &server);
 User*		findUser(std::string &userName, Server &server);
 void 		removeUserFromChannel(Channel *channel, User &user, Server &server);
-std::string	createCommandMessage(User &user, Server &server);
+std::string	createCommandMessage(Server &server);
 
 #endif
