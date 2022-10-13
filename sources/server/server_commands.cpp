@@ -131,19 +131,19 @@ void Server::addReplies(User &user, const std::string &message)
 	_bufferReplies.push_back(to_add);
 }
 
-int Server::_sendMessage(int socket)
-{
-	int ret;
-	if (socket == _bufferReplies[0].socket)
-	{
-		ret = send(socket, _bufferReplies[0].message.c_str(), _bufferReplies[0].message.size(), 0);
-		if (ret < 0)
-		{
-			std::cerr << "[-] send() failed: " << errno << std::endl;
-			return (ret);
-		}
-		_bufferReplies.pop_front();
-		return (1);
-	}
-	return (2);
-}
+// int Server::_sendMessage(int socket)
+// {
+// 	int ret;
+// 	if (socket == _bufferReplies[0].socket)
+// 	{
+// 		ret = send(socket, _bufferReplies[0].message.c_str(), _bufferReplies[0].message.size(), 0);
+// 		if (ret < 0)
+// 		{
+// 			std::cerr << "[-] send() failed: " << errno << std::endl;
+// 			return (ret);
+// 		}
+// 		_bufferReplies.pop_front();
+// 		return (1);
+// 	}
+// 	return (2);
+// }

@@ -96,11 +96,11 @@ private:
     void _listen(void);
     void _initFileDescriptorsStruct(void);
     void _addtoStruct(int fd);
-    void _handleEvents(bool *end_server);
-    void _serverSocketEvent(bool *end_server);
+    void _handleEvents(void);
+    void _serverSocketEvent(void);
     void _clientSocketEvent(int i, User &user);
     
-    void quitServer(void);
+    void _quitServer(void);
 
 	/*Functions to set command list and launch commands*/
 	void _setCommands(void);
@@ -112,7 +112,7 @@ private:
     void _updateFdsStructure(void);
     
     /*Functions to send a message to a client*/
-    int _sendMessage(int socket);
+    // int _sendMessage(int socket);
 
 public:
     void start(void);
