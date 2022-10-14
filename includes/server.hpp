@@ -99,7 +99,6 @@ private:
     void _serverSocketEvent(void);
     void _clientSocketEvent(int i, User &user);
     
-    void _quitServer(void);
 
 	/*Functions to set command list and launch commands*/
 	void _setCommands(void);
@@ -117,9 +116,10 @@ public:
     void start(void);
     void handleConnections(void);
     void closeOneConnection(User &user);
+    void quitServer(void);
+
     void errorMessage(User &recipient, std::string reason);
     void quitMessage(User &recipient, std::string reason);
-
 	void sendMessage(User &recipient, std::string message);
 
 	void interpretCommand(std::string &message, User &user); /*Change to Private at the end of project*/
