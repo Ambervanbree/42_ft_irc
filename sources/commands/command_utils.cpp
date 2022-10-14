@@ -35,6 +35,6 @@ std::string	createCommandMessage(Server &server){
 	for (size_t i = 0; i < server.getArgs().size(); i++)
 		message += server.getArgs()[i] + " ";
 	if (!server.getTrailer().empty())
-		message += "\"" + server.getTrailer() + "\"";
+		message += "\"" + server.getTrailer() + "\"\r\n";
 	return message ;
 }

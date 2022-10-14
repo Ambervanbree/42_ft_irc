@@ -162,6 +162,7 @@ void	channelMode(User &user, Server &server){
 	std::string message = "MODE " + mode.outString + " ";
 	for (size_t i = 0; i < mode.outArg.size(); i++)
 		message += mode.outArg[i] + " ";
+	message += "\r\n";
 	chan->sendChannelMessage(user, server, message);
 }
 

@@ -33,7 +33,7 @@ std::set<std::string>	Channel::getBanned() const {return _banned; }
 std::map<char, bool>	Channel::getModes() const {return _modes; }
 
 std::string			Channel::getNames(void){
-	std::string namesRPL("Nicknames listening to chan " + getName() + ":\n");
+	std::string namesRPL("Nicknames listening to chan " + getName() + ":\r\n");
 
 	std::set<User *>::iterator 	it = _users.begin();
 	std::set<User *>::iterator 	ite = _users.end();
@@ -41,13 +41,13 @@ std::string			Channel::getNames(void){
 	for (; it != ite; it++){
 		if (_chop.find((**it).getNickMask()) != _chop.end())
 			namesRPL += "@";
-		namesRPL += (*it)->getNickname() + "\n";
+		namesRPL += (*it)->getNickname() + "\r\n";
 	}
 	return namesRPL ;
 }
 
 std::string			Channel::getList(void){
-	std::string listRPL(getName() + " " + getTopic() + "\n");
+	std::string listRPL(getName() + " " + getTopic() + "\r\n");
 	return listRPL ;	
 }
 
@@ -74,7 +74,6 @@ void			Channel::sendChannelMessage(User &user, Server &server, std::string messa
 		userstring += "@";
 	userstring += user.getNickname();
 	message.insert(0, userstring);
-	message += "\n";
 
 	std::set<User *>::iterator	it = _users.begin();
 	std::set<User *>::iterator	ite = _users.end();
