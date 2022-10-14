@@ -17,7 +17,8 @@ class Channel;
 // void PONG(User &User, Server &server);
 // void ERROR(User &User, Server &server);
 // void WALLOPS(User &User, Server &server);
-// void SQUIT(User &User, Server &server);
+void QUIT(User &User, Server &server);
+// void JOIN(User &User, Server &server);
 
 /*User commands:*/
 
@@ -47,7 +48,8 @@ void KICK(User &user, Server &server);
 
 /*Operator commands:*/
 
-// void KILL(User &user);
+void OPER(User &User, Server &server);
+void KILL(User &user, Server &server);
 // void DIE(User &user);
 // void RESTART(User &user);
 
@@ -55,6 +57,7 @@ void KICK(User &user, Server &server);
 /*Command utils:*/
 Channel*	findChannel(std::string &channelName, Server &server);
 User*		findUser(std::string &userName, Server &server);
+bool        isOperator(const std::string &username, Server &server);
 void 		removeUserFromChannel(Channel *channel, User &user, Server &server);
 void 		partFromAllChannels(User &user, Server &server);
 std::string	createCommandMessage(Server &server);

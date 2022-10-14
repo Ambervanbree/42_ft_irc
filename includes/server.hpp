@@ -117,6 +117,8 @@ public:
     void start(void);
     void handleConnections(void);
     void closeOneConnection(User &user);
+    void errorMessage(User &recipient, std::string reason);
+    void quitMessage(User &recipient, std::string reason);
 
 	void sendMessage(User &recipient, std::string message);
 

@@ -1,13 +1,13 @@
 #include "user.hpp"
 #include "server.hpp"
 
-// QUIT [ <Quit Message> ]
+// QUIT [ <reason> ]
 
 void	QUIT(User &user, Server &server)
 {
 	server.closeOneConnection(user);
-    std::cerr << user.getNickMask() << " " << server._command.cmd_name;
-	if (!server._command.trailer.size())
-        std::cerr << " " << server._command.trailer;
-    std::cerr << std::endl;
+    if (!server.getArgs().empty())
+        server.quitMessage(user, server.getArgs()[0]);
+    else
+        server.quitMessage(user, "No reason risen");
 }

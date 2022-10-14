@@ -54,8 +54,8 @@ void   Server::handleConnections(void){
             std::cerr << "[-] poll() failed" << std::endl;
         if (ret == 0)
             std::cerr << "[-] poll() timed out." << std::endl;
-        if ((ret < 0) || (ret == 0))
-            _quitServer();
+        if (ret <= 0)
+            return;
         _handleEvents();
     }
 }
@@ -130,7 +130,7 @@ void    Server::_listen(void){
     if (ret == 0)
         std::cout << "[+] Server is _listen" << std::endl;
     else
-        std::cerr << "listen() failed" << std::endl;
+        std::cerr << "[-] listen() failed" << std::endl;
 }
 
 /******************************************************************************/
@@ -184,7 +184,6 @@ void    Server::_handleEvents(void) {
             continue;
     // verifier si c'est vraiment necessaire parce que ca bloque IRSSI
         if(_fds[i].revents != POLLIN){
-            std::cout << "Error! revents = " << _fds[i].revents << std::endl;
             _end_server = true;
             break;
         }
@@ -272,6 +271,14 @@ void    Server::_clientSocketEvent(int i, User &user) {
         closeOneConnection(user);
 }
 
+// /******************************************************************************/
+// /*  sendMessage()
+// *******************************************************************************/
+void 	sendMessage(User &recipient, std::string message) {
+	std::cout << "sending: " << message << std::endl;
+	send(recipient.clientSocket, message.c_str(), message.size(), 0);
+}
+
 /******************************************************************************/
 /*  sendMessage()
 *******************************************************************************/
@@ -295,8 +302,10 @@ void    Server::closeOneConnection(User &user) {
     close(_fds[i].fd);
     _fds[i].fd = -1;
     _updateFdsStructure();
-    // a supprimer :
-    std::cout << "[+] Connection closed" << std::endl;
+    // TO BE SENT TO ALL USERS: "<nickname> connexion has been closed."
+    // Et s'il y a un commentaire, ajouter: " for the following reason
+    //  : <comment>"
+    std::cout << "[+] Connexion closed " << std::endl;
 }
 
 /******************************************************************************/
@@ -324,15 +333,41 @@ void    Server::_updateFdsStructure(){
     - sends a message explaining why
 *******************************************************************************/
 void    Server::_quitServer(void) {
-    std::list<User>::iterator ite;
+    std::list<User>::iterator it = users.begin();
+    std::list<User>::iterator ite = users.end();
+    std::list<User>::iterator temp;
     int serverSocket = _fds[0].fd;
 
-    for (ite = users.begin(); ite != users.end(); ite++)
-        closeOneConnection(*ite);
+    while (it != ite) {
+        temp = it;
+        it++;
+        closeOneConnection(*temp);
+    }
     _fds[0].fd = -1;
-    close(serverSocket);
+    // if (serverSocket>0)
+        close(serverSocket);
     _end_server = true;
     return;
+}
+
+/******************************************************************************/
+/*  errorMessage()
+    to one user : "ERROR: <reason>"
+*******************************************************************************/
+void    Server::errorMessage(User &recipient, std::string reason) {
+    sendMessage(recipient, "ERROR: " + reason);
+}
+
+/******************************************************************************/
+/*  quitMessage()
+    to all users : "<nickmask> QUIT <reason>"
+*******************************************************************************/
+void    Server::quitMessage(User &recipient, std::string reason) {
+    std::list<User>::iterator it = users.begin();
+    std::list<User>::iterator ite = users.end();
+
+    for(;it != ite;it++)
+        sendMessage(*it, recipient.getNickMask() + " QUIT " + reason);
 }
 
 std::string 			    &Server::getPrefix() {return _command.prefix; }
