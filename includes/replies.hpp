@@ -16,6 +16,7 @@
 # define RPL_NOTOPIC(nick, channel)			    "331 " + nick + " " + channel + " :No topic is set\r\n"
 # define RPL_TOPIC(nick, channel, topic)	    "332 " + nick + " " + channel + " :" + topic + "\r\n"
 # define RPL_TOPICWHOTIME(nick, channel, user, setat)   "333 " + nick + " " + channel + " " + user + " " + setat + "\r\n"
+# define RPL_INVITING(channel, invitee)         "341 " + channel + " " + invitee + "\r\n"
 # define RPL_NAMREPLY(nick, channel, users)		"353 " + nick + " = " + channel + " :" + users + "\r\n"
 # define RPL_ENDOFNAMES(nick, channel)          "366 " + nick + " " + channel +  " :End of /NAMES list\r\n"
 # define RPL_BANLIST(nick, channel, mask)		"367 " + nick + " " + channel + " " + mask + "\r\n"

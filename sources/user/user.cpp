@@ -95,7 +95,8 @@ void User::addRepliesToBuffer(const std::string &message)
 		std::cerr << "-> Invalid format on replies - please check\n";
 		return ;
 	}
-	replies.push_back(message);
+	if (len < 512)
+		replies.push_back(message);
 	/*else if (message[len -1] == '\n')
 	{
 		while ((next = message.find("\r\n", last)) != std::string::npos)

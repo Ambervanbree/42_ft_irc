@@ -9,13 +9,19 @@
 void TOPIC(User &user, Server &server){
 	// if (!user.isRegistered())
 	//	return ;
-	if (CHANNEL.empty())
+	if (CHANNEL.empty()) {
 		user.addRepliesToBuffer(ERR_NEEDMOREPARAMS(user.getNickname(), server.getCommand()));
+		return ;
+	}
 	Channel *chan = findChannel(CHANNEL[0], server);
-	if (chan == NULL)
+	if (chan == NULL) {
 		user.addRepliesToBuffer(ERR_NOSUCHCHANNEL(CHANNEL[0]));
-	if (!chan->onChannel(user))
+		return ;
+	}
+	if (!chan->onChannel(user)) {
 		user.addRepliesToBuffer(ERR_NOTONCHANNEL(user.getNickname(), CHANNEL[0]));
+		return ;
+	}
 	if (server._command.trailer.empty())
 		chan->sendTopic(user);
 	else{

@@ -20,7 +20,6 @@ bool 		grammarCheckChannel(std::string name){
 		|| !(name[0] == '&' || name[0] == '#')
 		|| name.find(',') != std::string::npos
 		|| name.find(7) != std::string::npos){
-		std::cerr << "ERR_BADCHANMASK (476)" << std::endl;
 		return false;
 	}
 	return true;
@@ -50,7 +49,7 @@ void JOIN(User &user, Server &server){
 	char 					delimiter[] = ",";
 	
 	if (ARGUMENTS.empty()){
-		std::cerr << "ERR_NEEDMOREPARAMS (461)" << std::endl;
+		user.addRepliesToBuffer(ERR_NEEDMOREPARAMS(user.getNickname(), server.getCommand()));
 		return ;
 	}
 	split_args(CHANNELS, delimiter, channels);
@@ -62,7 +61,10 @@ void JOIN(User &user, Server &server){
 		split_args(KEYS, delimiter, keys);
 	for (size_t i = 0; i < channels.size(); i++){
 		if (!grammarCheckChannel(channels[i]))
+		{
+			user.addRepliesToBuffer(ERR_BADCHANMASK(channels[i]));
 			return ;
+		}
 		Channel	*chan = findChannel(channels[i], server);
 		if (chan != NULL){
 			if (!chan->hasChop()){
