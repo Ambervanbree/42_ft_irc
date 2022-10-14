@@ -26,22 +26,6 @@ bool 		grammarCheckChannel(std::string name){
 	return true;
 }
 
-void 		partFromAllChannels(User &user, Server &server){
-	std::map<std::string, Channel *>::iterator	it 	= server._channels.begin();
-	std::map<std::string, Channel *>::iterator	ite = server._channels.end();
-	std::map<std::string, Channel *>::iterator 	chan;
-
-	while (it != ite){
-		chan = it;
-		it++;
-		if (chan->second->onChannel(user)){
-			removeUserFromChannel(chan->second, user, server);
-			std::string message = "PART " + chan->second->getName() + "\r\n";
-			chan->second->sendChannelMessage(user, server, message);
-		}
-	}
-}
-
 void JOIN(User &user, Server &server){
 // 	if (!user.isRegistered())
 // 		return ;
@@ -69,8 +53,12 @@ void JOIN(User &user, Server &server){
 				std::cout << "[-] Chan no chop" << std::endl;
 				return ;
 			}
-			else
-				chan->addUser(keys[i], user);
+			else{
+				if (keys.empty())
+					chan->addUser("", user);
+				else
+					chan->addUser(keys[i], user);
+			}
 		}
 		else
 			chan = createChannel(channels[i], user, server);

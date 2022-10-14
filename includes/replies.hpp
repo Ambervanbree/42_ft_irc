@@ -60,17 +60,4 @@ struct Replies
 # define ERR_UMODEUNKNOWMFLAG(nick, channel)	"501 " + nick + " " + channel + " :Unknown :MODE flag\r\n";
 // # define ERR_USERSDONTMATCH(nick)            "502 :" + nick + " :Cant change mode for other users\r\n";
 
-/* Command messages */
-
-// # define JOIN_message(nick, chan)					":" + nick + " JOIN " + chan " "\r\n";
-// # define PART_message(nick, chan)					":" + nick + " PART " + chan + "\r\n";
-// # define PART_message(nick, chan, message)			":" + nick + " PART " + chan + " :" + message + "\r\n";
-// # define MODE_message(nick, chan, args)				":" + nick + " MODE " + args + "\r\n";
-// # define TOPIC_message(nick, chan, topic)			":" + nick + " TOPIC " + " :" + topic + "\r\n";
-// # define INVITE_message(inviter, chan, invitee)		":" + inviter + " INVITE " + invitee + " " + chan + "\r\n";
-// # define KICK_message(kicker, chan, kicked)			":" + kicker + " KICK " + kicked + "\r\n";
-// # define KICK_message(kicker, chan, kicked, reason)	":" + kicker + " KICK " + kicked + " :" + reason + "\r\n";
-// # define PRIVMSG_message(sender, reciever, message)	":" + sender + " PRIVMSG " + receiver + " :" + message + "\r\n";
-// # define NOTICE_message(sender, reciever, message)	":" + sender + " NOTICE " + receiver + " :" + message + "\r\n";
-
 #endif

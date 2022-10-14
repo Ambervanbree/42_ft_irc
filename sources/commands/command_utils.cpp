@@ -30,6 +30,22 @@ void 		removeUserFromChannel(Channel *channel, User &user, Server &server){
 	}
 }
 
+void 		partFromAllChannels(User &user, Server &server){
+	std::map<std::string, Channel *>::iterator	it 	= server._channels.begin();
+	std::map<std::string, Channel *>::iterator	ite = server._channels.end();
+	std::map<std::string, Channel *>::iterator 	chan;
+
+	while (it != ite){
+		chan = it;
+		it++;
+		if (chan->second->onChannel(user)){
+			removeUserFromChannel(chan->second, user, server);
+			std::string message = "PART " + chan->second->getName() + "\r\n";
+			chan->second->sendChannelMessage(user, server, message);
+		}
+	}
+}
+
 std::string	createCommandMessage(Server &server){
 	std::string message = " " + server.getCommand() + " ";
 	for (size_t i = 0; i < server.getArgs().size(); i++)
