@@ -5,14 +5,9 @@ User::User(const int &socket)
 	_isPassChecked(false), _isRegistered(false), _isOperator(false),
 	clientSocket(socket) {
 	std::cout << "[+] A user is born" << std::endl;
-	// _setHost();
-	// _setPort();
 }
 
 User::~User() {};
-
-// User::User() : _nickName("default user") { std::cout << "A user is born\n"; }
-
 
 User::User(const User &other)
 {
@@ -54,8 +49,20 @@ bool	User::isOperator() const { return _isOperator; }
 void				User::setNickname(const std::string &nick) { _nickName = nick; std::cout << "[+] _nickName is now set to: " << _nickName << std::endl;}
 void				User::setUsername(const std::string &user) { _userName = user; std::cout << "[+] _userName is now set to: " << _userName << std::endl;}
 void				User::setRealname(const std::string &realname) { _realName =  realname; std::cout << "[+] _realName is now set to: " << _realName << std::endl;}
+int 				User::setHostName(int newFileDescriptor) {
+    memset(&_clientAddr, 0, sizeof(_clientAddr));
+	socklen_t addr_size = sizeof(struct sockaddr_in);
 
-void				User::setAddr(const struct sockaddr_in &addr) { _clientAddr = addr; }
+    int ret = getpeername(newFileDescriptor, (struct sockaddr *)&_clientAddr, &addr_size);
+	if (ret < 0){
+        std::cerr << "getpeername() failed" << std::endl;
+        return 0;
+    }
+    char *hostName = new char[63];
+    strcpy(hostName, inet_ntoa(_clientAddr.sin_addr));
+	_hostName = (std::string)hostName;
+	return 1;
+}
 void				User::setSocket(const int &socket) { clientSocket = socket; }
 
 void	User::setPassChecked(void) { _isPassChecked = true; std::cout << "[+] pass successfully checked" << std::endl;}
