@@ -287,8 +287,10 @@ void 	Server::sendMessage(User &recipient, std::string message) {
 void    Server::closeOneConnection(User &user) {
     int i = 1;
 
-    while(_fds[i].fd != user.clientSocket)
+    while(_fds[i].fd != user.clientSocket){
         i++;
+	}
+	partFromAllChannels(user, *this);
     users.remove(user);
     close(_fds[i].fd);
     _fds[i].fd = -1;
