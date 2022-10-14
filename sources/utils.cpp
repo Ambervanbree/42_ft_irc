@@ -7,7 +7,7 @@ Split args : split str into a tab on each caracters of delimiter
 - out : reference to the outpout
 */
 
-void split_args(std::string &in, char *delimiter, std::deque<std::string> &out)
+void split_args(std::string &in, char *delimiter, std::vector<std::string> &out)
 {
     if (in.empty())
 		return ;
@@ -26,7 +26,7 @@ Split on string : split str into a tab with an entire str is the delimiter
 - out : reference to the outpout
 */
 
-void split_on_string(std::string &message, std::string delim, std::deque<std::string> &out)
+void split_on_string(std::string &message, std::string delim, std::vector<std::string> &out)
 {
     std::string::size_type start = 0;
     std::string::size_type end = message.find(delim);

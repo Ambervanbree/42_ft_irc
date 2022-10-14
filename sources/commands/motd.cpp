@@ -4,20 +4,22 @@
 #include "commands.hpp"
 #include <fstream>
 
-void	sendMOTD(User &user){
+void	sendMOTD(Server &server, User &user){
 	std::ifstream	MOTDfile;
 	std::string		line;
+	std::string		MOTDbuffer;
 
+	(void)server;
 	(void)user;
 	MOTDfile.open("other/motd.txt");
 	if (MOTDfile.is_open()){
-		// PRIVMSG to user: RPL_MOTDSTART (375)
+		std::cout << "RPL_MOTDSTART (375)" << std::endl;
 		while (MOTDfile.good()){
 			std::getline(MOTDfile, line);
-			std::cout << line << std::endl;
-			//PRIVMSG to user: line + "\n";
+			// RPL to user with line as a comment:
+			std::cout << "RPL_MOTD (372)" << std::endl;
 		}
-		// PRIVMSG to user: RPL_ENDOFMOTD (376)
+		std::cout << "RPL_ENDOFMOTD (376)" << std::endl;
 		MOTDfile.close();
 	}
 	else
@@ -33,5 +35,5 @@ void MOTD(User &user, Server &server){
 			return ;
 		}
 	}
-	sendMOTD(user);
+	sendMOTD(server, user);
 }

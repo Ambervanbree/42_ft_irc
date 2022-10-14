@@ -8,7 +8,11 @@
 #define KEYS 		server.getArgs()[1]
 
 Channel		*createChannel(std::string name, User &user, Server &server){
-	return &server._channels.insert(std::make_pair(name, Channel(name, user))).first->second;
+	Channel	*channel = new Channel(name, user);
+
+	server._channels.insert(std::make_pair(name, channel));
+	
+	return channel ;
 }
 
 bool 		grammarCheckChannel(std::string name){
@@ -16,37 +20,20 @@ bool 		grammarCheckChannel(std::string name){
 		|| !(name[0] == '&' || name[0] == '#')
 		|| name.find(',') != std::string::npos
 		|| name.find(7) != std::string::npos){
-		std::cerr << "ERR_BADCHANMASK (476)" << std::endl;
 		return false;
 	}
 	return true;
 }
 
-void 		partFromAllChannels(User &user, Server &server){
-	std::map<std::string, Channel>::iterator	it 	= server._channels.begin();
-	std::map<std::string, Channel>::iterator	ite = server._channels.end();
-	std::map<std::string, Channel>::iterator 	chan;
-
-	while (it != ite){
-		chan = it;
-		it++;
-		if (chan->second.onChannel(user)){
-			removeUserFromChannel(&(chan->second), user, server);
-			std::string message = ":" + user.getNickname() + " PART " + chan->second.getName();
-			chan->second.sendChannelMessage(message);
-		}
-	}
-}
-
 void JOIN(User &user, Server &server){
 // 	if (!user.isRegistered())
 // 		return ;
-	std::deque<std::string>	channels;
-	std::deque<std::string>	keys;
+	std::vector<std::string>	channels;
+	std::vector<std::string>	keys;
 	char 					delimiter[] = ",";
 	
 	if (ARGUMENTS.empty()){
-		std::cerr << "ERR_NEEDMOREPARAMS (461)" << std::endl;
+		user.addRepliesToBuffer(ERR_NEEDMOREPARAMS(user.getNickname(), server.getCommand()));
 		return ;
 	}
 	split_args(CHANNELS, delimiter, channels);
@@ -58,19 +45,30 @@ void JOIN(User &user, Server &server){
 		split_args(KEYS, delimiter, keys);
 	for (size_t i = 0; i < channels.size(); i++){
 		if (!grammarCheckChannel(channels[i]))
+		{
+			user.addRepliesToBuffer(ERR_BADCHANMASK(channels[i]));
 			return ;
+		}
 		Channel	*chan = findChannel(channels[i], server);
 		if (chan != NULL){
-			if (!chan->hasChop())
+			if (!chan->hasChop()){
+				std::cout << "[-] Chan no chop" << std::endl;
 				return ;
-			else
-				chan->addUser(keys[i], user);
+			}
+			else{
+				if (keys.empty())
+					chan->addUser("", user);
+				else
+					chan->addUser(keys[i], user);
+			}
 		}
 		else
 			chan = createChannel(channels[i], user, server);
-		chan->sendChannelMessage(createCommandMessage(user, server));
+		chan->sendChannelMessage(user, server, createCommandMessage(server));
 		if (!chan->getTopic().empty())
 			chan->sendTopic(user);
-		chan->sendNames(user);
+		// chan->getNames(); will return the list of names on the channel
+		// RPL send to user:
+		std::cout << "RPL_NAMREPLY (353)" << std::endl;
 	}
 }

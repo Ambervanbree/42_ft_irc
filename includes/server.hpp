@@ -21,6 +21,8 @@
 # include <list>
 # include "commands.hpp"
 # include "channel.hpp"
+# include "replies.hpp"
+
 
 // maximum length of the queue of pending connections
 # define MAX_CONNECTS   5
@@ -75,13 +77,13 @@ private:
     bool                _end_server;
 	
 	std::map<std::string, command>	_commands;
-	std::deque<std::string>			_bufferCommand;
+	std::vector<std::string>		_bufferCommand;
   
   public:
-	Command							_command;
-	std::map<std::string, Channel>	_channels;
-	std::list<User>					users;
-    std::list<std::string>          operators;
+	Command								_command;
+	std::map<std::string, Channel *>	_channels;
+	std::list<User>						users;
+    std::list<std::string>          	operators;
     
 /* ************************************************************************** */
 /*                              MEMBER FUNCTIONS                              */
@@ -96,6 +98,7 @@ private:
     void _handleEvents(void);
     void _serverSocketEvent(void);
     void _clientSocketEvent(int i, User &user);
+    
     void _quitServer(void);
 
 	/*Functions to set command list and launch commands*/
@@ -106,6 +109,9 @@ private:
 	void _splitBuffer(std::string buffer);
 	void _handleBuffer(char *buffer, User &user);
     void _updateFdsStructure(void);
+    
+    /*Functions to send a message to a client*/
+    int _sendMessage(User &user);
 
 public:
     void start(void);
@@ -114,14 +120,17 @@ public:
     void errorMessage(User &recipient, std::string reason);
     void quitMessage(User &recipient, std::string reason);
 
+	void sendMessage(User &recipient, std::string message);
+
 	void interpretCommand(std::string &message, User &user); /*Change to Private at the end of project*/
 
     std::string				&getPassword(void);
 
-	std::string 			    &getPrefix(void);
-	std::string				    &getCommand(void);
+	std::string 			&getPrefix(void);
+	std::string				&getCommand(void);
 	std::vector<std::string>	&getArgs(void);
-	std::string				    &getTrailer(void);
+	std::string				&getTrailer(void);
+
 };
 
 #endif

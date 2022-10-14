@@ -11,28 +11,29 @@ void	sendInvite(User &inviter, Server &server){
 
 	if (invitee != NULL){
 		(void)inviter;
-		// PRIVMSG to invitee: createCommandMessage(inviter, server);
+		//server.sendMessage(*invitee, createCommandMessage(server));
+		invitee->addRepliesToBuffer(createCommandMessage(server));
 		// PRIVMSG to inviter: RPL_INVITING (341)
 	}
 	return ;
 }
 
 void INVITE(User &user, Server &server){
-	if (!user.isRegistered())
-		return ;
+	// if (!user.isRegistered())
+	// 	return ;
 	if (server.getArgs().size() < 2){
-		std::cerr << "ERR_NEEDMOREPARAMS (461)" << std::endl;
+		user.addRepliesToBuffer(ERR_NEEDMOREPARAMS(user.getNickname(), server.getCommand()));
 		return ;
 	}
 	Channel	*chan = findChannel(CHANNEL, server);
 
 	if (chan != NULL){
 		if (!chan->onChannel(user)){
-			std::cerr << "ERR_NOTONCHANNEL (442)" << std::endl;
+			user.addRepliesToBuffer(ERR_NOTONCHANNEL(user.getNickname(), CHANNEL[0]));
 			return ;		
 		}
 		if (chan->onChannel(INVITEE)){
-			std::cerr << "ERR_USERONCHANNEL (443)" << std::endl;
+			user.addRepliesToBuffer(ERR_USERONCHANNEL(INVITEE, CHANNEL));
 			return ;
 		}
 	}

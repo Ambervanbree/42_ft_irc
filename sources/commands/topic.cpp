@@ -7,30 +7,29 @@
 #define NEWTOPIC 	server._command.trailer
 
 void TOPIC(User &user, Server &server){
-	if (!user.isRegistered())
-		return ;
-	if (CHANNEL.empty()){
-		std::cerr << "ERR_NEEDMOREPARAMS (461)" << std::endl; 
+	// if (!user.isRegistered())
+	//	return ;
+	if (CHANNEL.empty()) {
+		user.addRepliesToBuffer(ERR_NEEDMOREPARAMS(user.getNickname(), server.getCommand()));
 		return ;
 	}
 	Channel *chan = findChannel(CHANNEL[0], server);
-	if (chan == NULL){
-		std::cerr << "ERR_NOSUCHCHANNEL (403)" << std::endl; 
-		return ;		
+	if (chan == NULL) {
+		user.addRepliesToBuffer(ERR_NOSUCHCHANNEL(CHANNEL[0]));
+		return ;
 	}
-	if (!chan->onChannel(user)){
-		std::cerr << "ERR_NOTONCHANNEL (442)" << std::endl; 
+	if (!chan->onChannel(user)) {
+		user.addRepliesToBuffer(ERR_NOTONCHANNEL(user.getNickname(), CHANNEL[0]));
 		return ;
 	}
 	if (server._command.trailer.empty())
 		chan->sendTopic(user);
 	else{
 		if (!chan->isChop(user.getNickMask()))
-			std::cerr << "ERR_CHANOPRIVSNEEDED (482)" << std::endl; 
+			user.addRepliesToBuffer(ERR_CHANPRIVSNEEDED(user.getNickname(), CHANNEL[0]));
 		else{
 			chan->setTopic(NEWTOPIC);
-			chan->sendChannelMessage(createCommandMessage(user, server));			
+			chan->sendChannelMessage(user, server, createCommandMessage(server));	
 		}
-
 	}
 }

@@ -8,10 +8,10 @@
 #define COMMENT 	server._command.trailer
 
 void	sendKickMessage(Channel &chan, Server &server, User &kicker){
-	chan.sendChannelMessage(createCommandMessage(kicker, server));
+	chan.sendChannelMessage(kicker, server, createCommandMessage(server));
 }
 
-void	kickUserPerChannel(Server &server, User &user, std::deque<std::string> channels, std::deque<std::string> toKick){
+void	kickUserPerChannel(Server &server, User &user, std::vector<std::string> channels, std::vector<std::string> toKick){
 	Channel	*chan 		= NULL;
 	User	*userToKick;
 	
@@ -37,7 +37,7 @@ void	kickUserPerChannel(Server &server, User &user, std::deque<std::string> chan
 	}
 }
 
-void	kickMultipleUsers(Server &server, User &user, std::string channel, std::deque<std::string> toKick){
+void	kickMultipleUsers(Server &server, User &user, std::string channel, std::vector<std::string> toKick){
 	Channel	*chan = findChannel(channel, server);
 
 	if (chan == NULL){
@@ -76,8 +76,8 @@ void KICK(User &user, Server &server){
 		return ;
 	}
 
-	std::deque<std::string>	channels;
-	std::deque<std::string>	toKick;
+	std::vector<std::string>	channels;
+	std::vector<std::string>	toKick;
 	char 					delimiter[] = ",";
 
 	split_args(CHANNELS, delimiter, channels);

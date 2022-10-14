@@ -6,14 +6,14 @@
 #define CHANNELS 	server.getArgs()[0]
 
 void PART(User &user, Server &server) {
-	if (!user.isRegistered())
-		return ;
+	// if (!user.isRegistered())
+	// 	return ;
 	if (server.getArgs().empty()){
 		std::cerr << "ERR_NEEDMOREPARAMS (461)" << std::endl;
 		return ;
 	}
 
-	std::deque<std::string>	channels;
+	std::vector<std::string>	channels;
 	char 					delimiter[] = ",";
 	Channel					*chan = NULL;
 
@@ -27,7 +27,7 @@ void PART(User &user, Server &server) {
 			std::cerr << "ERR_NOTONCHANNEL (442)" << std::endl;
 		else{
 			removeUserFromChannel(chan, user, server);
-			chan->sendChannelMessage(createCommandMessage(user, server));			
+			chan->sendChannelMessage(user, server, createCommandMessage(server));			
 		}
 
 	}

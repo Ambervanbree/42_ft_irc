@@ -3,10 +3,10 @@
 #include <list>
 
 Channel*	findChannel(std::string &channelName, Server &server){
-	std::map<std::string, Channel>::iterator	it = server._channels.find(channelName);
+	std::map<std::string, Channel *>::iterator	it = server._channels.find(channelName);
 
 	if (it != server._channels.end())
-		return &(it->second);
+		return (it->second);
 	return NULL ;
 }
 
@@ -22,19 +22,36 @@ User*		findUser(std::string &nickName, Server &server){
 }
 
 void 		removeUserFromChannel(Channel *channel, User &user, Server &server){
+	
 	channel->removeUser(user);
 	if (channel->isEmpty()){
-		std::cout << "[+] Channel " << channel->getName() << " erased\n";
+		delete channel;
 		server._channels.erase(channel->getName());
 	}
 }
 
-std::string	createCommandMessage(User &user, Server &server){
-	std::string message = ":" + user.getNickname() + " " + server.getCommand() + " ";
+void 		partFromAllChannels(User &user, Server &server){
+	std::map<std::string, Channel *>::iterator	it 	= server._channels.begin();
+	std::map<std::string, Channel *>::iterator	ite = server._channels.end();
+	std::map<std::string, Channel *>::iterator 	chan;
+
+	while (it != ite){
+		chan = it;
+		it++;
+		if (chan->second->onChannel(user)){
+			removeUserFromChannel(chan->second, user, server);
+			std::string message = "PART " + chan->second->getName() + "\r\n";
+			chan->second->sendChannelMessage(user, server, message);
+		}
+	}
+}
+
+std::string	createCommandMessage(Server &server){
+	std::string message = " " + server.getCommand() + " ";
 	for (size_t i = 0; i < server.getArgs().size(); i++)
-		message.append(server.getArgs()[i] + " ");
+		message += server.getArgs()[i] + " ";
 	if (!server.getTrailer().empty())
-		message.append("\"" + server.getTrailer() + "\"");
+		message += "\"" + server.getTrailer() + "\"\r\n";
 	return message ;
 }
 

@@ -128,7 +128,7 @@ void    Server::_listen(void){
     int ret;
     ret = listen(_serverSocket, MAX_CONNECTS);
     if (ret == 0)
-        std::cout << "[+] Server is listening" << std::endl;
+        std::cout << "[+] Server is _listen" << std::endl;
     else
         std::cerr << "[-] listen() failed" << std::endl;
 }
@@ -258,11 +258,12 @@ void    Server::_clientSocketEvent(int i, User &user) {
             if (ret == 0)
                 close_conn = true;
             if (close_conn == false)
-            {
                 _handleBuffer(buffer, user);
-                // ret = _sendMessage(user.getSocket());
-                // if (ret < 0)
-                //     close_conn = true;
+            if (close_conn == false && user.replies.size())
+            {
+                ret = _sendMessage(user);
+                if (ret < 0)
+                     close_conn = true;
             }
         }
     }
@@ -279,14 +280,24 @@ void 	sendMessage(User &recipient, std::string message) {
 }
 
 /******************************************************************************/
+/*  sendMessage()
+*******************************************************************************/
+void 	Server::sendMessage(User &recipient, std::string message) {
+	std::cout << "sending: " << message << std::endl;
+	send(recipient.clientSocket, message.c_str(), message.size(), 0);
+}
+
+/******************************************************************************/
 /*  closeConnections()
     Closes client socket        
 *******************************************************************************/
 void    Server::closeOneConnection(User &user) {
     int i = 1;
 
-    while(_fds[i].fd != user.clientSocket)
+    while(_fds[i].fd != user.clientSocket){
         i++;
+	}
+	partFromAllChannels(user, *this);
     users.remove(user);
     close(_fds[i].fd);
     _fds[i].fd = -1;

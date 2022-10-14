@@ -14,8 +14,8 @@ void Server::_setCommands()
 	_commands["QUIT"] = QUIT;
 	_commands["JOIN"] = JOIN;
 	// _commands["SERVICE"] = SERVICE; 		x
-	// _commands["PRIVMSG"] = PRIVMSG;
-	// _commands["NOTICE"] = NOTICE;
+	_commands["PRIVMSG"] = PRIVMSG;
+	_commands["NOTICE"] = NOTICE;
 	_commands["MOTD"] = MOTD;
 	// _commands["LUSERS"] = LUSERS; 		x
 	// _commands["VERSION"] = VERSION; 		x
@@ -32,14 +32,13 @@ void Server::_setCommands()
 	_commands["LIST"] = LIST;
 	_commands["INVITE"] = INVITE;
 	_commands["KICK"] = KICK;
-	// _commands["CONNECT"] = CONNECT;		x
 	// _commands["KILL"] = KILL;
 	// _commands["DIE"] = DIE;
 	// _commands["RESTART"] = RESTART; 		?
 }
 
 void Server::_messageToCommandStruct(std::string message){
-	std::deque<std::string> 	out;
+	std::vector<std::string> 	out;
 	char 						delimiter[] = " ";
 
 	split_args(message, delimiter, out);
@@ -82,7 +81,7 @@ void Server::_launchCommand(User &user)
 	if (it != _commands.end())
 		it->second(user, *this);
 	else
-		std::cerr << "No command found\n";
+		std::cerr << "ERR_UNKNOWNCOMMAND (421)\n";
 }
 
 void Server::interpretCommand(std::string &message, User &user)
@@ -117,7 +116,23 @@ void Server::_handleBuffer(char *buffer, User &user)
 		while (_bufferCommand.size())
 		{
 			interpretCommand(_bufferCommand[0], user);
-			_bufferCommand.pop_front();
+			_bufferCommand.erase(_bufferCommand.begin());
 		}
 	}
+}
+
+int Server::_sendMessage(User &user)
+{
+	int ret = 0;
+	while (user.replies.size())
+	{
+		ret = send(user.getSocket(), user.replies[0].c_str(), user.replies[0].size(), 0);
+		if (ret < 0)
+		{
+			std::cerr << "[-] send() failed: " << errno << std::endl;
+			return (ret);
+		}
+		user.replies.erase(user.replies.begin());
+	}
+	return (ret);
 }
