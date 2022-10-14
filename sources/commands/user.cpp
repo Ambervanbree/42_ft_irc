@@ -12,13 +12,13 @@ void USER(User &user, Server &server)
 	if (server._command.args.size() < 3 || server._command.trailer.empty()) {
 		toSend = ERR_NEEDMOREPARAMS(user.getNickname(), server.getCommand());
 		std::cerr << toSend << std::endl;
-		server.addReplies(user, toSend);
+		user.addRepliesToBuffer(toSend);
 		return;
 	}
 	if (user.isRegistered()) {
 		toSend = ERR_ALREADYTREGISTERED(user.getNickname());
 		std::cerr << toSend << std::endl;
-		server.addReplies(user, toSend);
+		user.addRepliesToBuffer(toSend);
 		return;
 	}
 	
@@ -31,8 +31,9 @@ void USER(User &user, Server &server)
 		user.setUsername(username);
 	user.setRealname(realname.erase(0, 1));
 	user.setRegistered();
+	user.addRepliesToBuffer(RPL_WELCOME(user.getNickname()));
 	toSend = RPL_WELCOME(user.getNickname());
 	std::cerr << toSend << std::endl; 
-	server.addReplies(user, toSend);
+	user.addRepliesToBuffer(toSend);
 	return;
 }

@@ -122,28 +122,18 @@ void Server::_handleBuffer(char *buffer, User &user)
 	}
 }
 
-void Server::addReplies(User &user, const std::string &message)
+int Server::_sendMessage(User &user)
 {
-	Replies to_add;
-
-	to_add.socket = user.getSocket();
-	to_add.message = message;
-	_bufferReplies.push_back(to_add);
+	int ret = 0;
+	while (user.replies.size())
+	{
+		ret = send(user.getSocket(), user.replies[0].c_str(), user.replies[0].size(), 0);
+		if (ret < 0)
+		{
+			std::cerr << "[-] send() failed: " << errno << std::endl;
+			return (ret);
+		}
+		user.replies.erase(user.replies.begin());
+	}
+	return (ret);
 }
-
-int Server::_sendMessage(int socket)
- {
- 	int ret;
- 	if (socket == _bufferReplies[0].socket)
- 	{
- 		ret = send(socket, _bufferReplies[0].message.c_str(), _bufferReplies[0].message.size(), 0);
- 		if (ret < 0)
- 		{
- 			std::cerr << "[-] send() failed: " << errno << std::endl;
- 			return (ret);
- 		}
- 		_bufferReplies.erase(_bufferReplies.begin());
- 		return (1);
- 	}
- 	return (2);
- }
