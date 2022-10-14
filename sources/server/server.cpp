@@ -254,15 +254,17 @@ void    Server::_clientSocketEvent(int i, User &user) {
                     std::cerr << "[-] recv() failed" << errno << std::endl;
                     close_conn = true;
                 }
+                break;
             }
             if (ret == 0)
                 close_conn = true;
             if (close_conn == false)
-            {
                 _handleBuffer(buffer, user);
+            if (close_conn == false && _bufferReplies.size())
+            {
                 ret = _sendMessage(user.getSocket());
                 if (ret < 0)
-                    close_conn = true;
+                     close_conn = true;
             }
         }
     }

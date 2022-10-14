@@ -77,8 +77,8 @@ private:
     bool                _end_server;
 	
 	std::map<std::string, command>	_commands;
-	std::deque<std::string>			_bufferCommand;
-    std::deque<Replies>             _bufferReplies;
+	std::vector<std::string>		_bufferCommand;
+    std::vector<Replies>            _bufferReplies;
   
   public:
 	Command								_command;
