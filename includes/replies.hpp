@@ -53,7 +53,7 @@
 # define ERR_BANNEDFROMCHAN(channel)			"474 " + channel + " :Cannot join channel (+b)\r\n"
 # define ERR_BADCHANNELKEY(channel)				"475 " + channel + " :Cannot join channel (+k)\r\n"
 # define ERR_BADCHANMASK(channel)				"476 " + channel + " :Bad Channel Mask\r\n"
-// # define ERR_NOPRIVILEGES(nick)              "481 " + nick + " :Permission Denied- You're not an IRC operator\r\n"
+# define ERR_NOPRIVILEGES(nick)                 "481 " + nick + " :Permission Denied- You're not an IRC operator\r\n"
 # define ERR_CHANPRIVSNEEDED(nick, channel)		"482 " + nick + " " + channel + " :You're not channel operator\r\n"
 # define ERR_NOOPERHOST(nick)					"491 " + nick + " :No O-lines for your host\r\n"
 # define ERR_UMODEUNKNOWMFLAG(nick, channel)	"501 " + nick + " " + channel + " :Unknown :MODE flag\r\n"
