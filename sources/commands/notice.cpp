@@ -22,7 +22,7 @@ void	singleNotice(User &user, Server &server){
 	if (recipient == NULL)
 		return ;
 	else{
-		std::string message = ":" + user.getNickname() + " " + server.getTrailer() + "\n";
+		std::string message = ":" + user.getNickname() + " " + server.getTrailer() + "\r\n";
 		server.sendMessage(*recipient, message);
 	}
 }

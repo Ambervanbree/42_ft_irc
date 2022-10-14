@@ -60,4 +60,14 @@ struct Replies
 # define ERR_UMODEUNKNOWMFLAG(nick, channel)	"501 " + nick + " " + channel + " :Unknown :MODE flag\r\n";
 // # define ERR_USERSDONTMATCH(nick)            "502 :" + nick + " :Cant change mode for other users\r\n";
 
+/* Command messages */
+
+// # define JOIN_message()
+// # define KICK_message()
+// # define MODE_message()
+// # define PART_message()
+// # define INVITE_message()
+// # define PRIVMSG_message()
+// # define NOTICE_message()
+
 #endif
