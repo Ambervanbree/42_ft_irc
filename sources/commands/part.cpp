@@ -13,7 +13,7 @@ void PART(User &user, Server &server) {
 		return ;
 	}
 
-	std::deque<std::string>	channels;
+	std::vector<std::string>	channels;
 	char 					delimiter[] = ",";
 	Channel					*chan = NULL;
 

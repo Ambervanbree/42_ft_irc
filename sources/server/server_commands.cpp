@@ -39,7 +39,7 @@ void Server::_setCommands()
 }
 
 void Server::_messageToCommandStruct(std::string message){
-	std::deque<std::string> 	out;
+	std::vector<std::string> 	out;
 	char 						delimiter[] = " ";
 
 	split_args(message, delimiter, out);
@@ -117,7 +117,7 @@ void Server::_handleBuffer(char *buffer, User &user)
 		while (_bufferCommand.size())
 		{
 			interpretCommand(_bufferCommand[0], user);
-			_bufferCommand.pop_front();
+			_bufferCommand.erase(_bufferCommand.begin());
 		}
 	}
 }
@@ -131,19 +131,19 @@ void Server::addReplies(User &user, const std::string &message)
 	_bufferReplies.push_back(to_add);
 }
 
-// int Server::_sendMessage(int socket)
-// {
-// 	int ret;
-// 	if (socket == _bufferReplies[0].socket)
-// 	{
-// 		ret = send(socket, _bufferReplies[0].message.c_str(), _bufferReplies[0].message.size(), 0);
-// 		if (ret < 0)
-// 		{
-// 			std::cerr << "[-] send() failed: " << errno << std::endl;
-// 			return (ret);
-// 		}
-// 		_bufferReplies.pop_front();
-// 		return (1);
-// 	}
-// 	return (2);
-// }
+int Server::_sendMessage(int socket)
+ {
+ 	int ret;
+ 	if (socket == _bufferReplies[0].socket)
+ 	{
+ 		ret = send(socket, _bufferReplies[0].message.c_str(), _bufferReplies[0].message.size(), 0);
+ 		if (ret < 0)
+ 		{
+ 			std::cerr << "[-] send() failed: " << errno << std::endl;
+ 			return (ret);
+ 		}
+ 		_bufferReplies.erase(_bufferReplies.begin());
+ 		return (1);
+ 	}
+ 	return (2);
+ }

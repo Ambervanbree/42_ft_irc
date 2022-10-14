@@ -11,8 +11,8 @@ struct Mode{
 	std::string				nickMask;
 	std::string				modeString;
 	std::string				outString;
-	std::deque<std::string>	modeArg;
-	std::deque<std::string>	outArg;
+	std::vector<std::string>	modeArg;
+	std::vector<std::string>	outArg;
 	int						argNr;
 };
 

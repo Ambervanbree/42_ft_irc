@@ -259,11 +259,12 @@ void    Server::_clientSocketEvent(int i, User &user) {
             if (ret == 0)
                 close_conn = true;
             if (close_conn == false)
-            {
                 _handleBuffer(buffer, user);
-                // ret = _sendMessage(user.getSocket());
-                // if (ret < 0)
-                //     close_conn = true;
+            if (close_conn == false && _bufferReplies.size())
+            {
+                ret = _sendMessage(user.getSocket());
+                if (ret < 0)
+                     close_conn = true;
             }
         }
     }

@@ -16,7 +16,7 @@ void	sendMOTD(Server &server, User &user){
 		std::cout << "RPL_MOTDSTART (375)" << std::endl;
 		while (MOTDfile.good()){
 			std::getline(MOTDfile, line);
-			MOTDbuffer += line + "\n";
+			MOTDbuffer += line + "\r\n";
 		}
 		std::cout << "RPL_MOTD (372)" << std::endl;
 		std::cout << "RPL_ENDOFMOTD (376)" << std::endl;
