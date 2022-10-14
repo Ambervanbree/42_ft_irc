@@ -19,8 +19,8 @@ void	KILL(User &user, Server &server) {
     if (!victim)
       std::cerr << "(401) ERR_NOSUCHNICK" << std::endl;
     else {
-      std::string message = "Killed (" + user.getNickname() + " (" + server.getArgs()[1] + "))";
-      server.quitMessage(user, message);
+      std::string message = "killed by " + user.getNickname() + " - reason : " + server.getArgs()[1] + "))";
+      server.quitMessage(*victim, message);
       server.errorMessage(*victim, "Closing Link: " + message);
       server.closeOneConnection(*victim);
     }
