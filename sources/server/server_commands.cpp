@@ -33,7 +33,7 @@ void Server::_setCommands()
 	_commands["INVITE"] = INVITE;
 	_commands["KICK"] = KICK;
 	// _commands["KILL"] = KILL;
-	// _commands["DIE"] = DIE;
+	_commands["DIE"] = DIE;
 	// _commands["RESTART"] = RESTART; 		?
 }
 

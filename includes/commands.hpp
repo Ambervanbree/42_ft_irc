@@ -50,7 +50,7 @@ void KICK(User &user, Server &server);
 
 void OPER(User &User, Server &server);
 void KILL(User &user, Server &server);
-// void DIE(User &user);
+void DIE(User &user, Server &server);
 // void RESTART(User &user);
 
 
