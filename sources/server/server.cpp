@@ -213,9 +213,11 @@ void    Server::_handleEvents(void) {
 *******************************************************************************/
 void    Server::_serverSocketEvent(void) {
     int new_fd = 0;
+    struct sockaddr_in clientaddr;
+    socklen_t clientaddr_size = sizeof(clientaddr);
 
     while (new_fd != -1) {
-        new_fd = accept(_serverSocket, NULL, NULL);
+        new_fd = accept(_serverSocket, (struct sockaddr *)&clientaddr, &clientaddr_size);
         if (new_fd < 0) {
             if (errno != EWOULDBLOCK) {
                 std::cerr << "[-] accept() failed" << std::endl;
@@ -228,9 +230,13 @@ void    Server::_serverSocketEvent(void) {
             std::cerr << "[-] fcntl() failed" << std::endl;
             close(new_fd);
         }
-        _addtoStruct(new_fd);
-        User newUser(new_fd);
-        users.push_back(newUser);
+        else {
+            _addtoStruct(new_fd);
+            User newUser(new_fd);
+            users.push_back(newUser);
+            if (!newUser.setHostName(new_fd))
+                _end_server = true;
+        }
     }
 }
 
@@ -259,7 +265,7 @@ void    Server::_clientSocketEvent(int i, User &user) {
                     std::cerr << "[-] recv() failed" << errno << std::endl;
                     close_conn = true;
                 }
-                // break;
+                break;
             }
             else if (ret == 0)
                 close_conn = true;

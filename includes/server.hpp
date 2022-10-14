@@ -96,6 +96,8 @@ private:
     void _initFileDescriptorsStruct(void);
     void _addtoStruct(int fd);
     void _handleEvents(void);
+    bool _acceptNewConnexions(void);
+    bool _makeSocketNonBlocking(int newFileDescriptor);
     void _serverSocketEvent(void);
     void _clientSocketEvent(int i, User &user);
     
