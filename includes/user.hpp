@@ -55,6 +55,7 @@ class User
 	public:
 		int					clientSocket;
 		std::string			_buffer;
+		std::vector<std::string> replies;
 
 	public:
 		void		setUsername(const std::string &username);
@@ -73,6 +74,8 @@ class User
 		void		resetBuffer();
 
 		bool		operator==(const User& y);
+
+		void		addRepliesToBuffer(const std::string &message);
 };
 
 #endif
