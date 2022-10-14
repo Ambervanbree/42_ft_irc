@@ -260,9 +260,9 @@ void    Server::_clientSocketEvent(int i, User &user) {
                 close_conn = true;
             if (close_conn == false)
                 _handleBuffer(buffer, user);
-            if (close_conn == false && _bufferReplies.size())
+            if (close_conn == false && user.replies.size())
             {
-                ret = _sendMessage(user.getSocket());
+                ret = _sendMessage(user);
                 if (ret < 0)
                      close_conn = true;
             }

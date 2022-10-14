@@ -79,3 +79,33 @@ bool		User::operator==(const User& y) {
 	else
 		return 0;
 }
+
+/*Replies*/
+
+void User::addRepliesToBuffer(const std::string &message)
+{
+	size_t len;
+	std::string tmp;
+	//size_t next = 0;
+	//size_t last = 0;
+
+	len = message.size();
+	if (len < 2 || message[len - 1] != '\n' || message[len - 2] != '\r')
+	{
+		std::cerr << "-> Invalid format on replies - please check\n";
+		return ;
+	}
+	if (len < 512)
+		replies.push_back(message);
+	/*else if (message[len -1] == '\n')
+	{
+		while ((next = message.find("\r\n", last)) != std::string::npos)
+		{
+			tmp = message.substr(last, next - last + 2);
+			last = next + 2;
+			replies.push_back(tmp);
+		}
+		tmp = message.substr(last);
+		replies.push_back(tmp);
+	}*/
+}

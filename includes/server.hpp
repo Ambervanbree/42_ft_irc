@@ -78,7 +78,6 @@ private:
 	
 	std::map<std::string, command>	_commands;
 	std::vector<std::string>		_bufferCommand;
-    std::vector<Replies>            _bufferReplies;
   
   public:
 	Command								_command;
@@ -112,7 +111,7 @@ private:
     void _updateFdsStructure(void);
     
     /*Functions to send a message to a client*/
-    int _sendMessage(int socket);
+    int _sendMessage(User &user);
 
 public:
     void start(void);
@@ -130,7 +129,6 @@ public:
 	std::vector<std::string>	&getArgs(void);
 	std::string				&getTrailer(void);
 
-    void                    addReplies(User &user, const std::string &message);
 };
 
 #endif
