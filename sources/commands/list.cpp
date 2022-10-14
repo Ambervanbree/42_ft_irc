@@ -6,12 +6,12 @@
 #define ARGUMENTS	 	server.getArgs()
 
 void	channelList(User &user, Server &server){
-	std::deque<std::string>	channels;
+	std::vector<std::string>	channels;
 	char 					delimiter[] = ",";
 
 	split_args(ARGUMENTS[0], delimiter, channels);	
-	std::deque<std::string>::iterator	it = channels.begin();
-	std::deque<std::string>::iterator	ite = channels.end();
+	std::vector<std::string>::iterator	it = channels.begin();
+	std::vector<std::string>::iterator	ite = channels.end();
 	Channel		*chan;
 
 	for (; it != ite; it++){
