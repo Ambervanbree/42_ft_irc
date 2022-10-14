@@ -111,6 +111,8 @@ public:
     void start(void);
     void handleConnections(void);
     void closeOneConnection(User &user);
+    void errorMessage(User &recipient, std::string reason);
+    void quitMessage(User &recipient, std::string reason);
 
 	void interpretCommand(std::string &message, User &user); /*Change to Private at the end of project*/
 

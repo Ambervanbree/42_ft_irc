@@ -128,9 +128,9 @@ void    Server::_listen(void){
     int ret;
     ret = listen(_serverSocket, MAX_CONNECTS);
     if (ret == 0)
-        std::cout << "[+] Server is _listen" << std::endl;
+        std::cout << "[+] Server is listening" << std::endl;
     else
-        std::cerr << "listen() failed" << std::endl;
+        std::cerr << "[-] listen() failed" << std::endl;
 }
 
 /******************************************************************************/
@@ -184,7 +184,6 @@ void    Server::_handleEvents(void) {
             continue;
     // verifier si c'est vraiment necessaire parce que ca bloque IRSSI
         if(_fds[i].revents != POLLIN){
-            std::cout << "Error! revents = " << _fds[i].revents << std::endl;
             _end_server = true;
             break;
         }
@@ -292,8 +291,10 @@ void    Server::closeOneConnection(User &user) {
     close(_fds[i].fd);
     _fds[i].fd = -1;
     _updateFdsStructure();
-    // a supprimer :
-    std::cout << "[+] Connection closed" << std::endl;
+    // TO BE SENT TO ALL USERS: "<nickname> connexion has been closed."
+    // Et s'il y a un commentaire, ajouter: " for the following reason
+    //  : <comment>"
+    std::cout << "[+] Connexion closed " << std::endl;
 }
 
 /******************************************************************************/
@@ -336,6 +337,26 @@ void    Server::_quitServer(void) {
         close(serverSocket);
     _end_server = true;
     return;
+}
+
+/******************************************************************************/
+/*  errorMessage()
+    to one user : "ERROR: <reason>"
+*******************************************************************************/
+void    Server::errorMessage(User &recipient, std::string reason) {
+    sendMessage(recipient, "ERROR: " + reason);
+}
+
+/******************************************************************************/
+/*  quitMessage()
+    to all users : "<nickmask> QUIT <reason>"
+*******************************************************************************/
+void    Server::quitMessage(User &recipient, std::string reason) {
+    std::list<User>::iterator it = users.begin();
+    std::list<User>::iterator ite = users.end();
+
+    for(;it != ite;it++)
+        sendMessage(*it, recipient.getNickMask() + " QUIT " + reason);
 }
 
 std::string 			    &Server::getPrefix() {return _command.prefix; }

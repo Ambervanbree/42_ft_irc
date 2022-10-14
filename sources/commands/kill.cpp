@@ -9,16 +9,20 @@
 void	KILL(User &user, Server &server) {
   if (!user.isRegistered())
     return;
-	if (server._command.args.size() < 2)
-		std::cerr << "(461) ERR_NEEDMOREPARAMS" << std::endl;
-  else if (!isOperator(user.getUsername(), server))
+  if (!isOperator(user.getUsername(), server))
     std::cerr << "(481) ERR_NOPRIVILEGES" << std::endl;
+	else if (server.getArgs().size() < 2)
+		std::cerr << "(461) ERR_NEEDMOREPARAMS" << std::endl;
   else {
-    std::string nickname = server._command.args[0];
-    User *toBeKilled = findUser(nickname, server);
-    if (!toBeKilled)
+    std::string designatedVictim = server.getArgs()[0];
+    User *victim = findUser(designatedVictim, server);
+    if (!victim)
       std::cerr << "(401) ERR_NOSUCHNICK" << std::endl;
-    else
-      server.closeOneConnection(*toBeKilled);
+    else {
+      std::string message = "Killed (" + user.getNickname() + " (" + server.getArgs()[1] + "))";
+      server.quitMessage(user, message);
+      server.errorMessage(*victim, "Closing Link: " + message);
+      server.closeOneConnection(*victim);
+    }
   }
 }
