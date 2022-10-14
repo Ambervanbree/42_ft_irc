@@ -212,32 +212,46 @@ void    Server::_handleEvents(void) {
     - Creates a new user
 *******************************************************************************/
 void    Server::_serverSocketEvent(void) {
-    int new_fd = 0;
-    struct sockaddr_in clientaddr;
-    socklen_t clientaddr_size = sizeof(clientaddr);
+    int newFileDescriptor = 0;
 
-    while (new_fd != -1) {
-        new_fd = accept(_serverSocket, (struct sockaddr *)&clientaddr, &clientaddr_size);
-        if (new_fd < 0) {
-            if (errno != EWOULDBLOCK) {
-                std::cerr << "[-] accept() failed" << std::endl;
-                _end_server = true;
-            }
+    while (newFileDescriptor != -1) {
+        newFileDescriptor = _acceptNewConnexions();
+        if (newFileDescriptor < 0)
             break;
-        }
-        std::cout << "[+] New incoming connection - " << new_fd << std::endl;
-        if (fcntl(new_fd, F_SETFL, O_NONBLOCK) < 0){
-            std::cerr << "[-] fcntl() failed" << std::endl;
-            close(new_fd);
-        }
-        else {
-            _addtoStruct(new_fd);
-            User newUser(new_fd);
+        if (_makeSocketNonBlocking(newFileDescriptor)) {
+            _addtoStruct(newFileDescriptor);
+            User newUser(newFileDescriptor);
             users.push_back(newUser);
-            if (!newUser.setHostName(new_fd))
+            if (!newUser.setHostName(newFileDescriptor))
                 _end_server = true;
         }
     }
+}
+
+int    Server::_acceptNewConnexions(void) {
+    int newFileDescriptor = 0;
+    struct sockaddr_in clientaddr;
+    socklen_t clientaddr_size = sizeof(clientaddr);
+
+    newFileDescriptor = accept(_serverSocket, (struct sockaddr *)&clientaddr, &clientaddr_size);
+    if (newFileDescriptor < 0) {
+        if (errno != EWOULDBLOCK) {
+            std::cerr << "[-] accept() failed" << std::endl;
+            _end_server = true;
+        }
+    }
+    else
+        std::cout << "[+] New incoming connection - " << newFileDescriptor << std::endl;
+    return newFileDescriptor;
+}
+
+bool    Server::_makeSocketNonBlocking(int newFileDescriptor) {
+    if (fcntl(newFileDescriptor, F_SETFL, O_NONBLOCK) < 0){
+        std::cerr << "[-] fcntl() failed" << std::endl;
+        close(newFileDescriptor);
+        return false;
+    }
+    return true;
 }
 
 /******************************************************************************/

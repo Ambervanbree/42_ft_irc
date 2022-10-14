@@ -61,7 +61,6 @@ int 				User::setHostName(int newFileDescriptor) {
     char *hostName = new char[63];
     strcpy(hostName, inet_ntoa(_clientAddr.sin_addr));
 	_hostName = (std::string)hostName;
-	std::cout << "Hostname = " << _hostName << std::endl;
 	return 1;
 }
 void				User::setSocket(const int &socket) { clientSocket = socket; }
