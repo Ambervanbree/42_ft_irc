@@ -7,7 +7,7 @@
 
 void	channelNames(User &user, Server &server){
 	std::vector<std::string>	channels;
-	char 					delimiter[] = ",";
+	char 						delimiter[] = ",";
 
 	split_args(ARGUMENTS[0], delimiter, channels);
 	
@@ -18,11 +18,8 @@ void	channelNames(User &user, Server &server){
 	for (; it != ite; it++){
 		chan = findChannel(*it, server);
 		if (chan != NULL){
-			// chan->getNames(); will return the names
-			// RPL sent to user:
-			(void) user;
-			std::cout << chan->getNames() << std::endl;
-			std::cout << "RPL_NAMREPLY (353)" << std::endl;
+			user.addRepliesToBuffer(RPL_NAMREPLY(user.getNickname(), chan->getName(), chan->getNames()));
+			user.addRepliesToBuffer(RPL_ENDOFNAMES(user.getNickname(), chan->getName()));
 		}
 	}
 }
@@ -32,23 +29,18 @@ void	allNamesUser(User &user, Server &server){
 	std::map<std::string, Channel *>::iterator	ite = server._channels.end();
 
 	for (; it != ite; it++){
-		// it->second->getNames(); will return the names
-		// RPL sent to user:
-		(void) user;
-		std::cout << "RPL_NAMREPLY (353)" << std::endl;
-		std::cout << it->second->getNames() << std::endl;
+		user.addRepliesToBuffer(RPL_NAMREPLY(user.getNickname(), it->second->getName(), it->second->getNames()));
+		user.addRepliesToBuffer(RPL_ENDOFNAMES(user.getNickname(), it->second->getName()));
 	}
 }
 
 void NAMES(User &user, Server &server){
-	// if (!user.isRegistered())
-	// 	return ;
+	if (!user.isRegistered())
+		return ;
 	if (ARGUMENTS.empty())
 		allNamesUser(user, server);
 	else
 		channelNames(user, server);
-	// RPL sent to user:
-	std::cout << "RPL_ENDOFNAMES (366)" << std::endl;
 }
 
 /*

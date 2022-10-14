@@ -40,17 +40,7 @@ void 		partFromAllChannels(User &user, Server &server){
 		it++;
 		if (chan->second->onChannel(user)){
 			removeUserFromChannel(chan->second, user, server);
-			std::string message = "PART " + chan->second->getName() + "\r\n";
-			chan->second->sendChannelMessage(user, server, message);
+			chan->second->sendChannelMessage(user, PART_message(chan->second->getName()));
 		}
 	}
-}
-
-std::string	createCommandMessage(Server &server){
-	std::string message = " " + server.getCommand() + " ";
-	for (size_t i = 0; i < server.getArgs().size(); i++)
-		message += server.getArgs()[i] + " ";
-	if (!server.getTrailer().empty())
-		message += "\"" + server.getTrailer() + "\"\r\n";
-	return message ;
 }

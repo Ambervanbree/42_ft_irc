@@ -11,16 +11,15 @@ void	sendInvite(User &inviter, Server &server){
 
 	if (invitee != NULL){
 		(void)inviter;
-		//server.sendMessage(*invitee, createCommandMessage(server));
-		invitee->addRepliesToBuffer(createCommandMessage(server));
-		// PRIVMSG to inviter: RPL_INVITING (341)
+		invitee->addRepliesToBuffer(INVITE_message(inviter.getNickname(), CHANNEL, invitee->getNickname()));
+		inviter.addRepliesToBuffer(RPL_INVITING(CHANNEL, invitee->getNickname()));
 	}
 	return ;
 }
 
 void INVITE(User &user, Server &server){
-	// if (!user.isRegistered())
-	// 	return ;
+	if (!user.isRegistered())
+		return ;
 	if (server.getArgs().size() < 2){
 		user.addRepliesToBuffer(ERR_NEEDMOREPARAMS(user.getNickname(), server.getCommand()));
 		return ;

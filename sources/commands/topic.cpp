@@ -7,13 +7,15 @@
 #define NEWTOPIC 	server._command.trailer
 
 void TOPIC(User &user, Server &server){
-	// if (!user.isRegistered())
-	//	return ;
+	if (!user.isRegistered())
+		return ;
 	if (CHANNEL.empty()) {
 		user.addRepliesToBuffer(ERR_NEEDMOREPARAMS(user.getNickname(), server.getCommand()));
 		return ;
 	}
+
 	Channel *chan = findChannel(CHANNEL[0], server);
+	
 	if (chan == NULL) {
 		user.addRepliesToBuffer(ERR_NOSUCHCHANNEL(CHANNEL[0]));
 		return ;
@@ -29,7 +31,7 @@ void TOPIC(User &user, Server &server){
 			user.addRepliesToBuffer(ERR_CHANPRIVSNEEDED(user.getNickname(), CHANNEL[0]));
 		else{
 			chan->setTopic(NEWTOPIC);
-			chan->sendChannelMessage(user, server, createCommandMessage(server));	
+			chan->sendChannelMessage(user, TOPIC_message(chan->getName(), chan->getTopic()));
 		}
 	}
 }

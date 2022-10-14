@@ -9,33 +9,31 @@ void	channelMessage(User &user, Server &server){
 	Channel *chan = findChannel(TARGET, server);
 
 	if (chan == NULL || (chan != NULL && !chan->onChannel(user)))
-		std::cerr << "ERR_CANNOTSENDTOCHAN (404)" << std::endl;
+		user.addRepliesToBuffer(ERR_CANNOTSENDTOCHAN(user.getNickname(), TARGET));
 	else if (chan->isBanned(user.getNickMask()))
 		return ;
 	else
-		chan->sendChannelMessage(user, server, server.getTrailer().insert(0, " "));
+		chan->sendChannelMessage(user, PRIVMSG_message(user.getNickname(), chan->getName(), server.getTrailer()));
 }
 
 void	singleMessage(User &user, Server &server){
 	User	*recipient = findUser(TARGET, server);
 
 	if (recipient == NULL)
-		std::cerr << "ERR_NOSUCHNICK (401)" << std::endl;
-	else{
-		std::string message = ":" + user.getNickname() + " " + server.getTrailer() + "\n";
-		server.sendMessage(*recipient, message);
-	}
+		user.addRepliesToBuffer(ERR_NOSUCHNICK(TARGET));
+	else
+		user.addRepliesToBuffer(PRIVMSG_message(user.getNickname(), recipient->getNickname(), server.getTrailer()));
 }
 
 void PRIVMSG(User &user, Server &server){
-	// if (!user.isRegistered())
-	// 	return ;
+	if (!user.isRegistered())
+		return ;
 	if (server.getArgs().empty())
-		std::cerr << "ERR_NORECIPIENT (411)" << std::endl;
+		user.addRepliesToBuffer(ERR_NORECIPIENT);
 	else if (server.getArgs().size() > 1)
-		std::cerr << "ERR_TOOMANYTARGETS (407)" << std::endl;
+		user.addRepliesToBuffer(ERR_TOOMANYTARGETS);
 	else if (server.getTrailer().empty())
-		std::cerr << "ERR_NOTEXTTOSEND (412)" << std::endl;
+		user.addRepliesToBuffer(ERR_NOTEXTTOSEND);
 	else{
 		if (TARGET[0] == '#' || TARGET[0] == '&')
 			channelMessage(user, server);

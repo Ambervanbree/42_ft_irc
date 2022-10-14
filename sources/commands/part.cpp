@@ -6,10 +6,10 @@
 #define CHANNELS 	server.getArgs()[0]
 
 void PART(User &user, Server &server) {
-	// if (!user.isRegistered())
-	// 	return ;
+	if (!user.isRegistered())
+		return ;
 	if (server.getArgs().empty()){
-		std::cerr << "ERR_NEEDMOREPARAMS (461)" << std::endl;
+		user.addRepliesToBuffer(ERR_NEEDMOREPARAMS(user.getNickname(), "PART"));
 		return ;
 	}
 
@@ -22,13 +22,15 @@ void PART(User &user, Server &server) {
 	for (size_t i = 0; i < channels.size(); i++){
 		chan = findChannel(channels[i], server);
 		if (chan == NULL)
-			std::cerr << "ERR_NOSUCHCHANNEL (403)" << std::endl;
+			user.addRepliesToBuffer(ERR_NOSUCHCHANNEL(channels[i]));
 		else if (!chan->onChannel(user))
-			std::cerr << "ERR_NOTONCHANNEL (442)" << std::endl;
+			user.addRepliesToBuffer(ERR_NOTONCHANNEL(user.getNickname(), chan->getName()));
 		else{
 			removeUserFromChannel(chan, user, server);
-			chan->sendChannelMessage(user, server, createCommandMessage(server));			
+			if (server.getTrailer().empty())
+				chan->sendChannelMessage(user, PART_message(chan->getName()));
+			else
+				chan->sendChannelMessage(user, PART_message_2(chan->getName(), server.getTrailer()));	
 		}
-
 	}
 }
