@@ -54,8 +54,8 @@ void   Server::handleConnections(void){
             std::cerr << "[-] poll() failed" << std::endl;
         if (ret == 0)
             std::cerr << "[-] poll() timed out." << std::endl;
-        if ((ret < 0) || (ret == 0))
-            _quitServer();
+        if (ret <= 0)
+            return;
         _handleEvents();
     }
 }
@@ -72,7 +72,7 @@ void   Server::handleConnections(void){
     poption)
     - fcntl() function sets the server socket to be nonblocking. 
     All of the sockets for the incoming connections will also be nonblocking 
-    since they will inherit that state from the listening server socket.
+    since they will inherit that state from the _listen server socket.
 *******************************************************************************/
 void    Server::_makeServerSocket(void){
     int ret;
@@ -84,6 +84,8 @@ void    Server::_makeServerSocket(void){
         exit(-1);
     }
     ret = setsockopt(_serverSocket, SOL_SOCKET, SO_REUSEADDR, (char *)&on, sizeof(on));
+    // ---> A ESSAYER pour simplification
+    // ret = setsockopt(_serverSocket, SOL_SOCKET, SO_REUSEADDR, on, sizeof(on));
     if (ret < 0){
         std::cerr << "[-] setsockopt() failed" << std::endl;
         close(_serverSocket);
@@ -126,7 +128,7 @@ void    Server::_listen(void){
     int ret;
     ret = listen(_serverSocket, MAX_CONNECTS);
     if (ret == 0)
-        std::cout << "[+] Server is listening" << std::endl;
+        std::cout << "[+] Server is _listen" << std::endl;
     else
         std::cerr << "listen() failed" << std::endl;
 }
@@ -134,8 +136,8 @@ void    Server::_listen(void){
 /******************************************************************************/
 /*  _initFileDescriptorsStruct()
     - Initializes the pollfd structure _fds
-    - Sets up the initial listening socket 
-    - _fds[0].fd = server/listening socket
+    - Sets up the initial _listen socket 
+    - _fds[0].fd = server/_listen socket
     - _fds[0].events = events we are interested in managing
             POLLIN event = There is data to read
             POLLOUT event = Writing is now possible
@@ -171,7 +173,7 @@ void    Server::_addtoStruct(int fd) {
 /******************************************************************************/
 /*  _handleEvents()
     - Loop through to find the descriptors that returned POLLIN and 
-    determine whether it's the listening or the active connection.
+    determine whether it's the _listen or the active connection.
 *******************************************************************************/
 void    Server::_handleEvents(void) {       
     int     i;
@@ -238,27 +240,43 @@ void    Server::_serverSocketEvent(void) {
         - message reception
 *******************************************************************************/
 void    Server::_clientSocketEvent(int i, User &user) {
-    bool    close_conn = false;
     char    buffer[MAX_BUFFER];
     int     ret;
+    bool    close_conn = false;
 
-    while (close_conn == false && _fds[i].fd > 0) {
-        memset(buffer, '\0', MAX_BUFFER);
-        ret = recv(_fds[i].fd, buffer, sizeof(buffer), 0);
-        if (ret < 0) {
-            if (errno != EWOULDBLOCK) {
-                std::cerr << "[-] recv() failed" << errno << std::endl;
-                close_conn = true;
+    while (close_conn == false && _fds[i].fd > 0)
+    {
+        if (_fds[i].revents == POLLIN) {
+            memset(buffer, '\0', MAX_BUFFER);
+            ret = recv(_fds[i].fd, buffer, sizeof(buffer), 0);
+            if (ret < 0) {
+                if (errno != EWOULDBLOCK) {
+                    std::cerr << "[-] recv() failed" << errno << std::endl;
+                    close_conn = true;
+                }
+                break;
             }
-            break;
+            if (ret == 0)
+                close_conn = true;
+            if (close_conn == false)
+            {
+                _handleBuffer(buffer, user);
+                // ret = _sendMessage(user.getSocket());
+                // if (ret < 0)
+                //     close_conn = true;
+            }
         }
-        if (ret == 0)
-            close_conn = true;
-        if (close_conn == false)
-            _handleBuffer(buffer, user);
     }
     if (close_conn == true)
         closeOneConnection(user);
+}
+
+// /******************************************************************************/
+// /*  sendMessage()
+// *******************************************************************************/
+void 	sendMessage(User &recipient, std::string message) {
+	std::cout << "sending: " << message << std::endl;
+	send(recipient.clientSocket, message.c_str(), message.size(), 0);
 }
 
 /******************************************************************************/
@@ -303,13 +321,19 @@ void    Server::_updateFdsStructure(){
     - sends a message explaining why
 *******************************************************************************/
 void    Server::_quitServer(void) {
-    std::list<User>::iterator ite;
+    std::list<User>::iterator it = users.begin();
+    std::list<User>::iterator ite = users.end();
+    std::list<User>::iterator temp;
     int serverSocket = _fds[0].fd;
 
-    for (ite = users.begin(); ite != users.end(); ite++)
-        closeOneConnection(*ite);
+    while (it != ite) {
+        temp = it;
+        it++;
+        closeOneConnection(*temp);
+    }
     _fds[0].fd = -1;
-    close(serverSocket);
+    // if (serverSocket>0)
+        close(serverSocket);
     _end_server = true;
     return;
 }
