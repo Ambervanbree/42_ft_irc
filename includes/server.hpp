@@ -68,6 +68,7 @@ private:
 
 private:
     std::string         _password;
+    std::string         _operPassword;
     int                 _port;
     int                 _serverSocket;
     struct sockaddr_in  _serverAddr;
@@ -121,12 +122,13 @@ public:
     void quitServer(void);
 
     void errorMessage(User &recipient, std::string reason);
-    void quitMessage(User &recipient, std::string reason);
-	void sendMessage(User &recipient, std::string message);
+    void quitMessage(std::string &leaver, std::string &reason);
+//	void sendMessage(User &recipient, std::string message);
 
 	void interpretCommand(std::string &message, User &user); /*Change to Private at the end of project*/
 
     std::string				&getPassword(void);
+    std::string             &getOperPassword(void);
 
 	std::string 			&getPrefix(void);
 	std::string				&getCommand(void);

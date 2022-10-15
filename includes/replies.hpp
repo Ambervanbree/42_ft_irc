@@ -24,7 +24,7 @@
 //# define RPL_MOTD(nick, comment) 			    "372 " + nick + " :" + comment + "\r\n"
 # define RPL_MOTDSTART(nick)					"375 " + nick + " :- IRC Message of the day - \r\n"
 # define RPL_ENDOFMOTD(nick)					"376 " + nick + " :End of /MOTD command\r\n"
-//# define RPL_YOUREOPER(nick)				    "381 " + nick + " :You are now an IRC operator\r\n"
+# define RPL_YOUREOPER(nick)				    "381 " + nick + " :You are now an IRC operator\r\n"
 
 /* ERR */
 
@@ -73,5 +73,7 @@
 # define PRIVMSG_message_c(recipient, message)			" PRIVMSG " + recipient + " " + message + "\r\n"
 # define NOTICE_message(nick, recipient, message)		":" + nick + " NOTICE " + recipient + " " + message + "\r\n"
 # define NOTICE_message_c(recipient, message)			" NOTICE " + recipient + " " + message + "\r\n"
+# define ERROR_message(reason)                          " ERROR :Closing Link: " + reason + "\r\n"
+# define QUIT_message(leaver, reason)                   ":" + leaver + " QUIT :" + reason + "\r\n"
 
 #endif

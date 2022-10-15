@@ -5,9 +5,13 @@
 
 void	QUIT(User &user, Server &server)
 {
+    std::string leaver = user.getNickMask();
 	server.closeOneConnection(user);
     if (!server.getArgs().empty())
-        server.quitMessage(user, server.getArgs()[0]);
+        server.quitMessage(leaver, server.getArgs()[0]);
     else
-        server.quitMessage(user, "No reason risen");
+    {
+        std::string toSend = "No reason given";
+        server.quitMessage(leaver, toSend);
+    }
 }
