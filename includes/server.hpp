@@ -123,7 +123,6 @@ public:
 
     void errorMessage(User &recipient, std::string reason);
     void quitMessage(std::string &leaver, std::string &reason);
-//	void sendMessage(User &recipient, std::string message);
 
 	void interpretCommand(std::string &message, User &user); /*Change to Private at the end of project*/
 
