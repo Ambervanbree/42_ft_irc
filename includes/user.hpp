@@ -64,7 +64,7 @@ class User
 		void		setPassChecked(void);
 		void		setRegistered(void);
 		void		setOperator(void);
-		void		setAddr(const struct sockaddr_in &addr);
+		int		setHostName(int newFileDescriptor);
 		void		setSocket(const int &socket);
 		
 		void		setHost();

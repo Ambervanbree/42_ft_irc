@@ -6,8 +6,7 @@ void Server::_setCommands()
 	_commands["PASS"] = PASS;
 	_commands["USER"] = USER;
 	_commands["OPER"] = OPER;
-	// _commands["SQUIT"] = SQUIT; 			x
-	// _commands["KILL"] = KILL;
+	_commands["KILL"] = KILL;
 	// _commands["PING"] = PING;
 	// _commands["PONG"] = PONG;
 	// _commands["ERROR"] = ERROR;			x
@@ -34,7 +33,7 @@ void Server::_setCommands()
 	_commands["INVITE"] = INVITE;
 	_commands["KICK"] = KICK;
 	// _commands["KILL"] = KILL;
-	// _commands["DIE"] = DIE;
+	_commands["DIE"] = DIE;
 	// _commands["RESTART"] = RESTART; 		?
 }
 
