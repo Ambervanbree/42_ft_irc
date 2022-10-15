@@ -299,14 +299,6 @@ void    Server::_clientSocketEvent(int i, User &user) {
         closeOneConnection(user);
 }
 
-// /******************************************************************************/
-// /*  sendMessage()
-// *******************************************************************************/
-void 	sendMessage(User &recipient, std::string message) {
-	std::cout << "sending: " << message << std::endl;
-	send(recipient.clientSocket, message.c_str(), message.size(), 0);
-}
-
 /******************************************************************************/
 /*  sendMessage()
 *******************************************************************************/

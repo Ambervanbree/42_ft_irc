@@ -8,12 +8,12 @@
 void	channelNotice(User &user, Server &server){
 	Channel *chan = findChannel(TARGET, server);
 
-	if (chan == NULL 
+	if (chan == NULL
 		|| (chan != NULL && !chan->onChannel(user))
 		|| chan->isBanned(user.getNickMask()))
 		return ;
 	else
-		chan->sendChannelMessage(user, server, server.getTrailer().insert(0, " "));
+		chan->sendChannelMessage(user, NOTICE_message_c(chan->getName(), server.getTrailer()));
 }
 
 void	singleNotice(User &user, Server &server){
@@ -21,10 +21,8 @@ void	singleNotice(User &user, Server &server){
 
 	if (recipient == NULL)
 		return ;
-	else{
-		std::string message = ":" + user.getNickname() + " " + server.getTrailer() + "\r\n";
-		server.sendMessage(*recipient, message);
-	}
+	else
+		recipient->addRepliesToBuffer(NOTICE_message(user.getNickname(), recipient->getNickname(), server.getTrailer()));
 }
 
 void NOTICE(User &user, Server &server){

@@ -32,8 +32,8 @@ std::set<User *>		Channel::getUsers() const {return _users; }
 std::set<std::string>	Channel::getBanned() const {return _banned; }
 std::map<char, bool>	Channel::getModes() const {return _modes; }
 
-std::string			Channel::getNames(void){
-	std::string namesRPL("Nicknames listening to chan " + getName() + ":\r\n");
+std::string				Channel::getNames(void){
+	std::string namesRPL;
 
 	std::set<User *>::iterator 	it = _users.begin();
 	std::set<User *>::iterator 	ite = _users.end();
@@ -41,33 +41,48 @@ std::string			Channel::getNames(void){
 	for (; it != ite; it++){
 		if (_chop.find((**it).getNickMask()) != _chop.end())
 			namesRPL += "@";
-		namesRPL += (*it)->getNickname() + "\r\n";
+		namesRPL += (*it)->getNickname() + " ";
 	}
 	return namesRPL ;
 }
 
-std::string			Channel::getList(void){
-	std::string listRPL(getName() + " " + getTopic() + "\r\n");
-	return listRPL ;	
+std::string				Channel::getModes(void){
+	std::string						modeString("+");
+	std::map<char, bool>::iterator	it = _modes.begin();
+	std::map<char, bool>::iterator	ite = _modes.end();
+
+	for (; it != ite; it++){
+		if (it->second == true)
+			modeString += it->first;
+	}
+	return modeString;
 }
+
+std::string				Channel::getBannedList(void){
+	std::string						bannedList;
+	std::set<std::string>::iterator	it = _banned.begin();
+	std::set<std::string>::iterator	ite = _banned.end();
+
+	for (; it != ite; it++)
+		bannedList += *it;
+	return bannedList;	
+}
+
 
 /******************************************************************************/
 /*  Message requests
 *******************************************************************************/
 
 void			Channel::sendTopic(User &user){
-	(void)user; 
-	// RPL sent to user:
 	if (_topic.empty())
-		std::cout << "RPL_NOTOPIC (331)" << std::endl;
+		user.addRepliesToBuffer(RPL_NOTOPIC(user.getNickname(), getName()));
 	else{
-		// getTopic() returns topic
-		std::cout << "RPL_TOPIC (332)" << std::endl;
-		std::cout << "RPL_TOPICWHOTIME (333)" << std::endl;
+		user.addRepliesToBuffer(RPL_TOPIC(user.getNickname(), getName(), getTopic()));
+		// user.addRepliesToBuffer(RPL_TOPICWHOTIME(nick, channel, user, setat)) --->> TODO, std::time(0) gets the time, but it's in int. 
 	}
 }
 
-void			Channel::sendChannelMessage(User &user, Server &server, std::string message){
+void			Channel::sendChannelMessage(User &user, std::string message){
 	std::string userstring = ":";
 
 	if (_chop.find(user.getNickMask()) != _chop.end())
@@ -78,9 +93,8 @@ void			Channel::sendChannelMessage(User &user, Server &server, std::string messa
 	std::set<User *>::iterator	it = _users.begin();
 	std::set<User *>::iterator	ite = _users.end();
 
-	for (; it != ite; it++){
-		server.sendMessage(**it, message);
-	}
+	for (; it != ite; it++)
+		(*it)->addRepliesToBuffer(message);
 }
 
 /******************************************************************************/
@@ -111,10 +125,8 @@ bool			Channel::isChop(std::string nickMask) const {
 }
 
 bool			Channel::correctKey(std::string key) const {
-	if (!_key.empty() && (_key != key)){
-		std::cerr << "ERR_BADCHANNELKEY (475)" << std::endl;
+	if (!_key.empty() && (_key != key))
 		return false;
-	}
 	return true;
 }
 
@@ -136,14 +148,14 @@ bool			Channel::hasChop(void) const{
 
 void			Channel::addUser(std::string key, User &user){
 	if (onChannel(user))
-		std::cerr << "ERR_USERONCHANNEL (443)" << std::endl;
+		user.addRepliesToBuffer(ERR_USERONCHANNEL(user.getNickname(), getName()));
 	else if (isBanned(user.getNickMask()))
-		std::cerr << "ERR_BANNEDFROMCHAN (474)" << std::endl;
+		user.addRepliesToBuffer(ERR_BANNEDFROMCHAN(getName()));
 	else if (_modes['k'] == true && !correctKey(key))
-		std::cerr << "ERR_BADCHANNELKEY (475)" << std::endl;
+		user.addRepliesToBuffer(ERR_BADCHANNELKEY(getName()));
 	else{
 		_users.insert(&user);
-		std::cout << "[+] " << user.getNickname() << " has been added to " << _name << std::endl;
+		channelWelcomeMessage(*this, user);
 	}
 }
 

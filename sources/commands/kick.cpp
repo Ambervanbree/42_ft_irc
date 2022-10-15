@@ -8,7 +8,10 @@
 #define COMMENT 	server._command.trailer
 
 void	sendKickMessage(Channel &chan, Server &server, User &kicker){
-	chan.sendChannelMessage(kicker, server, createCommandMessage(server));
+	if (COMMENT.empty())
+		chan.sendChannelMessage(kicker, KICK_message(chan->getName(), TOKICK));
+	else
+		chan.sendChannelMessage(kicker, KICK_message_2(chan->getName(), TOKICK, COMMENT));
 }
 
 void	kickUserPerChannel(Server &server, User &user, std::vector<std::string> channels, std::vector<std::string> toKick){
@@ -19,16 +22,18 @@ void	kickUserPerChannel(Server &server, User &user, std::vector<std::string> cha
 		chan = findChannel(channels[i], server);
 
 		if (chan == NULL)
-			std::cerr << "ERR_NOSUCHCHANNEL (403)" << std::endl;
+			user.addRepliesToBuffer(ERR_NOSUCHCHANNEL(channels[i]));
 		else if (!chan->onChannel(user))
-			std::cerr << "ERR_NOTONCHANNEL (442)" << std::endl;
+			user.addRepliesToBuffer(ERR_NOTONCHANNEL(user.getNickname(), chan->getName()));
 		else if (!chan->isChop(user.getNickMask()))
-			std::cerr << "ERR_CHANOPRIVSNEEDED (482)" << std::endl;
+			user.addRepliesToBuffer(ERR_CHANPRIVSNEEDED(user.getNickname(), chan->getName()));
 		else{
 			userToKick = findUser(toKick[i], server);
 
-			if (!chan->onChannel(*userToKick))
-				std::cerr << "ERR_USERNOTINCHANNEL (441)" << std::endl;
+			if (userToKick == NULL)
+				return ;
+			else if (!chan->onChannel(*userToKick))
+				user.addRepliesToBuffer(ERR_USERNOTINCHANNEL(userToKick->getNickname(), chan->getName()));
 			else{
 				removeUserFromChannel(chan, user, server);
 				sendKickMessage(*chan, server, user);
@@ -40,39 +45,37 @@ void	kickUserPerChannel(Server &server, User &user, std::vector<std::string> cha
 void	kickMultipleUsers(Server &server, User &user, std::string channel, std::vector<std::string> toKick){
 	Channel	*chan = findChannel(channel, server);
 
-	if (chan == NULL){
-		std::cerr << "ERR_NOSUCHCHANNEL (403)" << std::endl;
-		return ;
-	}
-	if (!chan->onChannel(user)){
-		std::cerr << "ERR_NOTONCHANNEL (442)" << std::endl;
-		return ;
-	}
-	if (!chan->isChop(user.getNickMask())){
-		std::cerr << "ERR_CHANOPRIVSNEEDED (482)" << std::endl;
-		return ;
-	}	
-	
-	size_t	nrKicks 	= toKick.size();
-	User	*userToKick;
-	
-	for (size_t i = 0; i < nrKicks; i++){
-		userToKick = findUser(toKick[i], server);
+	if (chan == NULL)
+		user.addRepliesToBuffer(ERR_NOSUCHCHANNEL(channel));
+	else if (!chan->onChannel(user))
+		user.addRepliesToBuffer(ERR_NOTONCHANNEL(user.getNickname(), chan->getName()));
+	else if (!chan->isChop(user.getNickMask()))
+		user.addRepliesToBuffer(ERR_CHANPRIVSNEEDED(user.getNickname(), chan->getName()));
+	else{
+		size_t	nrKicks 	= toKick.size();
+		User	*userToKick;
+		
+		for (size_t i = 0; i < nrKicks; i++){
+			userToKick = findUser(toKick[i], server);
 
-		if (!chan->onChannel(*userToKick))
-			std::cerr << "ERR_USERNOTINCHANNEL (441)" << std::endl;
-		else{
-			removeUserFromChannel(chan, user, server);
-			sendKickMessage(*chan, server, user);
+			if (userToKick == NULL)
+				return ;
+			else if (!chan->onChannel(*userToKick))
+				user.addRepliesToBuffer(ERR_USERNOTINCHANNEL(userToKick->getNickname(), chan->getName()));
+			else{
+				removeUserFromChannel(chan, user, server);
+				sendKickMessage(*chan, server, user);
+			}
 		}
 	}
+	
 }
 
 void KICK(User &user, Server &server){
-	// if (!user.getRegistered())
-	// 	return ;
+	if (!user.isRegistered())
+		return ;
 	if (server.getArgs().size() < 2){
-		std::cerr << "ERR_NEEDMOREPARAMS (461)" << std::endl;
+		user.addRepliesToBuffer(ERR_NEEDMOREPARAMS(user.getNickname(), "KICK"));
 		return ;
 	}
 

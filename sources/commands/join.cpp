@@ -11,6 +11,7 @@ Channel		*createChannel(std::string name, User &user, Server &server){
 	Channel	*channel = new Channel(name, user);
 
 	server._channels.insert(std::make_pair(name, channel));
+	channelWelcomeMessage(*channel, user);
 	
 	return channel ;
 }
@@ -26,8 +27,8 @@ bool 		grammarCheckChannel(std::string name){
 }
 
 void JOIN(User &user, Server &server){
-// 	if (!user.isRegistered())
-// 		return ;
+	if (!user.isRegistered())
+		return ;
 	std::vector<std::string>	channels;
 	std::vector<std::string>	keys;
 	char 					delimiter[] = ",";
@@ -44,14 +45,14 @@ void JOIN(User &user, Server &server){
 	if (server.getArgs().size() > 1)
 		split_args(KEYS, delimiter, keys);
 	for (size_t i = 0; i < channels.size(); i++){
-		if (!grammarCheckChannel(channels[i]))
-		{
+		if (!grammarCheckChannel(channels[i])){
 			user.addRepliesToBuffer(ERR_BADCHANMASK(channels[i]));
 			return ;
 		}
 		Channel	*chan = findChannel(channels[i], server);
 		if (chan != NULL){
 			if (!chan->hasChop()){
+				// to delete:
 				std::cout << "[-] Chan no chop" << std::endl;
 				return ;
 			}
@@ -64,11 +65,5 @@ void JOIN(User &user, Server &server){
 		}
 		else
 			chan = createChannel(channels[i], user, server);
-		chan->sendChannelMessage(user, server, createCommandMessage(server));
-		if (!chan->getTopic().empty())
-			chan->sendTopic(user);
-		// chan->getNames(); will return the list of names on the channel
-		// RPL send to user:
-		std::cout << "RPL_NAMREPLY (353)" << std::endl;
 	}
 }

@@ -7,20 +7,21 @@
 #define MODESTRING 	server.getArgs()[1]
 
 struct Mode{
-	Channel					*chan;
-	std::string				nickMask;
-	std::string				modeString;
-	std::string				outString;
+	Channel						*chan;
+	User						*user;
+	std::string					nickMask;
+	std::string					modeString;
+	std::string					outString;
 	std::vector<std::string>	modeArg;
 	std::vector<std::string>	outArg;
-	int						argNr;
+	int							argNr;
 };
 
 void	addMode(char toSet, Mode &mode){
 	switch (toSet){
 		case 'k':
 			if (mode.modeArg.empty())
-				std::cout << "ERR_NEEDMOREPARAMS (461)" << std::endl;
+				mode.user->addRepliesToBuffer(ERR_NEEDMOREPARAMS(mode.user->getNickname(), "MODE"));
 			else if (mode.argNr < 3){
 				mode.chan->setKey(mode.modeArg[mode.argNr]);
 				mode.outString += toSet;
@@ -30,8 +31,8 @@ void	addMode(char toSet, Mode &mode){
 			return ;
 		case 'b':
 			if (mode.modeArg.empty()){
-				std::cout << "RPL_BANLIST (367)" << std::endl;
-				std::cout << "RPL_ENDOFBANLIST (368)" << std::endl;
+				mode.user->addRepliesToBuffer(RPL_BANLIST(mode.user->getNickname(), mode.chan->getName(), mode.chan->getBannedList()));
+				mode.user->addRepliesToBuffer(RPL_ENDOFBANLIST(mode.user->getNickname(), mode.chan->getName()));
 				return ;
 			}
 			if (mode.argNr < 3){
@@ -43,10 +44,10 @@ void	addMode(char toSet, Mode &mode){
 			return ;
 		case 'o':
 			if (mode.modeArg.empty())
-				std::cout << "ERR_NEEDMOREPARAMS (461)" << std::endl;
+				mode.user->addRepliesToBuffer(ERR_NEEDMOREPARAMS(mode.user->getNickname(), "MODE"));
 			else if (mode.argNr < 3){
 				if (!mode.chan->onChannel(mode.modeArg[mode.argNr]))
-					std::cout << "ERR_USERNOTINCHANNEL (441)" << std::endl;
+					mode.user->addRepliesToBuffer(ERR_USERNOTINCHANNEL(mode.user->getNickname(), mode.chan->getName()));
 				else{
 					mode.chan->addChop(mode.modeArg[mode.argNr]);
 					mode.outString += toSet;
@@ -56,8 +57,8 @@ void	addMode(char toSet, Mode &mode){
 			}
 			return ;			
 		default:
-			std::cerr << "ERR_UNKNOWNMODE (472)" << std::endl;
-			std::cout << "RPL_CHANNELMODEIS (324)" << std::endl;
+			mode.user->addRepliesToBuffer(ERR_UNKNOWNMODE(mode.user->getNickname(), toSet));
+			mode.user->addRepliesToBuffer(RPL_CHANNELMODEIS(mode.user->getNickname(), mode.chan->getName(), mode.chan->getModes()));
 			return ;
 	}
 }
@@ -70,7 +71,7 @@ void	eraseMode(char toSet, Mode &mode){
 			return ;
 		case 'b':
 			if (mode.modeArg.empty())
-				std::cout << "ERR_NEEDMOREPARAMS (461)" << std::endl;
+				mode.user->addRepliesToBuffer(ERR_NEEDMOREPARAMS(mode.user->getNickname(), "MODE"));
 			else if (mode.argNr < 3){
 				mode.chan->unbanUser(mode.modeArg[mode.argNr]);
 				mode.outString += toSet;
@@ -80,7 +81,7 @@ void	eraseMode(char toSet, Mode &mode){
 			return ;
 		case 'o':
 			if (mode.modeArg.empty())
-				std::cout << "ERR_NEEDMOREPARAMS (461)" << std::endl;
+				mode.user->addRepliesToBuffer(ERR_NEEDMOREPARAMS(mode.user->getNickname(), "MODE"));
 			else if (mode.argNr < 3){
 				mode.chan->removeChop(mode.modeArg[mode.argNr]);
 				mode.outString += toSet;
@@ -89,8 +90,8 @@ void	eraseMode(char toSet, Mode &mode){
 			}
 			return ;
 		default:
-			std::cerr << "ERR_UNKNOWNMODE (472)" << std::endl;
-			std::cout << "RPL_CHANNELMODEIS (324)" << std::endl;
+			mode.user->addRepliesToBuffer(ERR_UNKNOWNMODE(mode.user->getNickname(), toSet));
+			mode.user->addRepliesToBuffer(RPL_CHANNELMODEIS(mode.user->getNickname(), mode.chan->getName(), mode.chan->getModes()));
 			return ;
 	}	
 }
@@ -122,8 +123,9 @@ void	parseModeString(Mode &mode){
 	return ;
 }
 
-void	fillModeStruct(Mode &mode, Channel *channel, Server &server){
+void	fillModeStruct(Mode &mode, Channel *channel, Server &server, User *user){
 	mode.chan			= channel;
+	mode.user			= user;
 	mode.modeString 	= MODESTRING;
 	mode.argNr			= 0;
 	size_t args 		= server.getArgs().size() - 2;
@@ -141,43 +143,43 @@ void	fillModeStruct(Mode &mode, Channel *channel, Server &server){
 void	channelMode(User &user, Server &server){
 	Channel		*chan = findChannel(TARGET, server);
 
-	if (chan == NULL){
-		std::cerr << "ERR_NOSUCHCHANNEL (403)" << std::endl;
-		return ;	
-	}
-	if (!chan->isChop(user.getNickMask())){
-		std::cerr << "ERR_CHANOPRIVSNEEDED (482)" << std::endl;
-		return ;		
-	}
-	if (server.getArgs().size() < 2){
-		std::cout << "RPL_CHANNELMODEIS (324)" << std::endl;
-		return ;
+	if (chan == NULL)
+		user.addRepliesToBuffer(ERR_NOSUCHCHANNEL(TARGET));
+	else if (!chan->isChop(user.getNickMask()))
+		user.addRepliesToBuffer(ERR_CHANPRIVSNEEDED(user.getNickname(), chan->getName()));
+	else if (server.getArgs().size() < 2)
+		user.addRepliesToBuffer(RPL_CHANNELMODEIS(user.getNickname(), chan->getName(), chan->getModes()));
+	else{
+		Mode	mode;
+
+		fillModeStruct(mode, chan, server, &user);
+		parseModeString(mode);
+
+		std::string message(mode.outString);
+		for (size_t i = 0; i < mode.outArg.size(); i++)
+			message += mode.outArg[i] + " ";
+		chan->sendChannelMessage(user, MODE_message(chan->getName(), message));	
 	}
 
-	Mode	mode;
-
-	fillModeStruct(mode, chan, server);
-	parseModeString(mode);
-
-	std::string message = "MODE " + mode.outString + " ";
-	for (size_t i = 0; i < mode.outArg.size(); i++)
-		message += mode.outArg[i] + " ";
-	message += "\r\n";
-	chan->sendChannelMessage(user, server, message);
 }
 
 void	userMode(User &user, Server &server){
-	(void)user;
-	(void)server;
-	std::cerr << "ERR_UMODEUNKNOWNFLAG (501)" << std::endl;
+	Mode	mode;
+	
+	fillModeStruct(mode, NULL, server, &user);
+
+	for (size_t i = 0; i < mode.modeString.size(); i++){
+		if (mode.modeString[i] != '+' && mode.modeString[i] != '-')
+			user.addRepliesToBuffer(ERR_UNKNOWNMODE(user.getNickname(), mode.modeString[i]));
+	}
 	return ;
 }
 
 void MODE(User &user, Server &server){
-	// if (!user.isRegistered())
-	// 	return ;
+	if (!user.isRegistered())
+		return ;
 	if (server.getArgs().empty()){
-		std::cout << "ERR_NEEDMOREPARAMS (461)" << std::endl;
+		user.addRepliesToBuffer(ERR_NEEDMOREPARAMS(user.getNickname(), "MODE"));
 		return ;		
 	}
 	if (TARGET[0] == '#' || TARGET[0] == '&')
