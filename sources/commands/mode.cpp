@@ -155,7 +155,7 @@ void	channelMode(User &user, Server &server){
 		fillModeStruct(mode, chan, server, &user);
 		parseModeString(mode);
 
-		std::string message;
+		std::string message(mode.outString);
 		for (size_t i = 0; i < mode.outArg.size(); i++)
 			message += mode.outArg[i] + " ";
 		chan->sendChannelMessage(user, MODE_message(chan->getName(), message));	

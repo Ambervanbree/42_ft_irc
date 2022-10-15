@@ -5,6 +5,7 @@
 # include <vector>
 # include <map>
 # include <set>
+# include "commands.hpp"
 # include "user.hpp"
 
 class Server;

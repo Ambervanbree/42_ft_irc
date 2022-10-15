@@ -44,3 +44,9 @@ void 		partFromAllChannels(User &user, Server &server){
 		}
 	}
 }
+
+void		channelWelcomeMessage(Channel &chan, User &user){
+	chan.sendChannelMessage(user, JOIN_message(chan.getName()));
+	chan.sendTopic(user);
+	user.addRepliesToBuffer(RPL_NAMREPLY(user.getNickname(), chan.getName(), chan.getNames()));
+}

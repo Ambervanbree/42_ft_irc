@@ -13,7 +13,7 @@ void	channelMessage(User &user, Server &server){
 	else if (chan->isBanned(user.getNickMask()))
 		return ;
 	else
-		chan->sendChannelMessage(user, PRIVMSG_message(user.getNickname(), chan->getName(), server.getTrailer()));
+		chan->sendChannelMessage(user, PRIVMSG_message_c(chan->getName(), server.getTrailer()));
 }
 
 void	singleMessage(User &user, Server &server){
@@ -22,7 +22,7 @@ void	singleMessage(User &user, Server &server){
 	if (recipient == NULL)
 		user.addRepliesToBuffer(ERR_NOSUCHNICK(TARGET));
 	else
-		user.addRepliesToBuffer(PRIVMSG_message(user.getNickname(), recipient->getNickname(), server.getTrailer()));
+		recipient->addRepliesToBuffer(PRIVMSG_message(user.getNickname(), recipient->getNickname(), server.getTrailer()));
 }
 
 void PRIVMSG(User &user, Server &server){

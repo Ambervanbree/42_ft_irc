@@ -41,7 +41,7 @@ std::string				Channel::getNames(void){
 	for (; it != ite; it++){
 		if (_chop.find((**it).getNickMask()) != _chop.end())
 			namesRPL += "@";
-		namesRPL += (*it)->getNickname() + ", ";
+		namesRPL += (*it)->getNickname() + " ";
 	}
 	return namesRPL ;
 }
@@ -155,7 +155,7 @@ void			Channel::addUser(std::string key, User &user){
 		user.addRepliesToBuffer(ERR_BADCHANNELKEY(getName()));
 	else{
 		_users.insert(&user);
-		std::cout << "[+] " << user.getNickname() << " has been added to " << _name << std::endl;
+		channelWelcomeMessage(*this, user);
 	}
 }
 

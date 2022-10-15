@@ -58,5 +58,6 @@ User*		findUser(std::string &userName, Server &server);
 void 		removeUserFromChannel(Channel *channel, User &user, Server &server);
 void 		partFromAllChannels(User &user, Server &server);
 std::string	createCommandMessage(Server &server);
+void		channelWelcomeMessage(Channel &chan, User &user);
 
 #endif

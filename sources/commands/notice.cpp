@@ -13,7 +13,7 @@ void	channelNotice(User &user, Server &server){
 		|| chan->isBanned(user.getNickMask()))
 		return ;
 	else
-		chan->sendChannelMessage(user, NOTICE_message(user.getNickname(), chan->getName(), server.getTrailer()));
+		chan->sendChannelMessage(user, NOTICE_message_c(chan->getName(), server.getTrailer()));
 }
 
 void	singleNotice(User &user, Server &server){
@@ -22,7 +22,7 @@ void	singleNotice(User &user, Server &server){
 	if (recipient == NULL)
 		return ;
 	else
-		user.addRepliesToBuffer(NOTICE_message(user.getNickname(), recipient->getNickname(), server.getTrailer()));
+		recipient->addRepliesToBuffer(NOTICE_message(user.getNickname(), recipient->getNickname(), server.getTrailer()));
 }
 
 void NOTICE(User &user, Server &server){

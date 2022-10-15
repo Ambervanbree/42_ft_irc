@@ -10,7 +10,6 @@ void	sendInvite(User &inviter, Server &server){
 	User	*invitee = findUser(INVITEE, server);
 
 	if (invitee != NULL){
-		(void)inviter;
 		invitee->addRepliesToBuffer(INVITE_message(inviter.getNickname(), CHANNEL, invitee->getNickname()));
 		inviter.addRepliesToBuffer(RPL_INVITING(CHANNEL, invitee->getNickname()));
 	}
@@ -29,7 +28,7 @@ void INVITE(User &user, Server &server){
 	if (chan != NULL){
 		if (!chan->onChannel(user)){
 			user.addRepliesToBuffer(ERR_NOTONCHANNEL(user.getNickname(), CHANNEL[0]));
-			return ;		
+			return ;
 		}
 		if (chan->onChannel(INVITEE)){
 			user.addRepliesToBuffer(ERR_USERONCHANNEL(INVITEE, CHANNEL));

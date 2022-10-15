@@ -11,6 +11,7 @@ Channel		*createChannel(std::string name, User &user, Server &server){
 	Channel	*channel = new Channel(name, user);
 
 	server._channels.insert(std::make_pair(name, channel));
+	channelWelcomeMessage(*channel, user);
 	
 	return channel ;
 }
@@ -64,9 +65,5 @@ void JOIN(User &user, Server &server){
 		}
 		else
 			chan = createChannel(channels[i], user, server);
-		chan->sendChannelMessage(user, JOIN_message(chan->getName()));
-		if (!chan->getTopic().empty())
-			chan->sendTopic(user);
-		user.addRepliesToBuffer(RPL_NAMREPLY(user.getNickname(), chan->getName(), chan->getNames()));
 	}
 }

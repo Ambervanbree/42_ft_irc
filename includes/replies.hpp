@@ -31,7 +31,7 @@
 # define ERR_NOSUCHNICK(nick)     	            "401 " + nick + " :No such nick/channel\r\n"
 # define ERR_NOSUCHSERVER(server)          		"402 " + server + " :No such server\r\n"   
 # define ERR_NOSUCHCHANNEL(channel)				"403 " + channel + " :No such channel\r\n"
-# define ERR_CANNOTSENDTOCHAN(nick, channel)	"404 " + nick + " " + channel + " :Cannot send to channel\r"
+# define ERR_CANNOTSENDTOCHAN(nick, channel)	"404 " + nick + " " + channel + " :Cannot send to channel\r\n"
 # define ERR_TOOMANYCHANNELS(channel)			"405 " + channel + " :You have joined too many channels\r\n"
 # define ERR_TOOMANYTARGETS						"407 :Too many targets specified"
 // # define ERR_NOORIGIN                        "409 * :No origin specified\r\n"
@@ -69,7 +69,9 @@
 # define INVITE_message(inviter, chan, invitee)			":" + inviter + " INVITE " + invitee + " " + chan + "\r\n"
 # define KICK_message(chan, kicked)						" KICK " + kicked + "\r\n"
 # define KICK_message_2(chan, kicked, reason)			" KICK " + kicked + " :" + reason + "\r\n"
-# define PRIVMSG_message(sender, recipient, message)	":" + sender + " PRIVMSG " + recipient + " :" + message + "\r\n"
-# define NOTICE_message(sender, recipient, message)		":" + sender + " NOTICE " + recipient + " :" + message + "\r\n"
+# define PRIVMSG_message(nick, recipient, message)		":" + nick + " PRIVMSG " + recipient + " " + message + "\r\n"
+# define PRIVMSG_message_c(recipient, message)			" PRIVMSG " + recipient + " " + message + "\r\n"
+# define NOTICE_message(nick, recipient, message)		":" + nick + " NOTICE " + recipient + " " + message + "\r\n"
+# define NOTICE_message_c(recipient, message)			" NOTICE " + recipient + " " + message + "\r\n"
 
 #endif
