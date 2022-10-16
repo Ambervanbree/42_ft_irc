@@ -22,7 +22,6 @@ void	KILL(User &user, Server &server) {
       std::string message = "killed by " + user.getNickname() + " - reason : " + server.getArgs()[1] + "))";
       std::string hostMask = victim->getNickMask();
       server.quitMessage(hostMask, message);
-      //server.errorMessage(*victim, "Closing Link: " + message);
       victim->addRepliesToBuffer(ERROR_message(message));
       server.closeOneConnection(*victim);
     }
