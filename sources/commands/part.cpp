@@ -9,7 +9,7 @@ void PART(User &user, Server &server) {
 	if (!user.isRegistered())
 		return ;
 	if (server.getArgs().empty()){
-		user.addRepliesToBuffer(ERR_NEEDMOREPARAMS(user.getNickname(), "PART"));
+		user.addRepliesToBuffer(ERR_NEEDMOREPARAMS(server.getCommand()));
 		return ;
 	}
 
@@ -24,7 +24,7 @@ void PART(User &user, Server &server) {
 		if (chan == NULL)
 			user.addRepliesToBuffer(ERR_NOSUCHCHANNEL(channels[i]));
 		else if (!chan->onChannel(user))
-			user.addRepliesToBuffer(ERR_NOTONCHANNEL(user.getNickname(), chan->getName()));
+			user.addRepliesToBuffer(ERR_NOTONCHANNEL(chan->getName()));
 		else{
 			removeUserFromChannel(chan, user, server);
 			if (server.getTrailer().empty())

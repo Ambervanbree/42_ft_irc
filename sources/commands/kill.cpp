@@ -10,18 +10,19 @@ void	KILL(User &user, Server &server) {
   if (!user.isRegistered())
     return;
   if (!isOperator(user.getUsername(), server))
-    std::cerr << "(481) ERR_NOPRIVILEGES" << std::endl;
+    user.addRepliesToBuffer(ERR_NOPRIVILEGES);
 	else if (server.getArgs().size() < 2)
-		std::cerr << "(461) ERR_NEEDMOREPARAMS" << std::endl;
+    user.addRepliesToBuffer(ERR_NEEDMOREPARAMS(server.getCommand()));
   else {
     std::string designatedVictim = server.getArgs()[0];
     User *victim = findUser(designatedVictim, server);
     if (!victim)
-      std::cerr << "(401) ERR_NOSUCHNICK" << std::endl;
+      user.addRepliesToBuffer(ERR_NOSUCHNICK(designatedVictim));
     else {
       std::string message = "killed by " + user.getNickname() + " - reason : " + server.getArgs()[1] + "))";
-      server.quitMessage(*victim, message);
-      server.errorMessage(*victim, "Closing Link: " + message);
+      std::string hostMask = victim->getNickMask();
+      server.quitMessage(hostMask, message);
+      victim->addRepliesToBuffer(ERROR_message(message));
       server.closeOneConnection(*victim);
     }
   }

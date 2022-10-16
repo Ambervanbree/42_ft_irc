@@ -32,7 +32,7 @@ void Server::_setCommands()
 	_commands["LIST"] = LIST;
 	_commands["INVITE"] = INVITE;
 	_commands["KICK"] = KICK;
-	// _commands["KILL"] = KILL;
+	_commands["KILL"] = KILL;
 	_commands["DIE"] = DIE;
 	// _commands["RESTART"] = RESTART; 		?
 }
@@ -81,7 +81,7 @@ void Server::_launchCommand(User &user)
 	if (it != _commands.end())
 		it->second(user, *this);
 	else
-		std::cerr << "ERR_UNKNOWNCOMMAND (421)\n";
+		user.addRepliesToBuffer(ERR_UNKNOWNCOMMAND(_command.cmd_name));
 }
 
 void Server::interpretCommand(std::string &message, User &user)

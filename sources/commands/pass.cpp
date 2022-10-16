@@ -6,10 +6,12 @@
 
 void	PASS(User &user, Server &server)
 {
-	if (user.isPassChecked() || (server._command.args.size() == 0))
+	if (user.isPassChecked())
 		return;
+	if (server._command.args.size() == 2)
+		user.addRepliesToBuffer(ERR_NEEDMOREPARAMS(server.getCommand()));
 	if (server.getArgs()[0].compare(server.getPassword())) {
-		std::cerr << "ERR_PASSWDMISMATCH (464)" << std::endl;
+		user.addRepliesToBuffer(ERR_PASSWDMISMATCH);
 		server.closeOneConnection(user);
 	}
 	else

@@ -18,10 +18,11 @@ struct Mode{
 };
 
 void	addMode(char toSet, Mode &mode){
+	std::string cmd_name = "MODE";
 	switch (toSet){
 		case 'k':
 			if (mode.modeArg.empty())
-				mode.user->addRepliesToBuffer(ERR_NEEDMOREPARAMS(mode.user->getNickname(), "MODE"));
+				mode.user->addRepliesToBuffer(ERR_NEEDMOREPARAMS(cmd_name));
 			else if (mode.argNr < 3){
 				mode.chan->setKey(mode.modeArg[mode.argNr]);
 				mode.outString += toSet;
@@ -31,8 +32,8 @@ void	addMode(char toSet, Mode &mode){
 			return ;
 		case 'b':
 			if (mode.modeArg.empty()){
-				mode.user->addRepliesToBuffer(RPL_BANLIST(mode.user->getNickname(), mode.chan->getName(), mode.chan->getBannedList()));
-				mode.user->addRepliesToBuffer(RPL_ENDOFBANLIST(mode.user->getNickname(), mode.chan->getName()));
+				mode.user->addRepliesToBuffer(RPL_BANLIST(mode.chan->getName(), mode.chan->getBannedList()));
+				mode.user->addRepliesToBuffer(RPL_ENDOFBANLIST(mode.chan->getName()));
 				return ;
 			}
 			if (mode.argNr < 3){
@@ -44,7 +45,7 @@ void	addMode(char toSet, Mode &mode){
 			return ;
 		case 'o':
 			if (mode.modeArg.empty())
-				mode.user->addRepliesToBuffer(ERR_NEEDMOREPARAMS(mode.user->getNickname(), "MODE"));
+				mode.user->addRepliesToBuffer(ERR_NEEDMOREPARAMS(cmd_name));
 			else if (mode.argNr < 3){
 				if (!mode.chan->onChannel(mode.modeArg[mode.argNr]))
 					mode.user->addRepliesToBuffer(ERR_USERNOTINCHANNEL(mode.user->getNickname(), mode.chan->getName()));
@@ -57,13 +58,16 @@ void	addMode(char toSet, Mode &mode){
 			}
 			return ;			
 		default:
-			mode.user->addRepliesToBuffer(ERR_UNKNOWNMODE(mode.user->getNickname(), toSet));
-			mode.user->addRepliesToBuffer(RPL_CHANNELMODEIS(mode.user->getNickname(), mode.chan->getName(), mode.chan->getModes()));
+			std::string newMode;
+			newMode += toSet;
+			mode.user->addRepliesToBuffer(ERR_UNKNOWNMODE(newMode));
+			mode.user->addRepliesToBuffer(RPL_CHANNELMODEIS(mode.chan->getName(), mode.chan->getModes()));
 			return ;
 	}
 }
 
 void	eraseMode(char toSet, Mode &mode){
+	std::string cmd_name = "MODE";
 	switch (toSet){
 		case 'k':
 			mode.chan->unsetKey();
@@ -71,7 +75,7 @@ void	eraseMode(char toSet, Mode &mode){
 			return ;
 		case 'b':
 			if (mode.modeArg.empty())
-				mode.user->addRepliesToBuffer(ERR_NEEDMOREPARAMS(mode.user->getNickname(), "MODE"));
+				mode.user->addRepliesToBuffer(ERR_NEEDMOREPARAMS(cmd_name));
 			else if (mode.argNr < 3){
 				mode.chan->unbanUser(mode.modeArg[mode.argNr]);
 				mode.outString += toSet;
@@ -81,7 +85,7 @@ void	eraseMode(char toSet, Mode &mode){
 			return ;
 		case 'o':
 			if (mode.modeArg.empty())
-				mode.user->addRepliesToBuffer(ERR_NEEDMOREPARAMS(mode.user->getNickname(), "MODE"));
+				mode.user->addRepliesToBuffer(ERR_NEEDMOREPARAMS(cmd_name));
 			else if (mode.argNr < 3){
 				mode.chan->removeChop(mode.modeArg[mode.argNr]);
 				mode.outString += toSet;
@@ -90,8 +94,10 @@ void	eraseMode(char toSet, Mode &mode){
 			}
 			return ;
 		default:
-			mode.user->addRepliesToBuffer(ERR_UNKNOWNMODE(mode.user->getNickname(), toSet));
-			mode.user->addRepliesToBuffer(RPL_CHANNELMODEIS(mode.user->getNickname(), mode.chan->getName(), mode.chan->getModes()));
+			std::string newMode;
+			newMode += toSet;
+			mode.user->addRepliesToBuffer(ERR_UNKNOWNMODE(newMode));
+			mode.user->addRepliesToBuffer(RPL_CHANNELMODEIS(mode.chan->getName(), mode.chan->getModes()));
 			return ;
 	}	
 }
@@ -146,9 +152,9 @@ void	channelMode(User &user, Server &server){
 	if (chan == NULL)
 		user.addRepliesToBuffer(ERR_NOSUCHCHANNEL(TARGET));
 	else if (!chan->isChop(user.getNickMask()))
-		user.addRepliesToBuffer(ERR_CHANPRIVSNEEDED(user.getNickname(), chan->getName()));
+		user.addRepliesToBuffer(ERR_CHANPRIVSNEEDED(chan->getName()));
 	else if (server.getArgs().size() < 2)
-		user.addRepliesToBuffer(RPL_CHANNELMODEIS(user.getNickname(), chan->getName(), chan->getModes()));
+		user.addRepliesToBuffer(RPL_CHANNELMODEIS(chan->getName(), chan->getModes()));
 	else{
 		Mode	mode;
 
@@ -170,7 +176,11 @@ void	userMode(User &user, Server &server){
 
 	for (size_t i = 0; i < mode.modeString.size(); i++){
 		if (mode.modeString[i] != '+' && mode.modeString[i] != '-')
-			user.addRepliesToBuffer(ERR_UNKNOWNMODE(user.getNickname(), mode.modeString[i]));
+		{
+			std::string newMode;
+			newMode += mode.modeString[i];
+			user.addRepliesToBuffer(newMode);
+		}
 	}
 	return ;
 }
@@ -179,7 +189,7 @@ void MODE(User &user, Server &server){
 	if (!user.isRegistered())
 		return ;
 	if (server.getArgs().empty()){
-		user.addRepliesToBuffer(ERR_NEEDMOREPARAMS(user.getNickname(), "MODE"));
+		user.addRepliesToBuffer(ERR_NEEDMOREPARAMS(server.getCommand()));
 		return ;		
 	}
 	if (TARGET[0] == '#' || TARGET[0] == '&')

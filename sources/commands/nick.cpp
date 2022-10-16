@@ -35,14 +35,14 @@ void NICK(User &user, Server &server)
 	if (user.isPassChecked() == false)
 		return;
 	if (server.getArgs().empty()) {
-		std::cerr << "(431) ERR_NONICKNAMEGIVEN" << std::endl;
+		user.addRepliesToBuffer(ERR_NONICKNAMEGIVEN);
 		return;
 	}
 	std::string nick = server.getArgs()[0];
 	if (wrongGrammar(nick))
-		std::cerr << "(432) ERR_ERRONEUSNICKNAME" << std::endl;
+		user.addRepliesToBuffer(ERR_ERRONEUSNICKNAME(nick));
 	else if (existingNick(nick, server))
-		std::cerr << "(433) ERR_NICKNAMEINUSE" << std::endl;
+		user.addRepliesToBuffer(ERR_NICKNAMEINUSE(nick));
 	else
 		user.setNickname(nick);
 	return;

@@ -24,9 +24,9 @@ void	kickUserPerChannel(Server &server, User &user, std::vector<std::string> cha
 		if (chan == NULL)
 			user.addRepliesToBuffer(ERR_NOSUCHCHANNEL(channels[i]));
 		else if (!chan->onChannel(user))
-			user.addRepliesToBuffer(ERR_NOTONCHANNEL(user.getNickname(), chan->getName()));
+			user.addRepliesToBuffer(ERR_NOTONCHANNEL(chan->getName()));
 		else if (!chan->isChop(user.getNickMask()))
-			user.addRepliesToBuffer(ERR_CHANPRIVSNEEDED(user.getNickname(), chan->getName()));
+			user.addRepliesToBuffer(ERR_CHANPRIVSNEEDED(chan->getName()));
 		else{
 			userToKick = findUser(toKick[i], server);
 
@@ -48,9 +48,9 @@ void	kickMultipleUsers(Server &server, User &user, std::string channel, std::vec
 	if (chan == NULL)
 		user.addRepliesToBuffer(ERR_NOSUCHCHANNEL(channel));
 	else if (!chan->onChannel(user))
-		user.addRepliesToBuffer(ERR_NOTONCHANNEL(user.getNickname(), chan->getName()));
+		user.addRepliesToBuffer(ERR_NOTONCHANNEL(chan->getName()));
 	else if (!chan->isChop(user.getNickMask()))
-		user.addRepliesToBuffer(ERR_CHANPRIVSNEEDED(user.getNickname(), chan->getName()));
+		user.addRepliesToBuffer(ERR_CHANPRIVSNEEDED(chan->getName()));
 	else{
 		size_t	nrKicks 	= toKick.size();
 		User	*userToKick;
@@ -75,7 +75,7 @@ void KICK(User &user, Server &server){
 	if (!user.isRegistered())
 		return ;
 	if (server.getArgs().size() < 2){
-		user.addRepliesToBuffer(ERR_NEEDMOREPARAMS(user.getNickname(), "KICK"));
+		user.addRepliesToBuffer(ERR_NEEDMOREPARAMS(server.getCommand()));
 		return ;
 	}
 

@@ -5,7 +5,7 @@
 /* ************************************************************************** */
 
 Server::Server(int port, std::string password)
-: _password(password), _port(port), _nfds(0), _end_server(false) {}
+: _password(password), _operPassword("acc_power"), _port(port), _nfds(0), _end_server(false) {}
 
 Server::~Server(void) {
     if (_serverSocket != -1)
@@ -18,6 +18,10 @@ Server::~Server(void) {
 
 std::string &Server::getPassword(void) {
     return _password;
+}
+
+std::string &Server::getOperPassword(void) {
+    return _operPassword;
 }
 
 /******************************************************************************/
@@ -300,14 +304,6 @@ void    Server::_clientSocketEvent(int i, User &user) {
 }
 
 /******************************************************************************/
-/*  sendMessage()
-*******************************************************************************/
-void 	Server::sendMessage(User &recipient, std::string message) {
-	std::cout << "sending: " << message << std::endl;
-	send(recipient.clientSocket, message.c_str(), message.size(), 0);
-}
-
-/******************************************************************************/
 /*  closeConnections()
     Closes client socket        
 *******************************************************************************/
@@ -372,20 +368,21 @@ void    Server::quitServer(void) {
 /*  errorMessage()
     to one user : "ERROR: <reason>"
 *******************************************************************************/
-void    Server::errorMessage(User &recipient, std::string reason) {
-    sendMessage(recipient, "ERROR: " + reason);
-}
+//void    Server::errorMessage(User &recipient, std::string reason) {
+//    sendMessage(recipient, "ERROR: " + reason);
+//}
 
 /******************************************************************************/
 /*  quitMessage()
     to all users : "<nickmask> QUIT <reason>"
+    This is the nickmask of the person who leave
 *******************************************************************************/
-void    Server::quitMessage(User &recipient, std::string reason) {
+void    Server::quitMessage(std::string &leaver, std::string &reason) {
     std::list<User>::iterator it = users.begin();
     std::list<User>::iterator ite = users.end();
 
     for(;it != ite;it++)
-        sendMessage(*it, recipient.getNickMask() + " QUIT " + reason);
+        it->addRepliesToBuffer(QUIT_message(leaver, reason));
 }
 
 std::string 			    &Server::getPrefix() {return _command.prefix; }

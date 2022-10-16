@@ -17,8 +17,8 @@ void	channelList(User &user, Server &server){
 	for (; it != ite; it++){
 		chan = findChannel(*it, server);
 		if (chan != NULL){
-			user.addRepliesToBuffer(RPL_LIST(user.getNickname(), chan->getName(), chan->getTopic()));
-			user.addRepliesToBuffer(RPL_LISTEND(user.getNickname()));
+			user.addRepliesToBuffer(RPL_LIST(chan->getName(), chan->getTopic()));
+			user.addRepliesToBuffer(RPL_LISTEND);
 		}
 	}
 }
@@ -28,8 +28,8 @@ void	allListsUser(User &user, Server &server){
 	std::map<std::string, Channel *>::iterator	ite = server._channels.end();
 
 	for (; it != ite; it++){
-		user.addRepliesToBuffer(RPL_LIST(user.getNickname(), it->second->getName(), it->second->getTopic()));
-		user.addRepliesToBuffer(RPL_LISTEND(user.getNickname()));
+		user.addRepliesToBuffer(RPL_LIST(it->second->getName(), it->second->getTopic()));
+		user.addRepliesToBuffer(RPL_LISTEND);
 	}
 }
 
