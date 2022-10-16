@@ -11,17 +11,17 @@ void	OPER(User &user, Server &server)
 		return;
 	// check if right number of arguments
 	if (server._command.args.size() < 2)
-		user.addRepliesToBuffer(ERR_NEEDMOREPARAMS(user.getNickname(), server.getCommand()));
+		user.addRepliesToBuffer(ERR_NEEDMOREPARAMS(server.getCommand()));
 	// check if the username provided is the one of the user
 	// and as we already checked if user was registered in the host/server
 	// No need for further check
     else if (user.getUsername().compare(server._command.args[0]))
-		user.addRepliesToBuffer(ERR_NOOPERHOST(user.getNickname()));
+		user.addRepliesToBuffer(ERR_NOOPERHOST);
 	// check if user entered the right host/server password
 	else if (server._command.args[1].compare(server.getOperPassword()))
 		user.addRepliesToBuffer(ERR_PASSWDMISMATCH);
 	else {
 		server.operators.push_back(server._command.args[0]);
-		user.addRepliesToBuffer(RPL_YOUREOPER(user.getNickname()));
+		user.addRepliesToBuffer(RPL_YOUREOPER);
 	}
 }

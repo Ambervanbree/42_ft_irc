@@ -9,7 +9,7 @@ void	channelMessage(User &user, Server &server){
 	Channel *chan = findChannel(TARGET, server);
 
 	if (chan == NULL || (chan != NULL && !chan->onChannel(user)))
-		user.addRepliesToBuffer(ERR_CANNOTSENDTOCHAN(user.getNickname(), TARGET));
+		user.addRepliesToBuffer(ERR_CANNOTSENDTOCHAN(TARGET));
 	else if (chan->isBanned(user.getNickMask()))
 		return ;
 	else

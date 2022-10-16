@@ -11,14 +11,14 @@ void	sendMOTD(User &user){
 
 	MOTDfile.open("other/motd.txt");
 	if (MOTDfile.is_open()){
-		user.addRepliesToBuffer(RPL_MOTDSTART(user.getNickname()));
+		user.addRepliesToBuffer(RPL_MOTDSTART);
 		while (MOTDfile.good()){
 			std::getline(MOTDfile, line);
 			line += "\r\n";
-			user.addRepliesToBuffer(line);
+			user.addRepliesToBuffer(RPL_MOTD(line));
 			// std::cout << "RPL_MOTD (372)" << std::endl; --> this is too long (TODO - to discuss)
 		}
-		user.addRepliesToBuffer(RPL_ENDOFMOTD(user.getNickname()));
+		user.addRepliesToBuffer(RPL_ENDOFMOTD);
 		MOTDfile.close();
 	}
 	else
