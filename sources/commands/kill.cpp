@@ -10,9 +10,9 @@ void	KILL(User &user, Server &server) {
   if (!user.isRegistered())
     return;
   if (!isOperator(user.getUsername(), server))
-    user.addRepliesToBuffer(ERR_NOPRIVILEGES(user.getNickname()));
+    user.addRepliesToBuffer(ERR_NOPRIVILEGES);
 	else if (server.getArgs().size() < 2)
-    user.addRepliesToBuffer(ERR_NEEDMOREPARAMS(user.getNickname(), server.getCommand()));
+    user.addRepliesToBuffer(ERR_NEEDMOREPARAMS(server.getCommand()));
   else {
     std::string designatedVictim = server.getArgs()[0];
     User *victim = findUser(designatedVictim, server);

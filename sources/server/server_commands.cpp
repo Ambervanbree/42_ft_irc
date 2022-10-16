@@ -81,7 +81,7 @@ void Server::_launchCommand(User &user)
 	if (it != _commands.end())
 		it->second(user, *this);
 	else
-		user.addRepliesToBuffer(ERR_UNKNOWNCOMMAND);
+		user.addRepliesToBuffer(ERR_UNKNOWNCOMMAND(_command.cmd_name));
 }
 
 void Server::interpretCommand(std::string &message, User &user)

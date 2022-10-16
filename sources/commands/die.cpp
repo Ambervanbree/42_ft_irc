@@ -8,7 +8,7 @@ void	DIE(User &user, Server &server)
     if (!user.isRegistered())
         return;
     if (!isOperator(user.getUsername(), server))
-        user.addRepliesToBuffer(ERR_NOPRIVILEGES(user.getNickname()));
+        user.addRepliesToBuffer(ERR_NOPRIVILEGES);
     else
         server.quitServer();
 }

@@ -44,7 +44,6 @@
 # define ERR_USERNOTINCHANNEL(nick, channel)	"441 " + nick + " " + channel + " :They aren't on that channel\r\n"
 # define ERR_NOTONCHANNEL(channel)	        	"442 " + channel + " :You're not on that channel\r\n"
 # define ERR_USERONCHANNEL(nick, channel)		"443 " + nick + " " + channel + " :is already on channel\r\n"
-// # define ERR_NOTREGISTERED                    "451 * :You have not registered\r\n"
 # define ERR_NEEDMOREPARAMS(cmd_name)		    "461 " + cmd_name + " :Not enough parameters\r\n"
 # define ERR_ALREADYTREGISTERED	        		"462 :Unauthorized command (already registered)\r\n"
 # define ERR_PASSWDMISMATCH						"464 :Password incorrect\r\n"
