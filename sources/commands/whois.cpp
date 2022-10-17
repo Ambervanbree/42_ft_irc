@@ -13,8 +13,6 @@ void	sendWhoIs(User &user, Server &server, std::string nick){
 		user.addRepliesToBuffer(RPL_WHOISSERVER(nick, "localhost", "host of ACC Power network"));
 		if (isOperator(nick, server))
 			user.addRepliesToBuffer(RPL_WHOISOPERATOR(nick));
-		std::cout << "idle: " << target->getIdle() << ", singon: " << target->getSignon() << std::endl;
-		std::cout << "idle string: " << toString(target->getIdle()) << ", singon string: " << toString(target->getSignon()) << std::endl;
 		user.addRepliesToBuffer(RPL_WHOISIDLE(nick, toString(target->getIdle()), toString(target->getSignon())));
 		user.addRepliesToBuffer(RPL_ENDOFWHOIS(nick));
 	}

@@ -3,7 +3,7 @@
 User::User(const int &socket)
 	:_userName("dflt_user"), _realName("dflt_rname"), _nickName("dflt_nick"),
 	_isPassChecked(false), _isRegistered(false), _isOperator(false),
-	_signon(getTime()), _lastAction(getTime()), clientSocket(socket) {
+	_signon(getTime()), _lastAction(_signon), clientSocket(socket) {
 	std::cout << "[+] A user is born" << std::endl;
 	std::cout << "first time: " << getTime() << std::endl;
 	std::cout << "signon: " << _signon << " last Action: " << _lastAction << std::endl;
@@ -24,6 +24,8 @@ User::User(const User &other)
 		_isPassChecked = other._isPassChecked;
 		_isRegistered = other._isRegistered;
 		_isOperator = other._isOperator;
+		_signon = other._signon;
+		_lastAction = other._lastAction;
 	}
 }
 
