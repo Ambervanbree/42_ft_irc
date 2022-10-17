@@ -24,12 +24,15 @@ class User
 		std::string			getPass() const;
 		std::string			getUsername() const;
 		std::string			getNickname() const;
+		std::string			getRealname() const;
 		struct sockaddr_in	getAddr() const;
 		int					getSocket() const;
 		std::string			getHost() const;
 		int					getPort() const;
 		std::string			getPrefix() const;
 		std::string			getNickMask() const;
+		long				getSignon() const;
+		long				getIdle() const;
 
 
 		bool	isPassChecked() const;
@@ -53,6 +56,8 @@ class User
 		int					_port;
 		
 	public:
+		long 				_signon;
+		long 				_lastAction;
 		int					clientSocket;
 		std::string			_buffer;
 		std::vector<std::string> replies;
@@ -64,8 +69,9 @@ class User
 		void		setPassChecked(void);
 		void		setRegistered(void);
 		void		setOperator(void);
-		int		setHostName(int newFileDescriptor);
+		int			setHostName(int newFileDescriptor);
 		void		setSocket(const int &socket);
+		void		newAction(void);
 		
 		void		setHost();
 		void		setPort();

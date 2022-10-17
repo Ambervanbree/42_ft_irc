@@ -30,9 +30,9 @@ std::string				Channel::getName() const {return _name; }
 std::string				Channel::getTopic() const {return _topic; }
 std::set<User *>		Channel::getUsers() const {return _users; }
 std::set<std::string>	Channel::getBanned() const {return _banned; }
-std::map<char, bool>	Channel::getModes() const {return _modes; }
+size_t					Channel::size() const {return _users.size(); }
 
-std::string				Channel::getNames(void){
+std::string				Channel::getNames(void) const{
 	std::string namesRPL;
 
 	std::set<User *>::iterator 	it = _users.begin();
@@ -46,10 +46,10 @@ std::string				Channel::getNames(void){
 	return namesRPL ;
 }
 
-std::string				Channel::getModes(void){
+std::string				Channel::getModes(void) const{
 	std::string						modeString("+");
-	std::map<char, bool>::iterator	it = _modes.begin();
-	std::map<char, bool>::iterator	ite = _modes.end();
+	std::map<char, bool>::const_iterator	it = _modes.begin();
+	std::map<char, bool>::const_iterator	ite = _modes.end();
 
 	for (; it != ite; it++){
 		if (it->second == true)

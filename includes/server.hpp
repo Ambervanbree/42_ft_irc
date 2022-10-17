@@ -97,7 +97,7 @@ private:
     void _initFileDescriptorsStruct(void);
     void _addtoStruct(int fd);
     void _handleEvents(void);
-    int _acceptNewConnexions(void);
+    int _acceptNewConnections(void);
     bool _makeSocketNonBlocking(int newFileDescriptor);
     void _serverSocketEvent(void);
     void _clientSocketEvent(int i, User &user);

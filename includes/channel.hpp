@@ -33,10 +33,10 @@ class Channel{
 		std::string				getTopic(void) const;
 		std::set<User *>		getUsers(void) const;
 		std::set<std::string>	getBanned(void) const;
-		std::map<char, bool>	getModes(void) const;
-		std::string				getNames(void);
-		std::string				getModes(void);
+		std::string				getModes(void) const;
+		std::string				getNames(void) const;
 		std::string				getBannedList(void);
+		size_t					size(void) const;
 
 		/* Message requests */
 
