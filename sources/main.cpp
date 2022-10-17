@@ -21,6 +21,7 @@ static int check_arg(int argc, char **argv)
 
 void signalHandler(int signum) {
 	(void) signum;
+	std::cerr << "\b\b";
 	return;
 }
 

@@ -25,10 +25,7 @@ class User
 		std::string			getUsername() const;
 		std::string			getNickname() const;
 		std::string			getRealname() const;
-		struct sockaddr_in	getAddr() const;
 		int					getSocket() const;
-		std::string			getHost() const;
-		int					getPort() const;
 		std::string			getPrefix() const;
 		std::string			getNickMask() const;
 		long				getSignon() const;
@@ -53,7 +50,6 @@ class User
 		bool				_isRegistered;
 		bool				_isOperator;
 		std::string			_hostName;
-		int					_port;
 		
 	public:
 		long 				_signon;
@@ -70,11 +66,7 @@ class User
 		void		setRegistered(void);
 		void		setOperator(void);
 		int			setHostName(int newFileDescriptor);
-		void		setSocket(const int &socket);
-		void		newAction(void);
-		
-		void		setHost();
-		void		setPort();
+		void		setSocket(const int &socket);		
 
 		void		setBuffer(const std::string &buf);
 		void		resetBuffer();

@@ -19,7 +19,6 @@ User::User(const User &other)
 		_userName = other._userName;
 		_realName = other._realName;
 		_hostName = other._hostName;
-		_port = other._port;
 		_clientAddr = other._clientAddr;
 		_isPassChecked = other._isPassChecked;
 		_isRegistered = other._isRegistered;
@@ -35,16 +34,9 @@ User::User(const User &other)
 std::string			User::getUsername()	const { return _userName; }
 std::string 		User::getNickname() const { return _nickName; }
 std::string			User::getRealname() const { return _realName; }
-struct sockaddr_in	User::getAddr() const { return _clientAddr; }
 int					User::getSocket() const { return clientSocket; }
-std::string			User::getHost() const { return _hostName; }
-std::string			User::getNickMask() const { return (getNickname() + "!" + getUsername() + "@" + getHost()); }
-std::string			User::getPrefix() const
-{
-	std::string prefix;
-	prefix = ":" + getNickname() + "!" + getUsername() + "@" + getHost();
-	return prefix;
-}
+std::string			User::getNickMask() const { return (_nickName + "!" + _userName + "@" + _hostName); }
+std::string			User::getPrefix() const { return (":" + getNickMask()); }
 
 bool	User::isPassChecked() const { return _isPassChecked; }
 bool	User::isRegistered() const { return _isRegistered; }
@@ -77,10 +69,6 @@ void	User::setPassChecked(void) { _isPassChecked = true; std::cout << "[+] pass 
 void	User::setRegistered(void) { _isRegistered = true; }
 void	User::setOperator(void) { _isOperator = true; std::cout << "[+] _Operator is now set to true" << std::endl;}
 
-void	User::setHost() { _hostName = inet_ntoa(_clientAddr.sin_addr); }
-void	User::setPort() { _port = ntohs(_clientAddr.sin_port); }
-
-
 /*Handling buffer*/
 
 void		User::setBuffer(const std::string &buf) { std::string tmp = _buffer + buf; _buffer = tmp; }
@@ -100,27 +88,9 @@ bool		User::operator==(const User& y) {
 void User::addRepliesToBuffer(const std::string &message)
 {
 	size_t len;
-	std::string tmp;
-	//size_t next = 0;
-	//size_t last = 0;
 
 	len = message.size();
 	if (len < 2 || message[len - 1] != '\n' || message[len - 2] != '\r')
-	{
-		std::cerr << "-> Invalid format on replies - please check\n";
 		return ;
-	}
-	if (len < 512)
-		replies.push_back(message);
-	/*else if (message[len -1] == '\n')
-	{
-		while ((next = message.find("\r\n", last)) != std::string::npos)
-		{
-			tmp = message.substr(last, next - last + 2);
-			last = next + 2;
-			replies.push_back(tmp);
-		}
-		tmp = message.substr(last);
-		replies.push_back(tmp);
-	}*/
+	replies.push_back(message);
 }
