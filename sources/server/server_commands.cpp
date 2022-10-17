@@ -7,24 +7,13 @@ void Server::_setCommands()
 	_commands["USER"] = USER;
 	_commands["OPER"] = OPER;
 	_commands["KILL"] = KILL;
-	// _commands["PING"] = PING;
 	// _commands["PONG"] = PONG;
-	// _commands["ERROR"] = ERROR;			x
-	// _commands["WALLOPS"] = WALLOPS; 		x
 	_commands["QUIT"] = QUIT;
 	_commands["JOIN"] = JOIN;
-	// _commands["SERVICE"] = SERVICE; 		x
 	_commands["PRIVMSG"] = PRIVMSG;
 	_commands["NOTICE"] = NOTICE;
 	_commands["MOTD"] = MOTD;
-	// _commands["LUSERS"] = LUSERS; 		x
-	// _commands["VERSION"] = VERSION; 		x
-	// _commands["STATS"] = STATS; 			x
-	// _commands["TIME"] = TIME; 			x
-	// _commands["INFO"] = INFO; 			x
-	// _commands["WHO"] = WHO; 				?
-	// _commands["WHOWAS"] = WHOWAS; 		x
-	// _commands["WHOIS"] = WHOIS;
+	_commands["WHOIS"] = WHOIS;
 	_commands["MODE"] = MODE;
 	_commands["PART"] = PART;
 	_commands["TOPIC"] = TOPIC;
@@ -34,7 +23,6 @@ void Server::_setCommands()
 	_commands["KICK"] = KICK;
 	_commands["KILL"] = KILL;
 	_commands["DIE"] = DIE;
-	// _commands["RESTART"] = RESTART; 		?
 }
 
 void Server::_messageToCommandStruct(std::string message){
@@ -132,6 +120,7 @@ int Server::_sendMessage(User &user)
 			std::cerr << "[-] send() failed: " << errno << std::endl;
 			return (ret);
 		}
+		std::cerr << "[ sent to: " << user.getNickname() << "] " << user.replies[0] << std::endl;
 		user.replies.erase(user.replies.begin());
 	}
 	return (ret);

@@ -4,13 +4,14 @@
 // PASS <password> <version> <flags>
 // set a connection pass
 
-void	PASS(User &user, Server &server)
+void PASS(User &user, Server &server)
 {
 	if (user.isPassChecked())
 		return;
 	if (server._command.args.size() == 2)
 		user.addRepliesToBuffer(ERR_NEEDMOREPARAMS(server.getCommand()));
-	if (server.getArgs()[0].compare(server.getPassword())) {
+	if (server.getArgs()[0].compare(server.getPassword()))
+	{
 		user.addRepliesToBuffer(ERR_PASSWDMISMATCH);
 		server.closeOneConnection(user);
 	}

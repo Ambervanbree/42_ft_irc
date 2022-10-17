@@ -43,3 +43,15 @@ void split_on_string(std::string &message, std::string delim, std::vector<std::s
 	if (to_add.size())
     	out.push_back(to_add);
 }
+
+std::string	toString(size_t n){
+	std::stringstream	stream;
+
+	stream << n;
+	return stream.str();
+}
+
+int	getTime(){
+	std::time_t	time = std::time(nullptr);
+	return time;
+}

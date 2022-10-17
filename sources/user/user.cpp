@@ -3,8 +3,10 @@
 User::User(const int &socket)
 	:_userName("dflt_user"), _realName("dflt_rname"), _nickName("dflt_nick"),
 	_isPassChecked(false), _isRegistered(false), _isOperator(false),
-	clientSocket(socket) {
+	_signon(getTime()), _lastAction(_signon), clientSocket(socket) {
 	std::cout << "[+] A user is born" << std::endl;
+	std::cout << "first time: " << getTime() << std::endl;
+	std::cout << "signon: " << _signon << " last Action: " << _lastAction << std::endl;
 }
 
 User::~User() {};
@@ -17,11 +19,12 @@ User::User(const User &other)
 		_userName = other._userName;
 		_realName = other._realName;
 		_hostName = other._hostName;
-		_port = other._port;
 		_clientAddr = other._clientAddr;
 		_isPassChecked = other._isPassChecked;
 		_isRegistered = other._isRegistered;
 		_isOperator = other._isOperator;
+		_signon = other._signon;
+		_lastAction = other._lastAction;
 	}
 }
 
@@ -30,20 +33,16 @@ User::User(const User &other)
 /*Getters*/
 std::string			User::getUsername()	const { return _userName; }
 std::string 		User::getNickname() const { return _nickName; }
-struct sockaddr_in	User::getAddr() const { return _clientAddr; }
+std::string			User::getRealname() const { return _realName; }
 int					User::getSocket() const { return clientSocket; }
-std::string			User::getHost() const { return _hostName; }
-std::string			User::getNickMask() const { return (getNickname() + "!" + getUsername() + "@" + getHost()); }
-std::string			User::getPrefix() const
-{
-	std::string prefix;
-	prefix = ":" + getNickname() + "!" + getUsername() + "@" + getHost();
-	return prefix;
-}
+std::string			User::getNickMask() const { return (_nickName + "!" + _userName + "@" + _hostName); }
+std::string			User::getPrefix() const { return (":" + getNickMask()); }
 
 bool	User::isPassChecked() const { return _isPassChecked; }
 bool	User::isRegistered() const { return _isRegistered; }
 bool	User::isOperator() const { return _isOperator; }
+long	User::getSignon() const {return _signon; }
+long	User::getIdle() const {return (_lastAction - _signon); }
 
 /*Setters*/
 void				User::setNickname(const std::string &nick) { _nickName = nick; std::cout << "[+] _nickName is now set to: " << _nickName << std::endl;}
@@ -55,7 +54,7 @@ int 				User::setHostName(int newFileDescriptor) {
 
     int ret = getpeername(newFileDescriptor, (struct sockaddr *)&_clientAddr, &addr_size);
 	if (ret < 0){
-        std::cerr << "getpeername() failed" << std::endl;
+        std::cerr << "getpeername() failed: " << std::strerror(errno) << std::endl;
         return 0;
     }
     char *hostName = new char[63];
@@ -63,15 +62,12 @@ int 				User::setHostName(int newFileDescriptor) {
 	_hostName = (std::string)hostName;
 	return 1;
 }
-void				User::setSocket(const int &socket) { clientSocket = socket; }
+void	User::setSocket(const int &socket) { clientSocket = socket; }
+void	User::newAction(void) {_lastAction = getTime(); }
 
 void	User::setPassChecked(void) { _isPassChecked = true; std::cout << "[+] pass successfully checked" << std::endl;}
 void	User::setRegistered(void) { _isRegistered = true; }
 void	User::setOperator(void) { _isOperator = true; std::cout << "[+] _Operator is now set to true" << std::endl;}
-
-void				User::setHost() { _hostName = inet_ntoa(_clientAddr.sin_addr); }
-void				User::setPort() { _port = ntohs(_clientAddr.sin_port); }
-
 
 /*Handling buffer*/
 
@@ -92,27 +88,9 @@ bool		User::operator==(const User& y) {
 void User::addRepliesToBuffer(const std::string &message)
 {
 	size_t len;
-	std::string tmp;
-	//size_t next = 0;
-	//size_t last = 0;
 
 	len = message.size();
 	if (len < 2 || message[len - 1] != '\n' || message[len - 2] != '\r')
-	{
-		std::cerr << "-> Invalid format on replies - please check\n";
 		return ;
-	}
-	if (len < 512)
-		replies.push_back(message);
-	/*else if (message[len -1] == '\n')
-	{
-		while ((next = message.find("\r\n", last)) != std::string::npos)
-		{
-			tmp = message.substr(last, next - last + 2);
-			last = next + 2;
-			replies.push_back(tmp);
-		}
-		tmp = message.substr(last);
-		replies.push_back(tmp);
-	}*/
+	replies.push_back(message);
 }

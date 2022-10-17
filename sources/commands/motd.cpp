@@ -14,9 +14,7 @@ void	sendMOTD(User &user){
 		user.addRepliesToBuffer(RPL_MOTDSTART);
 		while (MOTDfile.good()){
 			std::getline(MOTDfile, line);
-			line += "\r\n";
 			user.addRepliesToBuffer(RPL_MOTD(line));
-			// std::cout << "RPL_MOTD (372)" << std::endl; --> this is too long (TODO - to discuss)
 		}
 		user.addRepliesToBuffer(RPL_ENDOFMOTD);
 		MOTDfile.close();

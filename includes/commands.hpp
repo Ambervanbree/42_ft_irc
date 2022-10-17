@@ -1,5 +1,6 @@
 #ifndef COMMANDS_HPP
 # define COMMANDS_HPP
+
 # include <vector>
 # include <string>
 # include <iostream>
@@ -13,12 +14,8 @@ class Channel;
 
 /*Server commands*/
 
-// void PING(User &User, Server &server);
 // void PONG(User &User, Server &server);
-// void ERROR(User &User, Server &server);
-// void WALLOPS(User &User, Server &server);
 void QUIT(User &User, Server &server);
-// void JOIN(User &User, Server &server);
 
 /*User commands:*/
 
@@ -31,9 +28,7 @@ void QUIT(User &User, Server &server);
 void PRIVMSG(User &User, Server &server);
 void NOTICE(User &User, Server &server);
 void MOTD(User &User, Server &server);
-// void WHO(User &User, Server &server);
-// void WHOIS(User &User, Server &server);
-// void WHOWAS(User &User, Server &server);
+void WHOIS(User &User, Server &server);
 
 /*User commands for channels:*/
 
@@ -51,10 +46,10 @@ void KICK(User &user, Server &server);
 void OPER(User &User, Server &server);
 void KILL(User &user, Server &server);
 void DIE(User &user, Server &server);
-// void RESTART(User &user);
 
 
 /*Command utils:*/
+
 Channel*	findChannel(std::string &channelName, Server &server);
 User*		findUser(std::string &userName, Server &server);
 bool        isOperator(const std::string &username, Server &server);
