@@ -132,7 +132,7 @@ int Server::_sendMessage(User &user)
 			std::cerr << "[-] send() failed: " << errno << std::endl;
 			return (ret);
 		}
-		std::cerr << "[ sent to: " << user.getNickMask() << "] " << user.replies[0] << std::endl;
+		std::cerr << "[ sent to: " << user.getNickname() << "] " << user.replies[0] << std::endl;
 		user.replies.erase(user.replies.begin());
 	}
 	return (ret);

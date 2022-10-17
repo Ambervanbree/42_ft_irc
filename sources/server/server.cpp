@@ -205,6 +205,8 @@ void    Server::_handleEvents(void) {
 			for (it = users.begin(); it != users.end(); it++){
 				if ((*it).replies.size())
         			ret = _sendMessage(*it);
+				if (ret < 0)
+					closeOneConnection((*it));
 			}
         }
     }
@@ -298,11 +300,6 @@ void    Server::_clientSocketEvent(int i, User &user) {
                     break;
             }
 		}
-	//	if (user.replies.size()) {
-      //  	ret = _sendMessage(user);
-        //    if (ret < 0)    
-		//	    close_conn = true;
-        //}
     }
     if ((client_fd == _fds[i].fd) && close_conn == true)
         closeOneConnection(user);

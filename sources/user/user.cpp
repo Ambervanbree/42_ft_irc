@@ -17,7 +17,6 @@ User::User(const User &other)
 		_userName = other._userName;
 		_realName = other._realName;
 		_hostName = other._hostName;
-		_port = other._port;
 		_clientAddr = other._clientAddr;
 		_isPassChecked = other._isPassChecked;
 		_isRegistered = other._isRegistered;
@@ -30,9 +29,7 @@ User::User(const User &other)
 /*Getters*/
 std::string			User::getUsername()	const { return _userName; }
 std::string 		User::getNickname() const { return _nickName; }
-struct sockaddr_in	User::getAddr() const { return _clientAddr; }
 int					User::getSocket() const { return clientSocket; }
-std::string			User::getHost() const { return _hostName; }
 std::string			User::getNickMask() const { return (_nickName + "!" + _userName + "@" + _hostName); }
 std::string			User::getPrefix() const { return (":" + getNickMask()); }
 
@@ -63,10 +60,6 @@ void				User::setSocket(const int &socket) { clientSocket = socket; }
 void	User::setPassChecked(void) { _isPassChecked = true; std::cout << "[+] pass successfully checked" << std::endl;}
 void	User::setRegistered(void) { _isRegistered = true; }
 void	User::setOperator(void) { _isOperator = true; std::cout << "[+] _Operator is now set to true" << std::endl;}
-
-void				User::setHost() { _hostName = inet_ntoa(_clientAddr.sin_addr); }
-void				User::setPort() { _port = ntohs(_clientAddr.sin_port); }
-
 
 /*Handling buffer*/
 
