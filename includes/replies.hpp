@@ -36,7 +36,7 @@
 # define ERR_TOOMANYTARGETS						"407 :Too many targets specified"
 # define ERR_NORECIPIENT						"411 :No recipient specified\r\n"
 # define ERR_NOTEXTTOSEND						"412 :No text to send"
-# define ERR_UNKNOWNCOMMAND(cmd_name)           "421 " + cmd_name + " :Command not found\r\n"
+# define ERR_UNKNOWNCOMMAND(cmd_name)           "421 " + cmd_name + " :Command not found " + cmd_name + " \r\n"
 # define ERR_NOMOTD								"422 :MOTD File is missing"
 # define ERR_NONICKNAMEGIVEN					"431 :No nickname given\r\n"
 # define ERR_ERRONEUSNICKNAME(nick)				"432 " + nick + " :Erroneous nickname\r\n"
