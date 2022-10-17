@@ -76,6 +76,7 @@ private:
     int                 _nfds;
     struct  pollfd      _fds[MAX_FDS];
     bool                _end_server;
+
 	
 	std::map<std::string, command>	_commands;
 	std::vector<std::string>		_bufferCommand;

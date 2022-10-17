@@ -225,9 +225,9 @@ void    Server::_serverSocketEvent(void) {
         if (_makeSocketNonBlocking(newFileDescriptor)) {
             _addtoStruct(newFileDescriptor);
             User newUser(newFileDescriptor);
-            users.push_back(newUser);
             if (!newUser.setHostName(newFileDescriptor))
                 _end_server = true;
+            users.push_back(newUser);
         }
     }
 }
