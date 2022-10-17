@@ -182,6 +182,7 @@ void    Server::_addtoStruct(int fd) {
 *******************************************************************************/
 void    Server::_handleEvents(void) {       
     int     i;
+	int 	ret;
     std::list<User>::iterator it = users.begin();
 
     for (i = 0; i < _nfds; i++){
@@ -201,6 +202,10 @@ void    Server::_handleEvents(void) {
                     break;
                 }
             }
+			for (it = users.begin(); it != users.end(); it++){
+				if ((*it).replies.size())
+        			ret = _sendMessage(*it);
+			}
         }
     }
 }
@@ -291,13 +296,13 @@ void    Server::_clientSocketEvent(int i, User &user) {
                 _handleBuffer(buffer, user);
                 if (client_fd != _fds[i].fd)
                     break;
-                if (user.replies.size()){
-                    ret = _sendMessage(user);
-                    if (ret < 0)
-                        close_conn = true;
-                }
             }
-        }
+		}
+	//	if (user.replies.size()) {
+      //  	ret = _sendMessage(user);
+        //    if (ret < 0)    
+		//	    close_conn = true;
+        //}
     }
     if ((client_fd == _fds[i].fd) && close_conn == true)
         closeOneConnection(user);
