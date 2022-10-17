@@ -127,7 +127,7 @@ void    Server::_bind(void){
 
 /******************************************************************************/
 /*  _listen()
-    - make the server listen for incoming client connexion
+    - make the server listen for incoming client connection
 *******************************************************************************/
 void    Server::_listen(void){
     int ret;
@@ -216,7 +216,7 @@ void    Server::_handleEvents(void) {
 /*  _serverSocketEvent()
     - Handle serversocket (= listeningsocket) events, here :
         - connection of a new client
-    - Accepts the connexion
+    - Accepts the connection
     - Make the client socket file descriptor non blocking (can make other
     actions while socket is waiting for an event)
     - Creates the new fd in the fd structure
@@ -226,20 +226,20 @@ void    Server::_serverSocketEvent(void) {
     int newFileDescriptor = 0;
 
     while (newFileDescriptor != -1) {
-        newFileDescriptor = _acceptNewConnexions();
+        newFileDescriptor = _acceptNewConnections();
         if (newFileDescriptor < 0)
             break;
         if (_makeSocketNonBlocking(newFileDescriptor)) {
             _addtoStruct(newFileDescriptor);
             User newUser(newFileDescriptor);
-            users.push_back(newUser);
             if (!newUser.setHostName(newFileDescriptor))
                 _end_server = true;
+            users.push_back(newUser);
         }
     }
 }
 
-int    Server::_acceptNewConnexions(void) {
+int    Server::_acceptNewConnections(void) {
     int newFileDescriptor = 0;
     struct sockaddr_in clientaddr;
     socklen_t clientaddr_size = sizeof(clientaddr);
@@ -320,7 +320,7 @@ void    Server::closeOneConnection(User &user) {
     close(_fds[i].fd);
     _fds[i].fd = -1;
     _updateFdsStructure();
-    std::cout << "[+] Connexion closed " << std::endl;
+    std::cout << "[+] connection closed " << std::endl;
 }
 
 /******************************************************************************/
@@ -343,7 +343,7 @@ void    Server::_updateFdsStructure(){
 
 /******************************************************************************/
 /*  quitServer()
-    - closes all the connexions
+    - closes all the connections
     - closes the server
     - sends a message explaining why
 *******************************************************************************/

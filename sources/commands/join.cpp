@@ -29,6 +29,8 @@ bool 		grammarCheckChannel(std::string name){
 void JOIN(User &user, Server &server){
 	if (!user.isRegistered())
 		return ;
+	user.newAction();
+	
 	std::vector<std::string>	channels;
 	std::vector<std::string>	keys;
 	char 					delimiter[] = ",";
@@ -51,11 +53,8 @@ void JOIN(User &user, Server &server){
 		}
 		Channel	*chan = findChannel(channels[i], server);
 		if (chan != NULL){
-			if (!chan->hasChop()){
-				// to delete:
-				std::cout << "[-] Chan no chop" << std::endl;
+			if (!chan->hasChop())
 				return ;
-			}
 			else{
 				if (keys.empty())
 					chan->addUser("", user);
