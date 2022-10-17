@@ -66,7 +66,8 @@ class User
 		void		setRegistered(void);
 		void		setOperator(void);
 		int			setHostName(int newFileDescriptor);
-		void		setSocket(const int &socket);		
+		void		setSocket(const int &socket);
+		void		newAction(void);	
 
 		void		setBuffer(const std::string &buf);
 		void		resetBuffer();
