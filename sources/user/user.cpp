@@ -34,6 +34,7 @@ User::User(const User &other)
 std::string			User::getUsername()	const { return _userName; }
 std::string 		User::getNickname() const { return _nickName; }
 std::string			User::getRealname() const { return _realName; }
+std::string			User::getHostname()	const { return _hostName; }
 int					User::getSocket() const { return clientSocket; }
 std::string			User::getNickMask() const { return (_nickName + "!" + _userName + "@" + _hostName); }
 std::string			User::getPrefix() const { return (":" + getNickMask()); }
@@ -57,7 +58,7 @@ int 				User::setHostName(int newFileDescriptor) {
         std::cerr << "getpeername() failed: " << std::strerror(errno) << std::endl;
         return 0;
     }
-    char *hostName = new char[63];
+    char hostName[63];
     strcpy(hostName, inet_ntoa(_clientAddr.sin_addr));
 	_hostName = (std::string)hostName;
 	return 1;

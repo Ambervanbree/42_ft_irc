@@ -182,7 +182,7 @@ void    Server::_addtoStruct(int fd) {
 *******************************************************************************/
 void    Server::_handleEvents(void) {       
     int     i;
-	int 	ret;
+	int 	ret = 0;
     std::list<User>::iterator it = users.begin();
 
     for (i = 0; i < _nfds; i++){
