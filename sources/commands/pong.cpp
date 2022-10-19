@@ -6,8 +6,6 @@
 
 void	PONG(User &user, Server &server)
 {
-    if (!user.isRegistered())
-		return ;
     if (server.getArgs().size() < 1)
         user.addRepliesToBuffer(ERR_NOORIGIN);
     else if ((server.getArgs().size() > 1) && (server.getArgs()[1].compare(user.getHostname())))

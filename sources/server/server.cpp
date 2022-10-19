@@ -198,6 +198,7 @@ void    Server::_handleEvents(void) {
             _serverSocketEvent();
         else {
             while (it != users.end()) {
+                std::cout << "### in handleEvents ###" << std::endl;
                 if (_fds[i].fd == (*it).clientSocket) {
                     (*it).newAction();
                     _clientSocketEvent(i, (*it));
