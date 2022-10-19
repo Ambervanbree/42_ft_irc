@@ -95,7 +95,6 @@ void Server::_splitBuffer(std::string buffer)
 
 void Server::_handleBuffer(char *buffer, User &user)
 {
-	std::cout << "COMMAND received = " << buffer << std::endl;
 	user.setBuffer(std::string(buffer));
 	std::string newBuffer = user.getBuffer();
 	

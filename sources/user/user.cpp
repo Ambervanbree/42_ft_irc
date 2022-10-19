@@ -5,8 +5,6 @@ User::User(const int &socket)
 	_isPassChecked(false), _isRegistered(false), _isOperator(false),
 	_signon(getTime()), _lastAction(_signon), clientSocket(socket) {
 	std::cout << "[+] A user is born" << std::endl;
-	// std::cout << "first time: " << getTime() << std::endl;
-	// std::cout << "signon: " << _signon << " last Action: " << _lastAction << std::endl;
 }
 
 User::~User() {};
