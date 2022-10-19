@@ -29,9 +29,9 @@ void NOTICE(User &user, Server &server){
 	if (!user.isRegistered())
 		return ;
 
-	user.newAction();
-	std::cout << "time new action: " << getTime() << std::endl;
-	std::cout << "(notice) signon: " << user._signon << " last Action: " << user._lastAction << std::endl;
+	// user.newAction();
+	// std::cout << "time new action: " << getTime() << std::endl;
+	// std::cout << "(notice) signon: " << user._signon << " last Action: " << user._lastAction << std::endl;
 	if (server.getArgs().empty()
 		|| server.getArgs().size() > 1
 		|| server.getTrailer().empty())

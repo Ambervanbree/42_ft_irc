@@ -59,6 +59,7 @@
 # define ERR_CHANPRIVSNEEDED(channel)	    	"482 " + channel + " :You're not channel operator\r\n"
 # define ERR_NOOPERHOST     					"491 :No O-lines for your host\r\n"
 # define ERR_UMODEUNKNOWMFLAG               	"501 :Unknown :MODE flag\r\n"
+# define ERR_NOORIGIN                           "409 :No origin specified\r\n"
 
 /* Command messages */
 
@@ -76,5 +77,7 @@
 # define NOTICE_message_c(recipient, message)			" NOTICE " + recipient + " " + message + "\r\n"
 # define ERROR_message(reason)                          " ERROR :Closing Link: " + reason + "\r\n"
 # define QUIT_message(leaver, reason)                   ":" + leaver + " QUIT :" + reason + "\r\n"
+# define PONG_message(host)                             "PONG " + host + "\r\n"
+# define PING_message(host)                             "PING " + host + "\r\n"
 
 #endif

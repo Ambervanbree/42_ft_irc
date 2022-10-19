@@ -30,8 +30,13 @@
 # define MAX_FDS        1024
 // maximum command size
 # define MAX_BUFFER     510
-// timeout in miliseconds
-# define TIME_OUT       180000
+// timeout in milliseconds (600000 = 10 minutes)
+# define POLL_TIMEOUT   600000
+// time of inactivity before ping in seconds
+# define TIME_TO_PING   60
+// maximum time of inactivity in seconds
+# define MAX_IDLE_TIME  300
+
 
 class Channel;
 class User;
@@ -98,7 +103,7 @@ private:
     void _initFileDescriptorsStruct(void);
     void _addtoStruct(int fd);
     void _handleEvents(void);
-    int _acceptNewConnections(void);
+    int  _acceptNewConnections(void);
     bool _makeSocketNonBlocking(int newFileDescriptor);
     void _serverSocketEvent(void);
     void _clientSocketEvent(int i, User &user);
@@ -119,6 +124,8 @@ private:
 public:
     void start(void);
     void handleConnections(void);
+    void checkActivity(User &user);
+    void pingUser(User &user);
     void closeOneConnection(User &user);
     void quitServer(void);
 

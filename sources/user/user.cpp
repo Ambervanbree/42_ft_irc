@@ -5,8 +5,8 @@ User::User(const int &socket)
 	_isPassChecked(false), _isRegistered(false), _isOperator(false),
 	_signon(getTime()), _lastAction(_signon), clientSocket(socket) {
 	std::cout << "[+] A user is born" << std::endl;
-	std::cout << "first time: " << getTime() << std::endl;
-	std::cout << "signon: " << _signon << " last Action: " << _lastAction << std::endl;
+	// std::cout << "first time: " << getTime() << std::endl;
+	// std::cout << "signon: " << _signon << " last Action: " << _lastAction << std::endl;
 }
 
 User::~User() {};
@@ -34,6 +34,7 @@ User::User(const User &other)
 std::string			User::getUsername()	const { return _userName; }
 std::string 		User::getNickname() const { return _nickName; }
 std::string			User::getRealname() const { return _realName; }
+std::string			User::getHostname()	const { return _hostName; }
 int					User::getSocket() const { return clientSocket; }
 std::string			User::getNickMask() const { return (_nickName + "!" + _userName + "@" + _hostName); }
 std::string			User::getPrefix() const { return (":" + getNickMask()); }
@@ -42,6 +43,7 @@ bool	User::isPassChecked() const { return _isPassChecked; }
 bool	User::isRegistered() const { return _isRegistered; }
 bool	User::isOperator() const { return _isOperator; }
 long	User::getSignon() const {return _signon; }
+long	User::getLastAction() const {return _lastAction; } ;
 long	User::getIdle() const {return (_lastAction - _signon); }
 
 /*Setters*/
@@ -57,7 +59,7 @@ int 				User::setHostName(int newFileDescriptor) {
         std::cerr << "getpeername() failed: " << std::strerror(errno) << std::endl;
         return 0;
     }
-    char *hostName = new char[63];
+    char hostName[63];
     strcpy(hostName, inet_ntoa(_clientAddr.sin_addr));
 	_hostName = (std::string)hostName;
 	return 1;

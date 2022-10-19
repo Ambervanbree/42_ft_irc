@@ -54,7 +54,7 @@ void   Server::handleConnections(void){
     int     ret;
 
     while (_end_server == false) {
-        ret = poll(_fds, _nfds, TIME_OUT);
+        ret = poll(_fds, _nfds, POLL_TIMEOUT);
         if (ret < 0)
             std::cerr << "[-] poll() failed" << std::endl;
         if (ret == 0)
@@ -182,8 +182,9 @@ void    Server::_addtoStruct(int fd) {
 *******************************************************************************/
 void    Server::_handleEvents(void) {       
     int     i;
-	int 	ret;
+	int 	ret = 0;
     std::list<User>::iterator it = users.begin();
+    std::list<User>::iterator temp;
 
     for (i = 0; i < _nfds; i++){
         if(_fds[i].revents == 0)
@@ -196,11 +197,16 @@ void    Server::_handleEvents(void) {
         if (_fds[i].fd == _serverSocket)
             _serverSocketEvent();
         else {
-            for(it = users.begin(); it != users.end(); it++){
+            while (it != users.end()) {
+                std::cout << "### in handleEvents ###" << std::endl;
                 if (_fds[i].fd == (*it).clientSocket) {
+                    (*it).newAction();
                     _clientSocketEvent(i, (*it));
                     break;
                 }
+                temp = it;
+                it++;
+                checkActivity(*temp);
             }
 			for (it = users.begin(); it != users.end(); it++){
 				if ((*it).replies.size())
@@ -211,6 +217,20 @@ void    Server::_handleEvents(void) {
         }
     }
 }
+
+void    Server::checkActivity(User &user) {
+    long    now = getTime();
+    long    timeSinceLastAction = now - user.getLastAction();
+
+    std::cout << "timeSinceLastAction = " << timeSinceLastAction << std::endl;
+
+    if (timeSinceLastAction > MAX_IDLE_TIME)
+        closeOneConnection(user);
+    else if (timeSinceLastAction > TIME_TO_PING)
+        user.addRepliesToBuffer(PING_message(user.getHostname()));
+}
+
+
 
 /******************************************************************************/
 /*  _serverSocketEvent()

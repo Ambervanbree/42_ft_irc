@@ -28,7 +28,7 @@ void	singleMessage(User &user, Server &server){
 void PRIVMSG(User &user, Server &server){
 	if (!user.isRegistered())
 		return ;
-	user.newAction();
+	// user.newAction();
 	if (server.getArgs().empty())
 		user.addRepliesToBuffer(ERR_NORECIPIENT);
 	else if (server.getArgs().size() > 1)
