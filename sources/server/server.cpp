@@ -198,7 +198,6 @@ void    Server::_handleEvents(void) {
             _serverSocketEvent();
         else {
             while (it != users.end()) {
-                std::cout << "### in handleEvents ###" << std::endl;
                 if (_fds[i].fd == (*it).clientSocket) {
                     (*it).newAction();
                     _clientSocketEvent(i, (*it));
@@ -221,8 +220,6 @@ void    Server::_handleEvents(void) {
 void    Server::checkActivity(User &user) {
     long    now = getTime();
     long    timeSinceLastAction = now - user.getLastAction();
-
-    std::cout << "timeSinceLastAction = " << timeSinceLastAction << std::endl;
 
     if (timeSinceLastAction > MAX_IDLE_TIME)
         closeOneConnection(user);
