@@ -14,7 +14,8 @@ class Channel;
 
 /*Server commands*/
 
-// void PONG(User &User, Server &server);
+void PING(User &User, Server &server);
+void PONG(User &User, Server &server);
 void QUIT(User &User, Server &server);
 
 /*User commands:*/

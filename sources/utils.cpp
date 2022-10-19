@@ -52,6 +52,6 @@ std::string	toString(size_t n){
 }
 
 int	getTime(){
-	std::time_t	time = std::time(nullptr);
+	std::time_t	time = std::time(NULL);
 	return time;
 }

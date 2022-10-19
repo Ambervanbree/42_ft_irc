@@ -7,7 +7,8 @@ void Server::_setCommands()
 	_commands["USER"] = USER;
 	_commands["OPER"] = OPER;
 	_commands["KILL"] = KILL;
-	// _commands["PONG"] = PONG;
+	_commands["PING"] = PING;
+	_commands["PONG"] = PONG;
 	_commands["QUIT"] = QUIT;
 	_commands["JOIN"] = JOIN;
 	_commands["PRIVMSG"] = PRIVMSG;
@@ -94,6 +95,7 @@ void Server::_splitBuffer(std::string buffer)
 
 void Server::_handleBuffer(char *buffer, User &user)
 {
+	std::cout << "COMMAND received = " << buffer << std::endl;
 	user.setBuffer(std::string(buffer));
 	std::string newBuffer = user.getBuffer();
 	

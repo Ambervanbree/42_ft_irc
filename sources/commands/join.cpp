@@ -29,7 +29,7 @@ bool 		grammarCheckChannel(std::string name){
 void JOIN(User &user, Server &server){
 	if (!user.isRegistered())
 		return ;
-	user.newAction();
+	// user.newAction();
 	
 	std::vector<std::string>	channels;
 	std::vector<std::string>	keys;
