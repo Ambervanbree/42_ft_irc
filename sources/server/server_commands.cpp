@@ -7,7 +7,7 @@ void Server::_setCommands()
 	_commands["USER"] = USER;
 	_commands["OPER"] = OPER;
 	_commands["KILL"] = KILL;
-	// _commands["PONG"] = PONG;
+	_commands["PING"] = PING;
 	_commands["QUIT"] = QUIT;
 	_commands["JOIN"] = JOIN;
 	_commands["PRIVMSG"] = PRIVMSG;

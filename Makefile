@@ -20,7 +20,8 @@ SRC_FILES	=	main.cpp $(SERVER) $(COMMANDS) $(USER) $(CHANNEL) utils.cpp
 COMMANDS	=	$(addprefix commands/, join.cpp nick.cpp mode.cpp \
 				part.cpp command_utils.cpp names.cpp list.cpp topic.cpp \
 				pass.cpp invite.cpp user.cpp kick.cpp oper.cpp die.cpp \
-				quit.cpp motd.cpp privmsg.cpp notice.cpp kill.cpp whois.cpp)
+				quit.cpp motd.cpp privmsg.cpp notice.cpp kill.cpp whois.cpp \
+				ping.cpp)
 USER		=	$(addprefix user/, user.cpp)
 CHANNEL		=	$(addprefix channel/, channel.cpp)
 SERVER		=	$(addprefix server/, server.cpp server_commands.cpp)
@@ -32,7 +33,7 @@ SERVER		=	$(addprefix server/, server.cpp server_commands.cpp)
 
 CC			=	c++
 RM			=	rm -rf
-CFLAGS		=	-Wall -Wextra -Werror #-std=c++98 -g
+CFLAGS		=	-Wall -Wextra -Werror -std=c++98 -g
 
 # ***************************************************************************** #
 # includes																		#

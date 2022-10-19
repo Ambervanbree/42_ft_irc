@@ -31,7 +31,7 @@
 // maximum command size
 # define MAX_BUFFER     510
 // timeout in miliseconds
-# define TIME_OUT       180000
+# define TIME_OUT       1800000
 
 class Channel;
 class User;
