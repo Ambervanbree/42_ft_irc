@@ -5,8 +5,8 @@ User::User(const int &socket)
 	_isPassChecked(false), _isRegistered(false), _isOperator(false),
 	_signon(getTime()), _lastAction(_signon), clientSocket(socket) {
 	std::cout << "[+] A user is born" << std::endl;
-	std::cout << "first time: " << getTime() << std::endl;
-	std::cout << "signon: " << _signon << " last Action: " << _lastAction << std::endl;
+	// std::cout << "first time: " << getTime() << std::endl;
+	// std::cout << "signon: " << _signon << " last Action: " << _lastAction << std::endl;
 }
 
 User::~User() {};
@@ -43,6 +43,7 @@ bool	User::isPassChecked() const { return _isPassChecked; }
 bool	User::isRegistered() const { return _isRegistered; }
 bool	User::isOperator() const { return _isOperator; }
 long	User::getSignon() const {return _signon; }
+long	User::getLastAction() const {return _lastAction; } ;
 long	User::getIdle() const {return (_lastAction - _signon); }
 
 /*Setters*/

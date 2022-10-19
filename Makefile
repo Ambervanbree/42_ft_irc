@@ -21,7 +21,7 @@ COMMANDS	=	$(addprefix commands/, join.cpp nick.cpp mode.cpp \
 				part.cpp command_utils.cpp names.cpp list.cpp topic.cpp \
 				pass.cpp invite.cpp user.cpp kick.cpp oper.cpp die.cpp \
 				quit.cpp motd.cpp privmsg.cpp notice.cpp kill.cpp whois.cpp \
-				ping.cpp)
+				ping.cpp pong.cpp)
 USER		=	$(addprefix user/, user.cpp)
 CHANNEL		=	$(addprefix channel/, channel.cpp)
 SERVER		=	$(addprefix server/, server.cpp server_commands.cpp)

@@ -78,5 +78,6 @@
 # define ERROR_message(reason)                          " ERROR :Closing Link: " + reason + "\r\n"
 # define QUIT_message(leaver, reason)                   ":" + leaver + " QUIT :" + reason + "\r\n"
 # define PONG_message(host)                             "PONG " + host + "\r\n"
+# define PING_message(host)                             "PING " + host + "\r\n"
 
 #endif

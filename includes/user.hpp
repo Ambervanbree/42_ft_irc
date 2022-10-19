@@ -30,6 +30,7 @@ class User
 		std::string			getPrefix() const;
 		std::string			getNickMask() const;
 		long				getSignon() const;
+		long				getLastAction() const;
 		long				getIdle() const;
 
 
