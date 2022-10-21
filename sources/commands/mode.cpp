@@ -140,10 +140,22 @@ void	addUserMode(char toSet, Mode &mode){
 	}
 }
 
-void	eraseUserMode(char toSet, Mode &mode){
+void	eraseUserMode(char toSet, Mode &mode, Server &server){
 	std::string newMode;
-	if (toSet == 'i' || toSet == 'o')
+	if (toSet == 'i' || toSet == 'o'){
 		mode.user->unsetMode(toSet);
+		if (toSet == 'o'){
+			std::list<std::string>::iterator	it = server.operators.begin();
+			std::list<std::string>::iterator	ite = server.operators.end();
+
+			for (; it != ite; it++){
+				if (*it == mode.user->getNickname()){
+					server.operators.erase(it);
+					break ;
+				}
+			}
+		}
+	}
 	else{
 		newMode += toSet;
 		mode.user->addRepliesToBuffer(ERR_UNKNOWNMODE(newMode));
@@ -151,7 +163,7 @@ void	eraseUserMode(char toSet, Mode &mode){
 	}	
 }
 
-void	parseUserModeString(Mode &mode){
+void	parseUserModeString(Mode &mode, Server &server){
 	std::string::iterator	it 	= mode.modeString.begin();
 	std::string::iterator	ite = mode.modeString.end();
 
@@ -168,7 +180,7 @@ void	parseUserModeString(Mode &mode){
 				}
 			case '-':
 				while (!(*it == '+' || *it == '-' || it == ite)){
-					eraseUserMode(*it, mode);
+					eraseUserMode(*it, mode, server);
 					it++;
 				}
 		}
@@ -226,7 +238,7 @@ void	userMode(User &user, Server &server){
 		user.addRepliesToBuffer(ERR_USERSDONTMATCH);
 	else{
 		fillModeStruct(mode, NULL, server, &user);
-		parseUserModeString(mode);
+		parseUserModeString(mode, server);
 	}
 
 
