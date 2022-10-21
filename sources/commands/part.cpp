@@ -26,11 +26,11 @@ void PART(User &user, Server &server) {
 		else if (!chan->onChannel(user))
 			user.addRepliesToBuffer(ERR_NOTONCHANNEL(chan->getName()));
 		else{
-			removeUserFromChannel(chan, user, server);
 			if (server.getTrailer().empty())
 				chan->sendChannelMessage(user, PART_message(chan->getName()));
 			else
 				chan->sendChannelMessage(user, PART_message_2(chan->getName(), server.getTrailer()));	
+			removeUserFromChannel(chan, user, server);
 		}
 	}
 }

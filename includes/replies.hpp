@@ -21,7 +21,7 @@
 # define RPL_TOPIC(channel, topic)      	    "332 " + channel + " :" + topic + "\r\n"
 //# define RPL_TOPICWHOTIME(nick, channel, user, setat)   "333 " + nick + " " + channel + " " + user + " " + setat + "\r\n"
 # define RPL_INVITING(channel, invitee)         "341 " + channel + " " + invitee + "\r\n"
-# define RPL_NAMREPLY(channel, users)   		"353  = " + channel + " :" + users + "\r\n"
+# define RPL_NAMREPLY(channel, users)   		"353 = " + channel + " :" + users + "\r\n"
 # define RPL_ENDOFNAMES(channel)                "366 " + channel +  " :End of /NAMES list\r\n"
 # define RPL_BANLIST(channel, masks)		    "367 " + channel + " " + masks + "\r\n"
 # define RPL_ENDOFBANLIST(channel)		        "368 " + channel + " :End of channel ban list\r\n"

@@ -25,8 +25,8 @@ void 		removeUserFromChannel(Channel *channel, User &user, Server &server){
 	
 	channel->removeUser(user);
 	if (channel->isEmpty()){
-		delete channel;
 		server._channels.erase(channel->getName());
+		delete channel;
 	}
 }
 
@@ -39,8 +39,8 @@ void 		partFromAllChannels(User &user, Server &server){
 		chan = it;
 		it++;
 		if (chan->second->onChannel(user)){
-			removeUserFromChannel(chan->second, user, server);
 			chan->second->sendChannelMessage(user, PART_message(chan->second->getName()));
+			removeUserFromChannel(chan->second, user, server);
 		}
 	}
 }
