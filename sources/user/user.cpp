@@ -2,8 +2,8 @@
 
 User::User(const int &socket)
 	:_userName("dflt_user"), _realName("dflt_rname"), _nickName("dflt_nick"),
-	_isPassChecked(false), _isRegistered(false), _isOperator(false),
-	_signon(getTime()), _lastAction(_signon), clientSocket(socket) {
+	_isPassChecked(false), _isRegistered(false), _signon(getTime()), 
+	_lastAction(_signon), clientSocket(socket) {
 	initModes();
 	std::cout << "[+] A user is born" << std::endl;
 }
@@ -21,7 +21,7 @@ User::User(const User &other)
 		_clientAddr = other._clientAddr;
 		_isPassChecked = other._isPassChecked;
 		_isRegistered = other._isRegistered;
-		_isOperator = other._isOperator;
+		_modes = other._modes;
 		_signon = other._signon;
 		_lastAction = other._lastAction;
 	}
@@ -51,7 +51,8 @@ std::string			User::getPrefix() const { return (":" + getNickMask()); }
 
 bool	User::isPassChecked() const { return _isPassChecked; }
 bool	User::isRegistered() const { return _isRegistered; }
-bool	User::isOperator() const { return _isOperator; }
+bool	User::isOperator() { return _modes['o']; }
+bool	User::isInvisible() { return _modes['i']; }
 long	User::getSignon() const {return _signon; }
 long	User::getLastAction() const {return _lastAction; } ;
 long	User::getIdle() const {return (_lastAction - _signon); }
@@ -89,7 +90,6 @@ void	User::newAction(void) {_lastAction = getTime(); }
 
 void	User::setPassChecked(void) { _isPassChecked = true; std::cout << "[+] pass successfully checked" << std::endl;}
 void	User::setRegistered(void) { _isRegistered = true; }
-void	User::setOperator(void) { _isOperator = true; std::cout << "[+] _Operator is now set to true" << std::endl;}
 
 /*Handling buffer*/
 

@@ -21,7 +21,7 @@ void	OPER(User &user, Server &server)
 	else if (server._command.args[1].compare(server.getOperPassword()))
 		user.addRepliesToBuffer(ERR_PASSWDMISMATCH);
 	else {
-		user.setMode('i');
+		user.setMode('o');
 		server.operators.push_back(server._command.args[0]);
 		user.addRepliesToBuffer(RPL_YOUREOPER);
 	}

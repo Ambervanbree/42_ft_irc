@@ -32,17 +32,26 @@ std::set<User *>		Channel::getUsers() const {return _users; }
 std::set<std::string>	Channel::getBanned() const {return _banned; }
 size_t					Channel::size() const {return _users.size(); }
 
-std::string				Channel::getNames(void) const{
+std::string				Channel::getNames(User &user) const{
 	std::string namesRPL;
 
 	std::set<User *>::iterator 	it = _users.begin();
 	std::set<User *>::iterator 	ite = _users.end();
 
 	for (; it != ite; it++){
-		namesRPL += "\r\n";
-		if (_chop.find((**it).getNickMask()) != _chop.end())
-			namesRPL += "@";
-		namesRPL += (*it)->getNickname();
+		if ((*it)->isInvisible()){
+			if (onChannel(user)){
+				if (_chop.find((**it).getNickMask()) != _chop.end())
+					namesRPL += "@";
+				namesRPL += (*it)->getNickname();				
+			}
+		}
+		else{
+			namesRPL += "\r\n";
+			if (_chop.find((**it).getNickMask()) != _chop.end())
+				namesRPL += "@";
+			namesRPL += (*it)->getNickname();
+		}
 	}
 	return namesRPL ;
 }

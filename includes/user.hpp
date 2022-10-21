@@ -38,7 +38,8 @@ class User
 
 		bool	isPassChecked() const;
 		bool	isRegistered() const;
-		bool	isOperator() const;
+		bool	isOperator();
+		bool	isInvisible();
 
 		std::string	getBuffer() const;
 
@@ -52,7 +53,6 @@ class User
 		std::string				_nickName;
 		bool					_isPassChecked;
 		bool					_isRegistered;
-		bool					_isOperator;
 		std::string				_hostName;
 		std::map<char, bool>	_modes;
 		
