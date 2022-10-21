@@ -59,6 +59,7 @@
 # define ERR_CHANPRIVSNEEDED(channel)	    	"482 " + channel + " :You're not channel operator\r\n"
 # define ERR_NOOPERHOST     					"491 :No O-lines for your host\r\n"
 # define ERR_UMODEUNKNOWMFLAG               	"501 :Unknown :MODE flag\r\n"
+# define ERR_USERSDONTMATCH						"502 :Cannot change mode for other users\r\n"
 # define ERR_NOORIGIN                           "409 :No origin specified\r\n"
 
 /* Command messages */

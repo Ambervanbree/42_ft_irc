@@ -26,12 +26,14 @@ class User
 		std::string			getNickname() const;
 		std::string			getRealname() const;
 		std::string			getHostname() const;
+		std::string			getModes() const;
 		int					getSocket() const;
 		std::string			getPrefix() const;
 		std::string			getNickMask() const;
 		long				getSignon() const;
 		long				getLastAction() const;
 		long				getIdle() const;
+
 
 
 		bool	isPassChecked() const;
