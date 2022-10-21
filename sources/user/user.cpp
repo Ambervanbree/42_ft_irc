@@ -4,6 +4,7 @@ User::User(const int &socket)
 	:_userName("dflt_user"), _realName("dflt_rname"), _nickName("dflt_nick"),
 	_isPassChecked(false), _isRegistered(false), _isOperator(false),
 	_signon(getTime()), _lastAction(_signon), clientSocket(socket) {
+	initModes();
 	std::cout << "[+] A user is born" << std::endl;
 }
 
@@ -45,6 +46,16 @@ long	User::getLastAction() const {return _lastAction; } ;
 long	User::getIdle() const {return (_lastAction - _signon); }
 
 /*Setters*/
+void				User::initModes(void){
+	_modes['i'] = false;
+	_modes['o'] = false;
+}
+void				User::setMode(char mode){
+	_modes[mode] = true;
+}
+void				User::unsetMode(char mode){
+	_modes[mode] = false;
+}
 void				User::setNickname(const std::string &nick) { _nickName = nick; std::cout << "[+] _nickName is now set to: " << _nickName << std::endl;}
 void				User::setUsername(const std::string &user) { _userName = user; std::cout << "[+] _userName is now set to: " << _userName << std::endl;}
 void				User::setRealname(const std::string &realname) { _realName =  realname; std::cout << "[+] _realName is now set to: " << _realName << std::endl;}

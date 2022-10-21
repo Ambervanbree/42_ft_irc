@@ -44,23 +44,27 @@ class User
 		User();
 		User &operator=(const User &other);
 
-		struct sockaddr_in	_clientAddr;
-		std::string			_userName;
-		std::string			_realName;
-		std::string			_nickName;
-		bool				_isPassChecked;
-		bool				_isRegistered;
-		bool				_isOperator;
-		std::string			_hostName;
+		struct sockaddr_in		_clientAddr;
+		std::string				_userName;
+		std::string				_realName;
+		std::string				_nickName;
+		bool					_isPassChecked;
+		bool					_isRegistered;
+		bool					_isOperator;
+		std::string				_hostName;
+		std::map<char, bool>	_modes;
 		
 	public:
-		long 				_signon;
-		long 				_lastAction;
-		int					clientSocket;
-		std::string			_buffer;
-		std::vector<std::string> replies;
+		long 						_signon;
+		long 						_lastAction;
+		int							clientSocket;
+		std::string					_buffer;
+		std::vector<std::string>	replies;
 
 	public:
+		void		initModes(void);
+		void		setMode(char mode);
+		void		unsetMode(char mode);
 		void		setUsername(const std::string &username);
 		void		setRealname(const std::string &username);
 		void		setNickname(const std::string &nick);
