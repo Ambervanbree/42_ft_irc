@@ -76,9 +76,9 @@ std::string				Channel::getBannedList(void){
 
 void			Channel::sendTopic(User &user){
 	if (_topic.empty())
-		user.addRepliesToBuffer(RPL_NOTOPIC(getName()));
+		user.addRepliesToBuffer(RPL_NOTOPIC(user.getPrefix(), getName()));
 	else{
-		user.addRepliesToBuffer(RPL_TOPIC(getName(), getTopic()));
+		user.addRepliesToBuffer(RPL_TOPIC(user.getPrefix(), getName(), getTopic()));
 		// user.addRepliesToBuffer(RPL_TOPICWHOTIME(nick, channel, user, setat)) --->> TODO, std::time(0) gets the time, but it's in int. 
 	}
 }
@@ -86,8 +86,8 @@ void			Channel::sendTopic(User &user){
 void			Channel::sendChannelMessage(User &user, std::string message){
 	std::string userstring = ":";
 
-	if (_chop.find(user.getNickMask()) != _chop.end())
-		userstring += "@";
+	//if (_chop.find(user.getNickMask()) != _chop.end())
+	//	userstring += "@";
 	userstring += user.getNickMask();
 	message.insert(0, userstring);
 

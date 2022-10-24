@@ -46,10 +46,10 @@ void 		partFromAllChannels(User &user, Server &server){
 }
 
 void		channelWelcomeMessage(Channel &chan, User &user){
-	chan.sendChannelMessage(user, JOIN_message(chan.getName()));
+	chan.sendChannelMessage(user, JOIN_message(user.getPrefix(), chan.getName()));
 	chan.sendTopic(user);
-	user.addRepliesToBuffer(RPL_NAMREPLY(user.getNickname(), chan.getName(), chan.getNames()));
-	user.addRepliesToBuffer(RPL_ENDOFNAMES(user.getNickname(), chan.getName()));
+	user.addRepliesToBuffer(RPL_NAMREPLY(user.getPrefix(), user.getNickname(), chan.getName(), chan.getNames()));
+	user.addRepliesToBuffer(RPL_ENDOFNAMES(user.getPrefix(), user.getNickname(), chan.getName()));
 }
 
 bool  	  isOperator(const std::string &username, Server &server) {
