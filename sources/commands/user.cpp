@@ -30,6 +30,5 @@ void USER(User &user, Server &server)
 	user.addRepliesToBuffer(RPL_YOURHOST(user.getNickname()));
 	user.addRepliesToBuffer(RPL_CREATED(user.getNickname(), server.getTimeInfo()));
 	user.addRepliesToBuffer(RPL_MYINFO(user.getNickname()));
-	MOTD(user, server);
 	return;
 }
