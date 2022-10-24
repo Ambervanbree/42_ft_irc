@@ -32,9 +32,8 @@ std::set<User *>		Channel::getUsers() const {return _users; }
 std::set<std::string>	Channel::getBanned() const {return _banned; }
 size_t					Channel::size() const {return _users.size(); }
 
-std::string				Channel::getNames(User &user) const{
-	std::string namesRPL;
-
+void					Channel::sendNames(User &user) const{
+	std::string 				namesRPL;
 	std::set<User *>::iterator 	it = _users.begin();
 	std::set<User *>::iterator 	ite = _users.end();
 
@@ -53,7 +52,21 @@ std::string				Channel::getNames(User &user) const{
 			namesRPL += (*it)->getNickname();
 		}
 	}
-	return namesRPL ;
+
+	size_t	total = (RPL_NAMREPLY(getName(), namesRPL)).size();
+
+	if (total > 78){
+		std::string		part;
+		size_t			rplSize = total - namesRPL.size();
+		size_t			cutSize = 78 - rplSize;
+		size_t			copySize = namesRPL.size() / cutSize;
+
+		for (size_t i = 0; copySize > 0; copySize--, i++){
+			part = namesRPL.substr((i * cutSize), cutSize);
+			user.addRepliesToBuffer(RPL_NAMREPLY(getName(), part));
+		}
+	}
+	user.addRepliesToBuffer(RPL_ENDOFNAMES(getName()));
 }
 
 std::string				Channel::getModes(void) const{
