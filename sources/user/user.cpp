@@ -35,7 +35,6 @@ std::string			User::getRealname() const { return _realName; }
 std::string			User::getHostname()	const { return _hostName; }
 int					User::getSocket() const { return clientSocket; }
 std::string			User::getNickMask() const { return (_nickName + "!" + _userName + "@" + _hostName); }
-std::string			User::getPrefix() const { return (":" + getNickMask()); }
 
 bool	User::isPassChecked() const { return _isPassChecked; }
 bool	User::isRegistered() const { return _isRegistered; }
