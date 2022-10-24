@@ -20,12 +20,12 @@
 # define RPL_LIST(channel, nbuser, topic)	  	"322 " + channel + " " + nbuser + " :" + topic + "\r\n"
 # define RPL_LISTEND	       				    "323 :End of /LIST\r\n"
 # define RPL_CHANNELMODEIS(chan, modestr)       "324 " + chan + " " + modestr + "\r\n"
-# define RPL_NOTOPIC(channel)			        "331 " + channel + " :No topic is set\r\n"
-# define RPL_TOPIC(channel, topic)      	    "332 " + channel + " :" + topic + "\r\n"
+# define RPL_NOTOPIC(prefix, channel)			prefix + " 331 " + channel + " :No topic is set\r\n"
+# define RPL_TOPIC(prefix, channel, topic)      prefix + " 332 " + channel + " :" + topic + "\r\n"
 //# define RPL_TOPICWHOTIME(nick, channel, user, setat)   "333 " + nick + " " + channel + " " + user + " " + setat + "\r\n"
 # define RPL_INVITING(channel, invitee)         "341 " + channel + " " + invitee + "\r\n"
-# define RPL_NAMREPLY(nick, channel, users)   	"353 " + nick + " = " + channel + " :" + users + "\r\n"
-# define RPL_ENDOFNAMES(nick, channel)          "366 " + nick + " " + channel +  " :End of /NAMES list\r\n"
+# define RPL_NAMREPLY(prefix, nick, channel, users)   prefix + " 353 " + nick + " = " + channel + " :" + users + "\r\n"
+# define RPL_ENDOFNAMES(prefix, nick, channel)  prefix + " 366 " + nick + " " + channel +  " :End of /NAMES list\r\n"
 # define RPL_BANLIST(channel, masks)		    "367 " + channel + " " + masks + "\r\n"
 # define RPL_ENDOFBANLIST(channel)		        "368 " + channel + " :End of channel ban list\r\n"
 # define RPL_MOTD(nick, comment) 			    "372 " + nick + " :" + comment + "\r\n"
@@ -66,7 +66,7 @@
 
 /* Command messages */
 
-# define JOIN_message(chan)								" JOIN " + chan + "\r\n"
+# define JOIN_message(prefix, chan)					    prefix + " JOIN " + chan + "\r\n"
 # define PART_message(chan)								" PART " + chan + " :has left the channel\r\n"
 # define PART_message_2(chan, message)					" PART " + chan + " " + message + "\r\n"
 # define MODE_message(chan, args)						" MODE " + args + "\r\n"

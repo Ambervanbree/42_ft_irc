@@ -26,6 +26,7 @@ class User
 		std::string			getNickname() const;
 		std::string			getRealname() const;
 		std::string			getHostname() const;
+		std::string			getPrefix() const;
 		int					getSocket() const;
 		std::string			getNickMask() const;
 		long				getSignon() const;

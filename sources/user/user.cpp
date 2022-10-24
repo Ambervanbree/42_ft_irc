@@ -33,6 +33,7 @@ std::string			User::getUsername()	const { return _userName; }
 std::string 		User::getNickname() const { return _nickName; }
 std::string			User::getRealname() const { return _realName; }
 std::string			User::getHostname()	const { return _hostName; }
+std::string			User::getPrefix() const { return (":" + getNickMask()); }
 int					User::getSocket() const { return clientSocket; }
 std::string			User::getNickMask() const { return (_nickName + "!" + _userName + "@" + _hostName); }
 
