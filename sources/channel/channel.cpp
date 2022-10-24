@@ -39,7 +39,7 @@ std::string				Channel::getNames(void) const{
 	std::set<User *>::iterator 	ite = _users.end();
 
 	for (; it != ite; it++){
-		namesRPL += "\r\n";
+		namesRPL += " ";
 		if (_chop.find((**it).getNickMask()) != _chop.end())
 			namesRPL += "@";
 		namesRPL += (*it)->getNickname();
