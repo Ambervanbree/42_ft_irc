@@ -84,11 +84,11 @@ void			Channel::sendTopic(User &user){
 }
 
 void			Channel::sendChannelMessage(User &user, std::string message){
-	std::string userstring = ":";
+	std::string userstring = user.getPrefix();
 
 	//if (_chop.find(user.getNickMask()) != _chop.end())
 	//	userstring += "@";
-	userstring += user.getNickMask();
+	//userstring += user.getNickMask();
 	message.insert(0, userstring);
 
 	std::set<User *>::iterator	it = _users.begin();
