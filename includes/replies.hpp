@@ -4,7 +4,10 @@
 
 /* Registration RPL */
 
-# define RPL_WELCOME(nickmask)                  "001 :Welcome to the Internet Relay Network, " + nickmask + "\r\n"
+# define RPL_WELCOME(nick, nickmask)			"001 " + nick + " :Welcome to the Internet Relay Network, " + nickmask + "\r\n"
+# define RPL_YOURHOST(nick)						"002 " + nick + " :Your host is ACC POWER, running version 1.0\r\n."
+# define RPL_CREATED(nick)						"003 " + nick + " :This server was created 2022/10/24 11:24:54\r\n."
+# define RPL_MYINFO(nick)						"004 " + nick + " :ACC-Power 1.0 i .\r\n"
 
 /* RPL */
 
@@ -64,7 +67,7 @@
 /* Command messages */
 
 # define JOIN_message(chan)								" JOIN " + chan + "\r\n"
-# define PART_message(chan)								" PART " + chan + "\r\n"
+# define PART_message(chan)								" PART " + chan + " :has left the channel\r\n"
 # define PART_message_2(chan, message)					" PART " + chan + " :" + message + "\r\n"
 # define MODE_message(chan, args)						" MODE " + args + "\r\n"
 # define TOPIC_message(chan, topic)						" TOPIC " + chan + " :" + topic + "\r\n"

@@ -26,6 +26,10 @@ void USER(User &user, Server &server)
 		user.setUsername(username);
 	user.setRealname(realname.erase(0, 1));
 	user.setRegistered();
-	user.addRepliesToBuffer(RPL_WELCOME(user.getNickMask()));
+	user.addRepliesToBuffer(RPL_WELCOME(user.getNickname(), user.getNickMask()));
+	user.addRepliesToBuffer(RPL_YOURHOST(user.getNickname()));
+	user.addRepliesToBuffer(RPL_CREATED(user.getNickname()));
+	user.addRepliesToBuffer(RPL_MYINFO(user.getNickname()));
+	MOTD(user, server);
 	return;
 }
