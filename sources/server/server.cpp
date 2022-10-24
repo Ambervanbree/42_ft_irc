@@ -39,6 +39,7 @@ void    Server::start(void){
     _bind();
     _listen();
     _initFileDescriptorsStruct();
+    _initTime();
 }
 
 /******************************************************************************/

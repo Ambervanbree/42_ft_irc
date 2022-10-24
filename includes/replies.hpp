@@ -6,7 +6,7 @@
 
 # define RPL_WELCOME(nick, nickmask)			"001 " + nick + " :Welcome to the Internet Relay Network, " + nickmask + "\r\n"
 # define RPL_YOURHOST(nick)						"002 " + nick + " :Your host is ACC Power, running version 1.0.\r\n"
-# define RPL_CREATED(nick)						"003 " + nick + " :This server was created 2022/10/24 11:24:54.\r\n"
+# define RPL_CREATED(nick, time)				"003 " + nick + " :This server was created " + time +  "\r\n"
 # define RPL_MYINFO(nick)						"004 " + nick + " :ACC-Power 1.0 aio .\r\n"
 
 /* RPL */
