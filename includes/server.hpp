@@ -81,6 +81,7 @@ private:
     int                 _nfds;
     struct  pollfd      _fds[MAX_FDS];
     bool                _end_server;
+    std::string         _creationTime;
 	
 	std::map<std::string, command>	_commands;
 	std::vector<std::string>		_bufferCommand;
@@ -106,7 +107,8 @@ private:
     bool _makeSocketNonBlocking(int newFileDescriptor);
     void _serverSocketEvent(void);
     void _clientSocketEvent(int i, User &user);
-    
+
+    void _initTime(void);
 
 	/*Functions to set command list and launch commands*/
 	void _setCommands(void);
@@ -130,6 +132,8 @@ public:
 
     void errorMessage(User &recipient, std::string reason);
     void quitMessage(std::string &leaver, std::string &reason);
+
+    std::string getTimeInfo(void) const;
 
 	void interpretCommand(std::string &message, User &user); /*Change to Private at the end of project*/
 
