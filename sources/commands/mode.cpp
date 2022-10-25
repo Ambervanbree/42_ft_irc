@@ -131,19 +131,19 @@ void	parseChanModeString(Mode &mode){
 
 void	addUserMode(char toSet, Mode &mode){
 	std::string	newMode;
-	if (toSet == 'i')
+	if (toSet == 'i'){
 		mode.user->setMode(toSet);
-	else{
-		newMode += toSet;
-		mode.user->addRepliesToBuffer(ERR_UNKNOWNMODE(newMode));
-		mode.user->addRepliesToBuffer(RPL_UMODEIS(mode.user->getModes()));
+		mode.outString += toSet;
 	}
+	else
+		mode.user->addRepliesToBuffer(ERR_UMODEUNKNOWMFLAG);
 }
 
 void	eraseUserMode(char toSet, Mode &mode, Server &server){
 	std::string newMode;
 	if (toSet == 'i' || toSet == 'o'){
 		mode.user->unsetMode(toSet);
+		mode.outString += toSet;
 		if (toSet == 'o'){
 			std::list<std::string>::iterator	it = server.operators.begin();
 			std::list<std::string>::iterator	ite = server.operators.end();
@@ -156,11 +156,8 @@ void	eraseUserMode(char toSet, Mode &mode, Server &server){
 			}
 		}
 	}
-	else{
-		newMode += toSet;
-		mode.user->addRepliesToBuffer(ERR_UNKNOWNMODE(newMode));
-		mode.user->addRepliesToBuffer(RPL_UMODEIS(mode.user->getModes()));
-	}	
+	else
+		mode.user->addRepliesToBuffer(ERR_UMODEUNKNOWMFLAG);
 }
 
 void	parseUserModeString(Mode &mode, Server &server){
@@ -224,8 +221,9 @@ void	channelMode(User &user, Server &server){
 
 		std::string message(mode.outString);
 		for (size_t i = 0; i < mode.outArg.size(); i++)
-			message += mode.outArg[i] + " ";
-		chan->sendChannelMessage(user, MODE_message(chan->getName(), message));	
+			message += " " + mode.outArg[i] + " ";
+		if (message.size() > 1)
+			chan->sendChannelMessage(user, MODE_message_2(chan->getName(), message));	
 	}
 
 }
@@ -234,23 +232,20 @@ void	userMode(User &user, Server &server){
 	Mode	mode;
 	User	*found = findUser(TARGET, server);
 	
-	if (user.getNickname() != found->getNickname())
+	if (found == NULL)
+		user.addRepliesToBuffer(ERR_NOSUCHNICK(user.getNickname()));
+	else if (user.getNickname() != found->getNickname())
 		user.addRepliesToBuffer(ERR_USERSDONTMATCH);
+	else if (server.getArgs().size() < 2)
+		user.addRepliesToBuffer(RPL_UMODEIS(user.getNickname(), user.getModes()));
 	else{
 		fillModeStruct(mode, NULL, server, &user);
 		parseUserModeString(mode, server);
+		std::string message(mode.outString);
+		for (size_t i = 0; i < mode.outArg.size(); i++)
+			message += " " + mode.outArg[i] + " ";
+		user.addRepliesToBuffer(RPL_UMODEIS(user.getNickname(), user.getModes()));
 	}
-
-
-	for (size_t i = 0; i < mode.modeString.size(); i++){
-		if (mode.modeString[i] != '+' && mode.modeString[i] != '-')
-		{
-			std::string newMode;
-			newMode += mode.modeString[i];
-			user.addRepliesToBuffer(newMode);
-		}
-	}
-	return ;
 }
 
 void MODE(User &user, Server &server){

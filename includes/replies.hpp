@@ -11,7 +11,8 @@
 
 /* RPL */
 
-# define RPL_UMODEIS(mode)			  			"221 " + mode + "\r\n"
+
+# define RPL_UMODEIS(nick, mode)	            "221 " + nick + " " + mode + "\r\n"
 # define RPL_WHOISUSER(nick, user, realname)	"311 " + nick + " " + user + " localhost " + realname + "\r\n"
 # define RPL_WHOISSERVER(nick, server, info)	"312 " + nick + " " + server + " :" + info "\r\n"
 # define RPL_WHOISOPERATOR(nick)				"313 " + nick + " :is an IRC operator\r\n"
@@ -69,7 +70,8 @@
 # define JOIN_message(prefix, chan)					    prefix + " JOIN " + chan + "\r\n"
 # define PART_message(chan)								" PART " + chan + " :has left the channel\r\n"
 # define PART_message_2(chan, message)					" PART " + chan + " " + message + "\r\n"
-# define MODE_message(chan, args)						" MODE " + args + "\r\n"
+# define MODE_message(prefix, args)						prefix + " MODE " + args + "\r\n"
+# define MODE_message_2(chan, args)						" MODE " + args + "\r\n"
 # define TOPIC_message(chan, topic)						" TOPIC " + chan + " :" + topic + "\r\n"
 # define INVITE_message(inviter, chan, invitee)			":" + inviter + " INVITE " + invitee + " " + chan + "\r\n"
 # define KICK_message(chan, kicked)						" KICK " + kicked + "\r\n"
