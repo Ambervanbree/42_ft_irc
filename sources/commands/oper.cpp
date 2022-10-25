@@ -16,10 +16,10 @@ void	OPER(User &user, Server &server)
 	// and as we already checked if user was registered in the host/server
 	// No need for further check
     else if (user.getUsername().compare(server._command.args[0]))
-		user.addRepliesToBuffer(ERR_NOOPERHOST);
+		user.addRepliesToBuffer(ERR_NOOPERHOST(user.getNickname()));
 	// check if user entered the right host/server password
 	else if (server._command.args[1].compare(server.getOperPassword()))
-		user.addRepliesToBuffer(ERR_PASSWDMISMATCH);
+		user.addRepliesToBuffer(ERR_PASSWDMISMATCH(user.getNickname()));
 	else {
 		user.setMode('o');
 		server.operators.push_back(server._command.args[0]);
