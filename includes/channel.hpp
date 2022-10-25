@@ -34,7 +34,7 @@ class Channel{
 		std::set<User *>		getUsers(void) const;
 		std::set<std::string>	getBanned(void) const;
 		std::string				getModes(void) const;
-		std::string				getNames(void) const;
+		void					sendNames(User &user) const;
 		std::string				getBannedList(void);
 		size_t					size(void) const;
 

@@ -126,3 +126,14 @@ int Server::_sendMessage(User &user)
 	}
 	return (ret);
 }
+
+void	Server::_initTime(void) {
+	time_t	t;
+	char	creationTime[64];
+
+	time(&t);
+	strftime(creationTime, 64, "%Y/%m/%d %H:%M:%S", localtime(&t));
+	_creationTime = creationTime;
+}
+
+std::string		Server::getTimeInfo(void) const { return _creationTime; }

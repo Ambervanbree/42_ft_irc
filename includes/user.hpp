@@ -26,6 +26,7 @@ class User
 		std::string			getNickname() const;
 		std::string			getRealname() const;
 		std::string			getHostname() const;
+		std::string			getModes() const;
 		int					getSocket() const;
 		std::string			getPrefix() const;
 		std::string			getNickMask() const;
@@ -34,9 +35,11 @@ class User
 		long				getIdle() const;
 
 
+
 		bool	isPassChecked() const;
 		bool	isRegistered() const;
-		bool	isOperator() const;
+		bool	isOperator();
+		bool	isInvisible();
 
 		std::string	getBuffer() const;
 
@@ -44,23 +47,26 @@ class User
 		User();
 		User &operator=(const User &other);
 
-		struct sockaddr_in	_clientAddr;
-		std::string			_userName;
-		std::string			_realName;
-		std::string			_nickName;
-		bool				_isPassChecked;
-		bool				_isRegistered;
-		bool				_isOperator;
-		std::string			_hostName;
+		struct sockaddr_in		_clientAddr;
+		std::string				_userName;
+		std::string				_realName;
+		std::string				_nickName;
+		bool					_isPassChecked;
+		bool					_isRegistered;
+		std::string				_hostName;
+		std::map<char, bool>	_modes;
 		
 	public:
-		long 				_signon;
-		long 				_lastAction;
-		int					clientSocket;
-		std::string			_buffer;
-		std::vector<std::string> replies;
+		long 						_signon;
+		long 						_lastAction;
+		int							clientSocket;
+		std::string					_buffer;
+		std::vector<std::string>	replies;
 
 	public:
+		void		initModes(void);
+		void		setMode(char mode);
+		void		unsetMode(char mode);
 		void		setUsername(const std::string &username);
 		void		setRealname(const std::string &username);
 		void		setNickname(const std::string &nick);

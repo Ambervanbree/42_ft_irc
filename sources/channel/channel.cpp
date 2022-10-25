@@ -32,18 +32,28 @@ std::set<User *>		Channel::getUsers() const {return _users; }
 std::set<std::string>	Channel::getBanned() const {return _banned; }
 size_t					Channel::size() const {return _users.size(); }
 
-std::string				Channel::getNames(void) const{
-	std::string namesRPL;
-
+void					Channel::sendNames(User &user) const{
+	std::string 				namesRPL;
 	std::set<User *>::iterator 	it = _users.begin();
 	std::set<User *>::iterator 	ite = _users.end();
 
 	for (; it != ite; it++){
-		if (_chop.find((**it).getNickMask()) != _chop.end())
-			namesRPL += "@";
-		namesRPL += (*it)->getNickname() + " ";
+		if ((*it)->isInvisible()){
+			if (onChannel(user)){
+				if (_chop.find((**it).getNickMask()) != _chop.end())
+					namesRPL += "@";
+				namesRPL += (*it)->getNickname();				
+			}
+		}
+		else{
+			namesRPL += " ";
+			if (_chop.find((**it).getNickMask()) != _chop.end())
+				namesRPL += "@";
+			namesRPL += (*it)->getNickname();
+		}
 	}
-	return namesRPL ;
+	user.addRepliesToBuffer(RPL_NAMREPLY(user.getPrefix(), user.getNickname(), getName(), namesRPL));
+	user.addRepliesToBuffer(RPL_ENDOFNAMES(user.getPrefix(), user.getNickname(), getName()));
 }
 
 std::string				Channel::getModes(void) const{
@@ -75,19 +85,14 @@ std::string				Channel::getBannedList(void){
 
 void			Channel::sendTopic(User &user){
 	if (_topic.empty())
-		user.addRepliesToBuffer(RPL_NOTOPIC(getName()));
-	else{
-		user.addRepliesToBuffer(RPL_TOPIC(getName(), getTopic()));
-		// user.addRepliesToBuffer(RPL_TOPICWHOTIME(nick, channel, user, setat)) --->> TODO, std::time(0) gets the time, but it's in int. 
-	}
+		user.addRepliesToBuffer(RPL_NOTOPIC(user.getPrefix(), getName()));
+	else
+		user.addRepliesToBuffer(RPL_TOPIC(user.getPrefix(), getName(), getTopic()));
 }
 
 void			Channel::sendChannelMessage(User &user, std::string message){
-	std::string userstring = ":";
+	std::string userstring = user.getPrefix();
 
-	if (_chop.find(user.getNickMask()) != _chop.end())
-		userstring += "@";
-	userstring += user.getNickname();
 	message.insert(0, userstring);
 
 	std::set<User *>::iterator	it = _users.begin();

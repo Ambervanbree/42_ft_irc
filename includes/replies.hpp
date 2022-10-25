@@ -4,7 +4,10 @@
 
 /* Registration RPL */
 
-# define RPL_WELCOME(nickmask)                  "001 :Welcome to the Internet Relay Network, " + nickmask + "\r\n"
+# define RPL_WELCOME(nick, nickmask)			"001 " + nick + " :Welcome to the Internet Relay Network, " + nickmask + "\r\n"
+# define RPL_YOURHOST(nick)						"002 " + nick + " :Your host is ACC Power, running version 1.0.\r\n"
+# define RPL_CREATED(nick, time)				"003 " + nick + " :This server was created " + time +  "\r\n"
+# define RPL_MYINFO(nick)						"004 " + nick + " :ACC-Power 1.0 io kbto.\r\n"
 
 /* RPL */
 
@@ -17,17 +20,17 @@
 # define RPL_LIST(channel, nbuser, topic)	  	"322 " + channel + " " + nbuser + " :" + topic + "\r\n"
 # define RPL_LISTEND	       				    "323 :End of /LIST\r\n"
 # define RPL_CHANNELMODEIS(chan, modestr)       "324 " + chan + " " + modestr + "\r\n"
-# define RPL_NOTOPIC(channel)			        "331 " + channel + " :No topic is set\r\n"
-# define RPL_TOPIC(channel, topic)      	    "332 " + channel + " :" + topic + "\r\n"
+# define RPL_NOTOPIC(prefix, channel)			prefix + " 331 " + channel + " :No topic is set\r\n"
+# define RPL_TOPIC(prefix, channel, topic)      prefix + " 332 " + channel + " :" + topic + "\r\n"
 //# define RPL_TOPICWHOTIME(nick, channel, user, setat)   "333 " + nick + " " + channel + " " + user + " " + setat + "\r\n"
 # define RPL_INVITING(channel, invitee)         "341 " + channel + " " + invitee + "\r\n"
-# define RPL_NAMREPLY(channel, users)   		"353  = " + channel + " :" + users + "\r\n"
-# define RPL_ENDOFNAMES(channel)                "366 " + channel +  " :End of /NAMES list\r\n"
+# define RPL_NAMREPLY(prefix, nick, channel, users)   prefix + " 353 " + nick + " = " + channel + " :" + users + "\r\n"
+# define RPL_ENDOFNAMES(prefix, nick, channel)  prefix + " 366 " + nick + " " + channel +  " :End of /NAMES list\r\n"
 # define RPL_BANLIST(channel, masks)		    "367 " + channel + " " + masks + "\r\n"
 # define RPL_ENDOFBANLIST(channel)		        "368 " + channel + " :End of channel ban list\r\n"
-# define RPL_MOTD(comment) 			            "372 :" + comment + "\r\n"
-# define RPL_MOTDSTART					        "375 :- IRC Message of the day - \r\n"
-# define RPL_ENDOFMOTD					        "376 :End of /MOTD command\r\n"
+# define RPL_MOTD(nick, comment) 			    "372 " + nick + " :" + comment + "\r\n"
+# define RPL_MOTDSTART(nick)					"375 " + nick + " :- Welcome stranger - \r\n"
+# define RPL_ENDOFMOTD(nick)					"376 " + nick + " :End of /MOTD command\r\n"
 # define RPL_YOUREOPER				            "381 :You are now an IRC operator\r\n"
 
 /* ERR */
@@ -59,13 +62,14 @@
 # define ERR_CHANPRIVSNEEDED(channel)	    	"482 " + channel + " :You're not channel operator\r\n"
 # define ERR_NOOPERHOST     					"491 :No O-lines for your host\r\n"
 # define ERR_UMODEUNKNOWMFLAG               	"501 :Unknown :MODE flag\r\n"
+# define ERR_USERSDONTMATCH						"502 :Cannot change mode for other users\r\n"
 # define ERR_NOORIGIN                           "409 :No origin specified\r\n"
 
 /* Command messages */
 
-# define JOIN_message(chan)								" JOIN " + chan + "\r\n"
-# define PART_message(chan)								" PART " + chan + "\r\n"
-# define PART_message_2(chan, message)					" PART " + chan + " :" + message + "\r\n"
+# define JOIN_message(prefix, chan)					    prefix + " JOIN " + chan + "\r\n"
+# define PART_message(chan)								" PART " + chan + " :has left the channel\r\n"
+# define PART_message_2(chan, message)					" PART " + chan + " " + message + "\r\n"
 # define MODE_message(chan, args)						" MODE " + args + "\r\n"
 # define TOPIC_message(chan, topic)						" TOPIC " + chan + " :" + topic + "\r\n"
 # define INVITE_message(inviter, chan, invitee)			":" + inviter + " INVITE " + invitee + " " + chan + "\r\n"
