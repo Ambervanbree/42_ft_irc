@@ -42,6 +42,7 @@ class Channel{
 
 		void			sendTopic(User &user);
 		void			sendChannelMessage(User &user, std::string message);
+		void			sendChannelPrivMessage(User &user, std::string message);
 
 		/* Checkers */
 

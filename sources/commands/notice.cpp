@@ -13,7 +13,7 @@ void	channelNotice(User &user, Server &server){
 		|| chan->isBanned(user.getNickMask()))
 		return ;
 	else
-		chan->sendChannelMessage(user, NOTICE_message_c(chan->getName(), server.getTrailer()));
+		chan->sendChannelPrivMessage(user, NOTICE_message_c(chan->getName(), server.getTrailer()));
 }
 
 void	singleNotice(User &user, Server &server){
@@ -28,6 +28,7 @@ void	singleNotice(User &user, Server &server){
 void NOTICE(User &user, Server &server){
 	if (!user.isRegistered())
 		return ;
+	user.newAction();
 	if (server.getArgs().empty()
 		|| server.getArgs().size() > 1
 		|| server.getTrailer().empty())
@@ -37,6 +38,5 @@ void NOTICE(User &user, Server &server){
 			channelNotice(user, server);
 		else
 			singleNotice(user, server);
-		// TODO -> should be able to send to server too, but not sure how to catch that.
 	}
 }

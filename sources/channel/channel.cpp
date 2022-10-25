@@ -103,6 +103,21 @@ void			Channel::sendChannelMessage(User &user, std::string message){
 		(*it)->addRepliesToBuffer(message);
 }
 
+void			Channel::sendChannelPrivMessage(User &user, std::string message){
+	std::string userstring = user.getPrefix();
+
+	message.insert(0, userstring);
+
+	std::set<User *>::iterator	it = _users.begin();
+	std::set<User *>::iterator	ite = _users.end();
+
+	for (; it != ite; it++){
+		if (user.getNickname() != (*it)->getNickname())
+			(*it)->addRepliesToBuffer(message);
+	}
+}
+
+
 /******************************************************************************/
 /*  Checkers
 *******************************************************************************/
