@@ -11,15 +11,15 @@
 
 /* RPL */
 
-# define RPL_UMODEIS(mode)			            "221 " + mode + "\r\n"
+# define RPL_UMODEIS(mode)			  			"221 " + mode + "\r\n"
 # define RPL_WHOISUSER(nick, user, realname)	"311 " + nick + " " + user + " localhost " + realname + "\r\n"
 # define RPL_WHOISSERVER(nick, server, info)	"312 " + nick + " " + server + " :" + info "\r\n"
 # define RPL_WHOISOPERATOR(nick)				"313 " + nick + " :is an IRC operator\r\n"
 # define RPL_WHOISIDLE(nick, idle, signon)		"317 " + nick + " " + idle + " " + signon + " :seconds idle, signon time\r\n"
 # define RPL_ENDOFWHOIS(nick)					"318 " + nick + " :End of /WHOIS list\r\n"
-# define RPL_LIST(channel, nbuser, topic)	  	"322 " + channel + " " + nbuser + " :" + topic + "\r\n"
-# define RPL_LISTEND	       				    "323 :End of /LIST\r\n"
-# define RPL_CHANNELMODEIS(chan, modestr)       "324 " + chan + " " + modestr + "\r\n"
+# define RPL_LIST(nick, channel, nbuser, topic)	"322 " + nick + " " + channel + " " + nbuser + " :" + topic + "\r\n"
+# define RPL_LISTEND(nick)	       				"323 " + nick + " :End of /LIST\r\n"
+# define RPL_CHANNELMODEIS(chan, modestr) 		"324 " + chan + " " + modestr + "\r\n"
 # define RPL_NOTOPIC(prefix, channel)			prefix + " 331 " + channel + " :No topic is set\r\n"
 # define RPL_TOPIC(prefix, channel, topic)      prefix + " 332 " + channel + " :" + topic + "\r\n"
 # define RPL_INVITING(channel, invitee)         "341 " + channel + " " + invitee + "\r\n"
@@ -30,7 +30,7 @@
 # define RPL_MOTD(nick, comment) 			    "372 " + nick + " :" + comment + "\r\n"
 # define RPL_MOTDSTART(nick)					"375 " + nick + " :- Welcome stranger - \r\n"
 # define RPL_ENDOFMOTD(nick)					"376 " + nick + " :End of /MOTD command\r\n"
-# define RPL_YOUREOPER				            "381 :You are now an IRC operator\r\n"
+# define RPL_YOUREOPER(nick)				    "381 " + nick + " :You are now an IRC operator\r\n"
 
 /* ERR */
 
@@ -57,7 +57,7 @@
 # define ERR_BANNEDFROMCHAN(channel)			"474 " + channel + " :Cannot join channel (+b)\r\n"
 # define ERR_BADCHANNELKEY(channel)				"475 " + channel + " :Cannot join channel (+k)\r\n"
 # define ERR_BADCHANMASK(channel)				"476 " + channel + " :Bad Channel Mask\r\n"
-# define ERR_NOPRIVILEGES                       "481 :Permission Denied- You're not an IRC operator\r\n"
+# define ERR_NOPRIVILEGES(nick)                 "481 " + nick + " :Permission Denied- You're not an IRC operator\r\n"
 # define ERR_CHANPRIVSNEEDED(channel)	    	"482 " + channel + " :You're not channel operator\r\n"
 # define ERR_NOOPERHOST     					"491 :No O-lines for your host\r\n"
 # define ERR_UMODEUNKNOWMFLAG               	"501 :Unknown :MODE flag\r\n"

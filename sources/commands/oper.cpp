@@ -23,6 +23,6 @@ void	OPER(User &user, Server &server)
 	else {
 		user.setMode('o');
 		server.operators.push_back(server._command.args[0]);
-		user.addRepliesToBuffer(RPL_YOUREOPER);
+		user.addRepliesToBuffer(RPL_YOUREOPER(user.getNickname()));
 	}
 }
