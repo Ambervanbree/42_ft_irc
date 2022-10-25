@@ -75,7 +75,7 @@ std::string				Channel::getBannedList(void){
 	std::set<std::string>::iterator	ite = _banned.end();
 
 	for (; it != ite; it++)
-		bannedList += *it;
+		bannedList += " " + *it;
 	return bannedList;	
 }
 
@@ -137,8 +137,8 @@ bool			Channel::onChannel(std::string nickName) const {
 	return false ;
 }
 
-bool			Channel::isBanned(std::string nickMask) const {
-	return (_banned.find(nickMask) != _banned.end());
+bool			Channel::isBanned(std::string nick) const {
+	return (_banned.find(nick) != _banned.end());
 }
 
 bool			Channel::isChop(std::string nickMask) const {
@@ -146,7 +146,7 @@ bool			Channel::isChop(std::string nickMask) const {
 }
 
 bool			Channel::correctKey(std::string key) const {
-	if (!_key.empty() && (_key != key))
+	if (_key.size() && _key != key)
 		return false;
 	return true;
 }
@@ -155,12 +155,10 @@ bool			Channel::isEmpty(void) const {
 	return (_users.size() == 0);
 }
 
-bool			Channel::hasChop(void) const{
-	std::map<char, bool>::const_iterator	it = _modes.find('o');
-
-	if (it != _modes.end() && it->second == true)
-		return true ;
-	return false ;
+bool			Channel::hasChop(void) const {
+	if (_chop.size() > 0)
+		return true;
+	return false;
 }
 
 /******************************************************************************/
@@ -170,7 +168,7 @@ bool			Channel::hasChop(void) const{
 void			Channel::addUser(std::string key, User &user){
 	if (onChannel(user))
 		user.addRepliesToBuffer(ERR_USERONCHANNEL(user.getNickname(), getName()));
-	else if (isBanned(user.getNickMask()))
+	else if (isBanned(user.getNickname()))
 		user.addRepliesToBuffer(ERR_BANNEDFROMCHAN(getName()));
 	else if (_modes['k'] == true && !correctKey(key))
 		user.addRepliesToBuffer(ERR_BADCHANNELKEY(getName()));
@@ -221,6 +219,8 @@ void			Channel::unbanUser(std::string toUnban){
 }
 
 void			Channel::removeUser(User &user){
+	if (_chop.find(user.getNickMask()) != _chop.end())
+		removeChop(user.getNickMask());
 	_users.erase(&user);
 }
 

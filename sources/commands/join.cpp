@@ -33,7 +33,7 @@ void JOIN(User &user, Server &server){
 	
 	std::vector<std::string>	channels;
 	std::vector<std::string>	keys;
-	char 					delimiter[] = ",";
+	char 						delimiter[] = ",";
 	
 	if (ARGUMENTS.empty()){
 		user.addRepliesToBuffer(ERR_NEEDMOREPARAMS(server.getCommand()));
