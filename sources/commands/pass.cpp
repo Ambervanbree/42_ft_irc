@@ -8,16 +8,17 @@ void PASS(User &user, Server &server)
 {
 	if (user.isPassChecked()){
 		if (user.isRegistered())
-			user.addRepliesToBuffer(ERR_ALREADYREGISTRED);
-		return;
+			user.addRepliesToBuffer(ERR_ALREADYREGISTERED);
 	}
-	if (server._command.args.size() == 2)
-		user.addRepliesToBuffer(ERR_NEEDMOREPARAMS(server.getCommand()));
-	if (server.getArgs()[0].compare(server.getPassword()))
-	{
-		user.addRepliesToBuffer(ERR_PASSWDMISMATCH(user.getNickname()));
-		server.closeOneConnection(user);
+	else if (server._command.args.size() >= 1) {
+		if (server.getArgs()[0].compare(server.getPassword())){
+			user.addRepliesToBuffer(ERR_PASSWDMISMATCH(user.getNickname()));
+			server.closeOneConnection(user);
+		}
+		else
+			user.setPassChecked();
 	}
 	else
-		user.setPassChecked();
+		user.addRepliesToBuffer(ERR_NEEDMOREPARAMS(server.getCommand()));
+	return;
 }

@@ -73,6 +73,7 @@ private:
 
 private:
     std::string         _password;
+    std::string         _operUsername;
     std::string         _operPassword;
     int                 _port;
     int                 _serverSocket;
@@ -138,6 +139,7 @@ public:
 	void interpretCommand(std::string &message, User &user); /*Change to Private at the end of project*/
 
     std::string				&getPassword(void);
+    std::string             &getOperUsername(void);
     std::string             &getOperPassword(void);
 
 	std::string 			&getPrefix(void);

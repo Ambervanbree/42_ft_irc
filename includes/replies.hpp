@@ -52,7 +52,6 @@
 # define ERR_NOTONCHANNEL(channel)	        	"442 " + channel + " :You're not on that channel\r\n"
 # define ERR_USERONCHANNEL(nick, channel)		"443 " + nick + " " + channel + " :is already on channel\r\n"
 # define ERR_NEEDMOREPARAMS(cmd_name)		    "461 " + cmd_name + " :Not enough parameters\r\n"
-# define ERR_ALREADYTREGISTERED	        		"462 :Unauthorized command (already registered)\r\n"
 # define ERR_PASSWDMISMATCH(nick)				"464 " + nick + " :Password incorrect\r\n"
 # define ERR_UNKNOWNMODE(flag)			        "472 " + flag + " :is unknown mode char to me\r\n"
 # define ERR_BANNEDFROMCHAN(channel)			"474 " + channel + " :Cannot join channel (+b)\r\n"
@@ -64,7 +63,7 @@
 # define ERR_UMODEUNKNOWMFLAG               	"501 :Unknown :MODE flag\r\n"
 # define ERR_USERSDONTMATCH						"502 :Cannot change mode for other users\r\n"
 # define ERR_NOORIGIN                           "409 :No origin specified\r\n"
-# define ERR_ALREADYREGISTRED                   "462 :Unauthorized command (already registered)\r\n"
+# define ERR_ALREADYREGISTERED	        		"462 :Unauthorized command (already registered)\r\n"
 
 /* Command messages */
 

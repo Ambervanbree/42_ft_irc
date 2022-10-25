@@ -5,7 +5,7 @@
 /* ************************************************************************** */
 
 Server::Server(int port, std::string password)
-: _password(password), _operPassword("acc_power"), _port(port), _nfds(0), _end_server(false) {}
+: _password(password), _operUsername("operator_power"),_operPassword("acc_power"), _port(port), _nfds(0), _end_server(false) {}
 
 Server::~Server(void) {
     if (_serverSocket != -1)
@@ -18,6 +18,10 @@ Server::~Server(void) {
 
 std::string &Server::getPassword(void) {
     return _password;
+}
+
+std::string &Server::getOperUsername(void) {
+    return _operUsername;
 }
 
 std::string &Server::getOperPassword(void) {
