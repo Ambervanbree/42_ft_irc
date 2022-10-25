@@ -40,6 +40,7 @@ void					Channel::sendNames(User &user) const{
 	for (; it != ite; it++){
 		if ((*it)->isInvisible()){
 			if (onChannel(user)){
+				namesRPL += " ";
 				if (_chop.find((**it).getNickMask()) != _chop.end())
 					namesRPL += "@";
 				namesRPL += (*it)->getNickname();				
