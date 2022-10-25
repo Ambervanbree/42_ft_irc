@@ -45,9 +45,9 @@ std::string			User::getModes() const{
 	}
 	return modeString;	
 }
+std::string			User::getPrefix() const { return (":" + getNickMask()); }
 int					User::getSocket() const { return clientSocket; }
 std::string			User::getNickMask() const { return (_nickName + "!" + _userName + "@" + _hostName); }
-std::string			User::getPrefix() const { return (":" + getNickMask()); }
 
 bool	User::isPassChecked() const { return _isPassChecked; }
 bool	User::isRegistered() const { return _isRegistered; }
