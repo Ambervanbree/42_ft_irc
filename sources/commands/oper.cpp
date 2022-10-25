@@ -11,7 +11,7 @@ void	OPER(User &user, Server &server)
 		return;
 	// check if right number of arguments
 	if (server._command.args.size() < 2)
-		user.addRepliesToBuffer(ERR_NEEDMOREPARAMS(server.getCommand()));
+		user.addRepliesToBuffer(ERR_NEEDMOREPARAMS(user.getNickname(), server.getCommand()));
 	// check if the username provided is the one of the user
 	// and as we already checked if user was registered in the host/server
 	// No need for further check
