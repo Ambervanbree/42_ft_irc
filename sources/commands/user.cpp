@@ -9,11 +9,11 @@ void USER(User &user, Server &server)
 	if ((user.isPassChecked() == false) || (user.getNickname().compare("dflt_nick") == 0))
 		return;
 	if (server._command.args.size() < 3 || server._command.trailer.empty()) {
-		user.addRepliesToBuffer(ERR_NEEDMOREPARAMS(server.getCommand()));
+		user.addRepliesToBuffer(ERR_NEEDMOREPARAMS(user.getNickname(), server.getCommand()));
 		return;
 	}
 	if (user.isRegistered()) {
-		user.addRepliesToBuffer(ERR_ALREADYTREGISTERED);
+		user.addRepliesToBuffer(ERR_ALREADYTREGISTERED(user.getNickname()));
 		return;
 	}
 	

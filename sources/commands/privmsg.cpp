@@ -9,7 +9,7 @@ void	channelMessage(User &user, Server &server){
 	Channel *chan = findChannel(TARGET, server);
 
 	if (chan == NULL || (chan != NULL && !chan->onChannel(user)))
-		user.addRepliesToBuffer(ERR_CANNOTSENDTOCHAN(TARGET));
+		user.addRepliesToBuffer(ERR_CANNOTSENDTOCHAN(user.getNickname(), TARGET));
 	else if (chan->isBanned(user.getNickMask()))
 		return ;
 	else
@@ -34,7 +34,7 @@ void PRIVMSG(User &user, Server &server){
 	else if (server.getArgs().size() > 1)
 		user.addRepliesToBuffer(ERR_TOOMANYTARGETS);
 	else if (server.getTrailer().empty())
-		user.addRepliesToBuffer(ERR_NOTEXTTOSEND);
+		user.addRepliesToBuffer(ERR_NOTEXTTOSEND(user.getNickname()));
 	else{
 		if (TARGET[0] == '#' || TARGET[0] == '&')
 			channelMessage(user, server);
