@@ -15,7 +15,7 @@ void PASS(User &user, Server &server)
 		user.addRepliesToBuffer(ERR_NEEDMOREPARAMS(server.getCommand()));
 	if (server.getArgs()[0].compare(server.getPassword()))
 	{
-		user.addRepliesToBuffer(ERR_PASSWDMISMATCH);
+		user.addRepliesToBuffer(ERR_PASSWDMISMATCH(user.getNickname()));
 		server.closeOneConnection(user);
 	}
 	else

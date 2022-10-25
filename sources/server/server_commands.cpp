@@ -46,14 +46,6 @@ void Server::_messageToCommandStruct(std::string message){
 	out.clear();
 	for (unsigned int i = 0; i < _command.cmd_name.size(); i++)
 		_command.cmd_name[i] = std::toupper(_command.cmd_name[i]);
-
-	// std::cerr << "\n------ Command struct details -----\n";
-	// std::cerr << "Prefix: " << _command.prefix << std::endl;
-	// std::cerr << "Command_name: " << _command.cmd_name << std::endl;
-	// std::cerr << "Args:\n";
-	// for (unsigned int i = 0; i < _command.args.size(); i++)
-		// std::cerr << _command.args[i] << "\n";
-	// std::cerr << "Trailer: " << _command.trailer << std::endl <<std::endl;
 }
 
 void Server::_clearCommandStruct(){
@@ -75,6 +67,7 @@ void Server::_launchCommand(User &user)
 
 void Server::interpretCommand(std::string &message, User &user)
 {	
+	std::cerr << "[->] " << message << std::endl;
 	_messageToCommandStruct(message);
 	_launchCommand(user);
 	_clearCommandStruct();
@@ -86,11 +79,6 @@ void Server::_splitBuffer(std::string buffer)
 	if (buffer.size() > 1 && buffer[buffer.size() - 2] != '\r')
 		delimiter = "\n";
 	split_on_string(buffer, delimiter, _bufferCommand);
-	// for (unsigned int i = 0; i < _bufferCommand.size(); i++)
-	// {
-	// 	std::cerr << "[+] split buffer [" << i << "] " << _bufferCommand[i];
-	// 	std::cerr << " -> len: " << _bufferCommand[i].size() << std::endl;
-	// }
 }
 
 void Server::_handleBuffer(char *buffer, User &user)
@@ -121,7 +109,7 @@ int Server::_sendMessage(User &user)
 			std::cerr << "[-] send() failed: " << errno << std::endl;
 			return (ret);
 		}
-		std::cerr << "[ sent to: " << user.getNickname() << "] " << user.replies[0] << std::endl;
+		std::cerr << "[ sent to: " << user.getNickname() << "] " << user.replies[0];
 		user.replies.erase(user.replies.begin());
 	}
 	return (ret);

@@ -13,7 +13,7 @@ void	channelMessage(User &user, Server &server){
 	else if (chan->isBanned(user.getNickMask()))
 		return ;
 	else
-		chan->sendChannelMessage(user, PRIVMSG_message_c(chan->getName(), server.getTrailer()));
+		chan->sendChannelPrivMessage(user, PRIVMSG_message_c(chan->getName(), server.getTrailer()));
 }
 
 void	singleMessage(User &user, Server &server){
@@ -28,7 +28,7 @@ void	singleMessage(User &user, Server &server){
 void PRIVMSG(User &user, Server &server){
 	if (!user.isRegistered())
 		return ;
-	// user.newAction();
+	user.newAction();
 	if (server.getArgs().empty())
 		user.addRepliesToBuffer(ERR_NORECIPIENT);
 	else if (server.getArgs().size() > 1)
@@ -40,6 +40,5 @@ void PRIVMSG(User &user, Server &server){
 			channelMessage(user, server);
 		else
 			singleMessage(user, server);
-		// TODO -> should be able to send to server too, but not sure how to catch that.
 	}
 }
