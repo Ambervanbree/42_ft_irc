@@ -2,8 +2,9 @@
 
 User::User(const int &socket)
 	:_userName("dflt_user"), _realName("dflt_rname"), _nickName("dflt_nick"),
-	_isPassChecked(false), _isRegistered(false), _isOperator(false),
-	_signon(getTime()), _lastAction(_signon), clientSocket(socket) {
+	_isPassChecked(false), _isRegistered(false), _signon(getTime()), 
+	_lastAction(_signon), clientSocket(socket) {
+	initModes();
 	std::cout << "[+] A user is born" << std::endl;
 }
 
@@ -20,7 +21,7 @@ User::User(const User &other)
 		_clientAddr = other._clientAddr;
 		_isPassChecked = other._isPassChecked;
 		_isRegistered = other._isRegistered;
-		_isOperator = other._isOperator;
+		_modes = other._modes;
 		_signon = other._signon;
 		_lastAction = other._lastAction;
 	}
@@ -33,18 +34,40 @@ std::string			User::getUsername()	const { return _userName; }
 std::string 		User::getNickname() const { return _nickName; }
 std::string			User::getRealname() const { return _realName; }
 std::string			User::getHostname()	const { return _hostName; }
+std::string			User::getModes() const{
+	std::string						modeString("+");
+	std::map<char, bool>::const_iterator	it = _modes.begin();
+	std::map<char, bool>::const_iterator	ite = _modes.end();
+
+	for (; it != ite; it++){
+		if (it->second == true)
+			modeString += it->first;
+	}
+	return modeString;	
+}
 std::string			User::getPrefix() const { return (":" + getNickMask()); }
 int					User::getSocket() const { return clientSocket; }
 std::string			User::getNickMask() const { return (_nickName + "!" + _userName + "@" + _hostName); }
 
 bool	User::isPassChecked() const { return _isPassChecked; }
 bool	User::isRegistered() const { return _isRegistered; }
-bool	User::isOperator() const { return _isOperator; }
+bool	User::isOperator() { return _modes['o']; }
+bool	User::isInvisible() { return _modes['i']; }
 long	User::getSignon() const {return _signon; }
 long	User::getLastAction() const {return _lastAction; } ;
 long	User::getIdle() const {return (_lastAction - _signon); }
 
 /*Setters*/
+void				User::initModes(void){
+	_modes['i'] = false;
+	_modes['o'] = false;
+}
+void				User::setMode(char mode){
+	_modes[mode] = true;
+}
+void				User::unsetMode(char mode){
+	_modes[mode] = false;
+}
 void				User::setNickname(const std::string &nick) { _nickName = nick; std::cout << "[+] _nickName is now set to: " << _nickName << std::endl;}
 void				User::setUsername(const std::string &user) { _userName = user; std::cout << "[+] _userName is now set to: " << _userName << std::endl;}
 void				User::setRealname(const std::string &realname) { _realName =  realname; std::cout << "[+] _realName is now set to: " << _realName << std::endl;}
@@ -67,7 +90,6 @@ void	User::newAction(void) {_lastAction = getTime(); }
 
 void	User::setPassChecked(void) { _isPassChecked = true; std::cout << "[+] pass successfully checked" << std::endl;}
 void	User::setRegistered(void) { _isRegistered = true; }
-void	User::setOperator(void) { _isOperator = true; std::cout << "[+] _Operator is now set to true" << std::endl;}
 
 /*Handling buffer*/
 

@@ -17,7 +17,7 @@ struct Mode{
 	int							argNr;
 };
 
-void	addMode(char toSet, Mode &mode){
+void	addChanMode(char toSet, Mode &mode){
 	std::string cmd_name = "MODE";
 	switch (toSet){
 		case 'k':
@@ -66,7 +66,7 @@ void	addMode(char toSet, Mode &mode){
 	}
 }
 
-void	eraseMode(char toSet, Mode &mode){
+void	eraseChanMode(char toSet, Mode &mode){
 	std::string cmd_name = "MODE";
 	switch (toSet){
 		case 'k':
@@ -102,7 +102,7 @@ void	eraseMode(char toSet, Mode &mode){
 	}	
 }
 
-void	parseModeString(Mode &mode){
+void	parseChanModeString(Mode &mode){
 	std::string::iterator	it 	= mode.modeString.begin();
 	std::string::iterator	ite = mode.modeString.end();
 
@@ -114,12 +114,73 @@ void	parseModeString(Mode &mode){
 		switch (*(it++)){
 			case '+':
 				while (!(*it == '+' || *it == '-' || it == ite)){
-					addMode(*it, mode);
+					addChanMode(*it, mode);
 					it++;
 				}
 			case '-':
 				while (!(*it == '+' || *it == '-' || it == ite)){
-					eraseMode(*it, mode);
+					eraseChanMode(*it, mode);
+					it++;
+				}
+		}
+		if (it == ite)
+			return ;
+	}
+	return ;
+}
+
+void	addUserMode(char toSet, Mode &mode){
+	std::string	newMode;
+	if (toSet == 'i')
+		mode.user->setMode(toSet);
+	else{
+		newMode += toSet;
+		mode.user->addRepliesToBuffer(ERR_UNKNOWNMODE(newMode));
+		mode.user->addRepliesToBuffer(RPL_UMODEIS(mode.user->getModes()));
+	}
+}
+
+void	eraseUserMode(char toSet, Mode &mode, Server &server){
+	std::string newMode;
+	if (toSet == 'i' || toSet == 'o'){
+		mode.user->unsetMode(toSet);
+		if (toSet == 'o'){
+			std::list<std::string>::iterator	it = server.operators.begin();
+			std::list<std::string>::iterator	ite = server.operators.end();
+
+			for (; it != ite; it++){
+				if (*it == mode.user->getNickname()){
+					server.operators.erase(it);
+					break ;
+				}
+			}
+		}
+	}
+	else{
+		newMode += toSet;
+		mode.user->addRepliesToBuffer(ERR_UNKNOWNMODE(newMode));
+		mode.user->addRepliesToBuffer(RPL_UMODEIS(mode.user->getModes()));
+	}	
+}
+
+void	parseUserModeString(Mode &mode, Server &server){
+	std::string::iterator	it 	= mode.modeString.begin();
+	std::string::iterator	ite = mode.modeString.end();
+
+	if (!(*it == '+' || *it == '-'))
+		return ;
+
+	for (; it != ite; ){
+		mode.outString += *it;
+		switch (*(it++)){
+			case '+':
+				while (!(*it == '+' || *it == '-' || it == ite)){
+					addUserMode(*it, mode);
+					it++;
+				}
+			case '-':
+				while (!(*it == '+' || *it == '-' || it == ite)){
+					eraseUserMode(*it, mode, server);
 					it++;
 				}
 		}
@@ -159,7 +220,7 @@ void	channelMode(User &user, Server &server){
 		Mode	mode;
 
 		fillModeStruct(mode, chan, server, &user);
-		parseModeString(mode);
+		parseChanModeString(mode);
 
 		std::string message(mode.outString);
 		for (size_t i = 0; i < mode.outArg.size(); i++)
@@ -171,8 +232,15 @@ void	channelMode(User &user, Server &server){
 
 void	userMode(User &user, Server &server){
 	Mode	mode;
+	User	*found = findUser(TARGET, server);
 	
-	fillModeStruct(mode, NULL, server, &user);
+	if (user.getNickname() != found->getNickname())
+		user.addRepliesToBuffer(ERR_USERSDONTMATCH);
+	else{
+		fillModeStruct(mode, NULL, server, &user);
+		parseUserModeString(mode, server);
+	}
+
 
 	for (size_t i = 0; i < mode.modeString.size(); i++){
 		if (mode.modeString[i] != '+' && mode.modeString[i] != '-')
