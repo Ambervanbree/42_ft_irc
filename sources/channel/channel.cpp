@@ -46,26 +46,12 @@ void					Channel::sendNames(User &user) const{
 			}
 		}
 		else{
-			namesRPL += "\r\n";
 			if (_chop.find((**it).getNickMask()) != _chop.end())
 				namesRPL += "@";
 			namesRPL += (*it)->getNickname();
 		}
 	}
-
-	size_t	total = (RPL_NAMREPLY(getName(), namesRPL)).size();
-
-	if (total > 78){
-		std::string		part;
-		size_t			rplSize = total - namesRPL.size();
-		size_t			cutSize = 78 - rplSize;
-		size_t			copySize = namesRPL.size() / cutSize;
-
-		for (size_t i = 0; copySize > 0; copySize--, i++){
-			part = namesRPL.substr((i * cutSize), cutSize);
-			user.addRepliesToBuffer(RPL_NAMREPLY(getName(), part));
-		}
-	}
+	user.addRepliesToBuffer(RPL_NAMREPLY(getName(), namesRPL));
 	user.addRepliesToBuffer(RPL_ENDOFNAMES(getName()));
 }
 
