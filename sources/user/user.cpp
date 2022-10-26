@@ -35,7 +35,7 @@ std::string 		User::getNickname() const { return _nickName; }
 std::string			User::getRealname() const { return _realName; }
 std::string			User::getHostname()	const { return _hostName; }
 std::string			User::getModes() const{
-	std::string						modeString("+");
+	std::string						modeString;
 	std::map<char, bool>::const_iterator	it = _modes.begin();
 	std::map<char, bool>::const_iterator	ite = _modes.end();
 

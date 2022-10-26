@@ -58,7 +58,7 @@ void					Channel::sendNames(User &user) const{
 }
 
 std::string				Channel::getModes(void) const{
-	std::string						modeString("+");
+	std::string						modeString;
 	std::map<char, bool>::const_iterator	it = _modes.begin();
 	std::map<char, bool>::const_iterator	ite = _modes.end();
 
