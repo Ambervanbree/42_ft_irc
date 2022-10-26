@@ -60,7 +60,7 @@ class Channel{
 		void			setKey(std::string key);
 		void			banUser(std::string toBan);
 		void			setTopic(std::string newTopic);
-		void			addChop(std::string toBan);
+		void			addChop(std::string toAdd);
 
 		/* Unsetters */
 

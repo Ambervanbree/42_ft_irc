@@ -46,7 +46,7 @@ void 		partFromAllChannels(User &user, Server &server){
 }
 
 void		channelWelcomeMessage(Channel &chan, User &user){
-	chan.sendChannelMessage(user, JOIN_message(user.getPrefix(), chan.getName()));
+	chan.sendChannelMessage(user, JOIN_message(chan.getName()));
 	chan.sendTopic(user);
 	chan.sendNames(user);
 }

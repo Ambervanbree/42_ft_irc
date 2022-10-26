@@ -7,7 +7,7 @@
 Channel::Channel(std::string name, User &user) : _name(name) {
 	initModes();
 	_users.insert(&user);
-	_chop.insert(user.getNickMask());
+	addChop(user.getNickMask());
 	std::cout << "[+] Channel " << name << " created" << std::endl;
 };
 
@@ -196,6 +196,7 @@ void			Channel::setTopic(std::string newTopic){
 }
 
 void			Channel::addChop(std::string newChop){
+	std::cout << "Adding " << newChop << " to oper list\n";
 	_chop.insert(newChop);
 	_modes['o'] = true;
 }
