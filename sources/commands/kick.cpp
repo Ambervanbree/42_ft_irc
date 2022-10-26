@@ -14,61 +14,23 @@ void	sendKickMessage(Channel &chan, Server &server, User &kicker){
 		chan.sendChannelMessage(kicker, KICK_message_2(TOKICK, chan.getName(), COMMENT));
 }
 
-void	kickUserPerChannel(Server &server, User &user, std::vector<std::string> channels, std::vector<std::string> toKick){
-	Channel	*chan 		= NULL;
-	User	*userToKick;
-	
-	for (size_t i = 0; i < channels.size(); i++){
-		chan = findChannel(channels[i], server);
-
-		if (chan == NULL)
-			user.addRepliesToBuffer(ERR_NOSUCHCHANNEL(user.getNickname(), channels[i]));
-		else if (!chan->onChannel(user))
-			user.addRepliesToBuffer(ERR_NOTONCHANNEL(user.getNickname(), chan->getName()));
-		else if (!chan->isChop(user.getNickMask()))
-			user.addRepliesToBuffer(ERR_CHANPRIVSNEEDED(user.getNickname(), chan->getName()));
-		else{
-			userToKick = findUser(toKick[i], server);
-
-			if (userToKick == NULL)
-				return ;
-			else if (!chan->onChannel(*userToKick))
-				user.addRepliesToBuffer(ERR_USERNOTINCHANNEL(userToKick->getNickname(), chan->getName()));
-			else{
-				removeUserFromChannel(chan, user, server);
-				sendKickMessage(*chan, server, user);
-			}
-		}
-	}
-}
-
-void	kickMultipleUsers(Server &server, User &user, std::string channel, std::vector<std::string> toKick){
-	Channel	*chan = findChannel(channel, server);
-
-	if (chan == NULL)
-		user.addRepliesToBuffer(ERR_NOSUCHCHANNEL(user.getNickname(), channel));
-	else if (!chan->onChannel(user))
+void	kickPerChannel(User &user, Server &server, Channel *chan, std::string toKick){
+	if (!chan->onChannel(user.getNickname()))
 		user.addRepliesToBuffer(ERR_NOTONCHANNEL(user.getNickname(), chan->getName()));
 	else if (!chan->isChop(user.getNickMask()))
-		user.addRepliesToBuffer(ERR_CHANPRIVSNEEDED(user.getNickname(), chan->getName()));
+		user.addRepliesToBuffer(ERR_CHANPRIVSNEEDED(user.getUsername(),chan->getName()));
+	else if(!chan->onChannel(toKick))
+		user.addRepliesToBuffer(ERR_USERNOTINCHANNEL(toKick, chan->getName()));
 	else{
-		size_t	nrKicks 	= toKick.size();
-		User	*userToKick;
+		User	*userToKick = findUser(toKick, server);
 		
-		for (size_t i = 0; i < nrKicks; i++){
-			userToKick = findUser(toKick[i], server);
-
-			if (userToKick == NULL)
-				return ;
-			else if (!chan->onChannel(*userToKick))
-				user.addRepliesToBuffer(ERR_USERNOTINCHANNEL(userToKick->getNickname(), chan->getName()));
-			else{
-				removeUserFromChannel(chan, user, server);
-				sendKickMessage(*chan, server, user);
-			}
+		if (userToKick == NULL)
+			user.addRepliesToBuffer(ERR_NOSUCHNICK(toKick));
+		else{
+			removeUserFromChannel(chan, *userToKick, server);
+			sendKickMessage(*chan, server, user);
 		}
 	}
-	
 }
 
 void KICK(User &user, Server &server){
@@ -86,9 +48,25 @@ void KICK(User &user, Server &server){
 	split_args(CHANNELS, delimiter, channels);
 	split_args(TOKICK, delimiter, toKick);
 
-	if (channels.size() == toKick.size())
-		kickUserPerChannel(server, user, channels, toKick);
-	if (channels.size() == 1 && toKick.size() > 1)
-		kickMultipleUsers(server, user, channels[0], toKick);
+	Channel		*chan;
+
+	if (channels.size() == toKick.size()){
+		for (size_t i = 0; i < channels.size(); i++){
+			chan = findChannel(channels[i], server);
+			if (chan == NULL)
+				user.addRepliesToBuffer(ERR_NOSUCHCHANNEL(user.getNickname(), channels[i]));
+			else
+				kickPerChannel(user, server, chan, toKick[i]);
+		}
+	}
+	else if (channels.size() == 1 && toKick.size() > 1){
+		chan = findChannel(channels[0], server);
+		if (chan == NULL)
+			user.addRepliesToBuffer(ERR_NOSUCHCHANNEL(user.getNickname(), channels[0]));
+		else{
+			for (size_t i = 0; i < toKick.size(); i++)
+				kickPerChannel(user, server, chan, toKick[i]);
+		}
+	}
 	return ;
 }
