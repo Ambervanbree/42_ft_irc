@@ -19,11 +19,15 @@ void	KILL(User &user, Server &server) {
     if (!victim)
       user.addRepliesToBuffer(ERR_NOSUCHNICK(designatedVictim));
     else {
-      std::string message = "killed by " + user.getNickname() + " - reason : " + server.getTrailer() + "))";
-      std::string hostMask = victim->getNickMask();
-      server.quitMessage(hostMask, message);
-      victim->addRepliesToBuffer(ERROR_message(message));
-      server.closeOneConnection((*victim));
+    	std::string message = "killed by " + user.getNickname() + " - reason ";
+		if (server.getTrailer().size() <= 1)
+			message += ":No reason given";
+		else
+			message += server.getTrailer();
+      	std::string hostMask = victim->getNickMask();
+      	server.quitMessage(hostMask, message);
+      	victim->addRepliesToBuffer(ERROR_message(message));
+      	server.closeOneConnection((*victim));
     }
   }
 }
