@@ -30,8 +30,8 @@
 # define MAX_FDS        1024
 // maximum command size
 # define MAX_BUFFER     510
-// timeout in milliseconds (600000 = 10 minutes)
-# define POLL_TIMEOUT   6000000
+// timeout in milliseconds (-1 = infinite minutes)
+# define POLL_TIMEOUT   -1
 // time of inactivity before ping in seconds
 # define TIME_TO_PING   60
 // maximum time of inactivity in seconds

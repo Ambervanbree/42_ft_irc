@@ -60,6 +60,7 @@ void   Server::handleConnections(void){
 
     while (_end_server == false) {
         ret = poll(_fds, _nfds, POLL_TIMEOUT);
+        std::cout << "POLL WAS CALLED" << std::endl;
         if (ret < 0)
             std::cerr << "[-] poll() failed" << std::endl;
         if (ret == 0)
