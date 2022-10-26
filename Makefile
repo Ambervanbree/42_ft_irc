@@ -33,7 +33,7 @@ SERVER		=	$(addprefix server/, server.cpp server_commands.cpp)
 
 CC			=	c++
 RM			=	rm -rf
-CFLAGS		=	-Wall -Wextra -Werror -std=c++98 -g
+CFLAGS		=	-Wall -Wextra -Werror -std=c++98
 
 # ***************************************************************************** #
 # includes																		#

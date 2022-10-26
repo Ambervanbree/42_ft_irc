@@ -53,14 +53,10 @@ void JOIN(User &user, Server &server){
 		}
 		Channel	*chan = findChannel(channels[i], server);
 		if (chan != NULL){
-			if (!chan->hasChop())
-				return ;
-			else{
-				if (keys.empty() || keys[i].empty())
-					chan->addUser("", user);
-				else
-					chan->addUser(keys[i], user);
-			}
+			if (keys.empty() || keys[i].empty())
+				chan->addUser("", user);
+			else
+				chan->addUser(keys[i], user);
 		}
 		else
 			chan = createChannel(channels[i], user, server);
