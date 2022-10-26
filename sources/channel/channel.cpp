@@ -58,7 +58,7 @@ void					Channel::sendNames(User &user) const{
 }
 
 std::string				Channel::getModes(void) const{
-	std::string						modeString("+");
+	std::string						modeString;
 	std::map<char, bool>::const_iterator	it = _modes.begin();
 	std::map<char, bool>::const_iterator	ite = _modes.end();
 
@@ -196,7 +196,6 @@ void			Channel::setTopic(std::string newTopic){
 }
 
 void			Channel::addChop(std::string newChop){
-	std::cout << "Adding " << newChop << " to oper list\n";
 	_chop.insert(newChop);
 	_modes['o'] = true;
 }

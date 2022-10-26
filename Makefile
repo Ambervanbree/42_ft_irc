@@ -48,7 +48,7 @@ INCL		=	-Iincludes/
 all:	$(NAME)
 
 $(NAME):	$(OBJ_DIR) $(OBJS)
-		$(CC) $(CFLAGS) $(OBJS) -o $@
+		$(CC) $(OBJS) -o $@
 
 $(OBJ_DIR):
 		mkdir $(OBJ_DIR) $(DIR)

@@ -9,6 +9,7 @@ void	sendWhoIs(User &user, Server &server, std::string nick){
 	if (target == NULL)
 		user.addRepliesToBuffer(ERR_NOSUCHNICK(nick));
 	else{
+		
 		user.addRepliesToBuffer(RPL_WHOISUSER(user.getNickname(), nick, target->getUsername(), target->getRealname()));
 		user.addRepliesToBuffer(RPL_WHOISSERVER(user.getNickname(), nick, "localhost", "host of ACC Power network"));
 		if (isOperator(nick, server))
