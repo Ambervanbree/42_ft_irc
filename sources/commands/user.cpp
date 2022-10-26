@@ -13,7 +13,7 @@ void USER(User &user, Server &server)
 		return;
 	}
 	if (user.isRegistered()) {
-		user.addRepliesToBuffer(ERR_ALREADYTREGISTERED(user.getNickname()));
+		user.addRepliesToBuffer(ERR_ALREADYREGISTERED(user.getNickname()));
 		return;
 	}
 	
