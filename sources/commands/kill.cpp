@@ -9,7 +9,7 @@
 void	KILL(User &user, Server &server) {
   if (!user.isRegistered())
     return;
-  if (!isOperator(user.getUsername(), server))
+  if (!isOperator(user.getNickname(), server))
     user.addRepliesToBuffer(ERR_NOPRIVILEGES(user.getNickname()));
 	else if (server.getArgs().size() != 1)
     user.addRepliesToBuffer(ERR_NEEDMOREPARAMS(server.getCommand()));
@@ -19,7 +19,7 @@ void	KILL(User &user, Server &server) {
     if (!victim)
       user.addRepliesToBuffer(ERR_NOSUCHNICK(designatedVictim));
     else {
-      std::string message = "killed by " + user.getNickname() + " - reason : " + server.getTrailer() + "))";
+      std::string message = "killed by " + user.getNickname() + " - reason " + server.getTrailer();
       std::string hostMask = victim->getNickMask();
       server.quitMessage(hostMask, message);
       victim->addRepliesToBuffer(ERROR_message(message));
