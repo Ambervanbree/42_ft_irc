@@ -8,10 +8,10 @@
 #define COMMENT 	server._command.trailer
 
 void	sendKickMessage(Channel &chan, Server &server, User &kicker){
-	if (COMMENT.empty())
-		chan.sendChannelMessage(kicker, KICK_message(chan->getName(), TOKICK));
+	if (COMMENT.size() <= 1)
+		chan.sendChannelMessage(kicker, KICK_message(kicker.getNickname(), TOKICK, chan.getName()));
 	else
-		chan.sendChannelMessage(kicker, KICK_message_2(chan->getName(), TOKICK, COMMENT));
+		chan.sendChannelMessage(kicker, KICK_message_2(kicker.getNickname(), TOKICK, chan.getName(), COMMENT));
 }
 
 void	kickUserPerChannel(Server &server, User &user, std::vector<std::string> channels, std::vector<std::string> toKick){

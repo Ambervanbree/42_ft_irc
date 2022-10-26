@@ -50,7 +50,7 @@ class Channel{
 		bool			onChannel(std::string nickName) const;
 		bool			isBanned(std::string nickMask) const;
 		bool			isChop(std::string nickMask) const;
-		bool			correctKey(std::string key) const;
+		bool			correctKey(std::string key);
 		bool			isEmpty(void) const;
 		bool			hasChop(void) const;
 

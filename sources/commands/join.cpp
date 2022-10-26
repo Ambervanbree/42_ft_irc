@@ -56,7 +56,7 @@ void JOIN(User &user, Server &server){
 			if (!chan->hasChop())
 				return ;
 			else{
-				if (keys.empty())
+				if (keys.empty() || keys[i].empty())
 					chan->addUser("", user);
 				else
 					chan->addUser(keys[i], user);

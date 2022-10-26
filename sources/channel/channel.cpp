@@ -145,8 +145,8 @@ bool			Channel::isChop(std::string nickMask) const {
 	return (_chop.find(nickMask) != _chop.end());
 }
 
-bool			Channel::correctKey(std::string key) const {
-	if (_key.size() && _key != key)
+bool			Channel::correctKey(std::string key) {
+	if (_modes['k'] && !(_key == key))
 		return false;
 	return true;
 }
