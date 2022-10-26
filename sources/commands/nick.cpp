@@ -41,9 +41,11 @@ void NICK(User &user, Server &server)
 	std::string nick = server.getArgs()[0];
 	if (wrongGrammar(nick))
 		user.addRepliesToBuffer(ERR_ERRONEUSNICKNAME(nick));
-	else if (existingNick(nick, server))
-		user.addRepliesToBuffer(ERR_NICKNAMEINUSE(user.getNickname(), nick));
 	else {
+		if (existingNick(nick, server)) {
+			user.addRepliesToBuffer(ERR_NICKNAMEINUSE(user.getNickname(), nick));
+			nick = "x";
+		}
 		server.nickMessage(user.getPrefix(), nick);
 		user.setNickname(nick);
 	}
