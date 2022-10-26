@@ -133,6 +133,7 @@ public:
 
     void errorMessage(User &recipient, std::string reason);
     void quitMessage(std::string &leaver, std::string &reason);
+    void nickMessage(const std::string &prefix, std::string &nick);
 
     std::string getTimeInfo(void) const;
 

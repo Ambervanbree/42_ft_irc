@@ -409,6 +409,14 @@ void    Server::quitMessage(std::string &leaver, std::string &reason) {
         it->addRepliesToBuffer(QUIT_message(leaver, reason));
 }
 
+void    Server::nickMessage(const std::string &prefix, std::string &nick) {
+    std::list<User>::iterator it = users.begin();
+    std::list<User>::iterator ite = users.end();
+
+    for(;it != ite;it++)
+        it->addRepliesToBuffer(NICK_message(prefix, nick));
+}
+
 std::string 			    &Server::getPrefix() {return _command.prefix; }
 std::string				    &Server::getCommand() {return _command.cmd_name; }
 std::vector<std::string>	&Server::getArgs() {return _command.args; }
