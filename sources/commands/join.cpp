@@ -36,7 +36,7 @@ void JOIN(User &user, Server &server){
 	char 						delimiter[] = ",";
 	
 	if (ARGUMENTS.empty()){
-		user.addRepliesToBuffer(ERR_NEEDMOREPARAMS(server.getCommand()));
+		user.addRepliesToBuffer(ERR_NEEDMOREPARAMS(user.getNickname(), server.getCommand()));
 		return ;
 	}
 	split_args(CHANNELS, delimiter, channels);

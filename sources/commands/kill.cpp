@@ -12,7 +12,7 @@ void	KILL(User &user, Server &server) {
   if (!isOperator(user.getUsername(), server))
     user.addRepliesToBuffer(ERR_NOPRIVILEGES(user.getNickname()));
 	else if (server.getArgs().size() != 1)
-    user.addRepliesToBuffer(ERR_NEEDMOREPARAMS(server.getCommand()));
+    user.addRepliesToBuffer(ERR_NEEDMOREPARAMS(user.getNickname(), server.getCommand()));
   else {
     std::string designatedVictim = server.getArgs()[0];
     User *victim = findUser(designatedVictim, server);
