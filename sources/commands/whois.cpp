@@ -9,12 +9,12 @@ void	sendWhoIs(User &user, Server &server, std::string nick){
 	if (target == NULL)
 		user.addRepliesToBuffer(ERR_NOSUCHNICK(nick));
 	else{
-		user.addRepliesToBuffer(RPL_WHOISUSER(nick, target->getUsername(), target->getRealname()));
-		user.addRepliesToBuffer(RPL_WHOISSERVER(nick, "localhost", "host of ACC Power network"));
+		user.addRepliesToBuffer(RPL_WHOISUSER(user.getNickname(), nick, target->getUsername(), target->getRealname()));
+		user.addRepliesToBuffer(RPL_WHOISSERVER(user.getNickname(), nick, "localhost", "host of ACC Power network"));
 		if (isOperator(nick, server))
-			user.addRepliesToBuffer(RPL_WHOISOPERATOR(nick));
-		user.addRepliesToBuffer(RPL_WHOISIDLE(nick, toString(target->getIdle()), toString(target->getSignon())));
-		user.addRepliesToBuffer(RPL_ENDOFWHOIS(nick));
+			user.addRepliesToBuffer(RPL_WHOISOPERATOR(user.getNickname(), nick));
+		user.addRepliesToBuffer(RPL_WHOISIDLE(user.getNickname(), nick, toString(target->getIdle())));
+		user.addRepliesToBuffer(RPL_ENDOFWHOIS(user.getNickname(), nick));
 	}
 }
 

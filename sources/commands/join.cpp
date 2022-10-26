@@ -33,7 +33,7 @@ void JOIN(User &user, Server &server){
 	
 	std::vector<std::string>	channels;
 	std::vector<std::string>	keys;
-	char 					delimiter[] = ",";
+	char 						delimiter[] = ",";
 	
 	if (ARGUMENTS.empty()){
 		user.addRepliesToBuffer(ERR_NEEDMOREPARAMS(user.getNickname(), server.getCommand()));
@@ -56,7 +56,7 @@ void JOIN(User &user, Server &server){
 			if (!chan->hasChop())
 				return ;
 			else{
-				if (keys.empty())
+				if (keys.empty() || keys[i].empty())
 					chan->addUser("", user);
 				else
 					chan->addUser(keys[i], user);
