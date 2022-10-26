@@ -14,7 +14,8 @@ SERVER INFORMATION
 Server Hostname:        localhost
 Default port:           6667
 Contact:                doesntexist@gmail.com
-Operator:				operator_power
+Operator:               operator_power
+Operator password:      acc_power
 
 SOME INSPIRATION
 Learn as if you will live forever, live like you will die tomorrow.
