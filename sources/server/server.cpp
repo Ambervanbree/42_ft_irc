@@ -243,10 +243,10 @@ void    Server::checkActivity(User &user) {
 void    Server::_serverSocketEvent(void) {
     int newFileDescriptor = 0;
 
-    while (newFileDescriptor != -1) {
+    // while (newFileDescriptor != -1) {
         newFileDescriptor = _acceptNewConnections();
-        if (newFileDescriptor < 0)
-            break;
+        // if (newFileDescriptor < 0)
+            // break;
         if (_makeSocketNonBlocking(newFileDescriptor)) {
             _addtoStruct(newFileDescriptor);
             User newUser(newFileDescriptor);
@@ -254,7 +254,7 @@ void    Server::_serverSocketEvent(void) {
                 _end_server = true;
             users.push_back(newUser);
         }
-    }
+    // }
 }
 
 int    Server::_acceptNewConnections(void) {
@@ -263,11 +263,12 @@ int    Server::_acceptNewConnections(void) {
     socklen_t clientaddr_size = sizeof(clientaddr);
 
     newFileDescriptor = accept(_serverSocket, (struct sockaddr *)&clientaddr, &clientaddr_size);
+    std::cout << "retour de accept: " << newFileDescriptor << std::endl;
     if (newFileDescriptor < 0) {
-        if (errno != EWOULDBLOCK) {
+        // if (errno != EWOULDBLOCK) {
             std::cerr << "[-] accept() failed" << std::endl;
             _end_server = true;
-        }
+        // }
     }
     return newFileDescriptor;
 }
@@ -296,27 +297,27 @@ void    Server::_clientSocketEvent(int i, User &user) {
     bool    close_conn = false;
     int     client_fd = _fds[i].fd;
 
-    while (close_conn == false && client_fd > 0)
-    {
+    // while (close_conn == false && client_fd > 0)
+    // {
         if (_fds[i].revents == POLLIN) {
             memset(buffer, '\0', MAX_BUFFER);
             ret = recv(client_fd, buffer, sizeof(buffer), 0);
             if (ret < 0) {
-                if (errno != EWOULDBLOCK) {
+                // if (errno != EWOULDBLOCK) {
                     std::cerr << "[-] recv() failed" << errno << std::endl;
                     close_conn = true;
-                }
-                break;
+                // }
+                // break;
             }
             else if (ret == 0)
                 close_conn = true;
             if (close_conn == false) {
                 _handleBuffer(buffer, user);
-                if (client_fd != _fds[i].fd)
-                    break;
+                // if (client_fd != _fds[i].fd)
+                    // break;
             }
 		}
-    }
+    // }
     if ((client_fd == _fds[i].fd) && close_conn == true)
         closeOneConnection(user);
 }
