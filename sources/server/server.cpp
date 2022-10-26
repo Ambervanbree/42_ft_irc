@@ -94,8 +94,6 @@ void    Server::_makeServerSocket(void){
         exit(-1);
     }
     ret = setsockopt(_serverSocket, SOL_SOCKET, SO_REUSEADDR, (char *)&on, sizeof(on));
-    // ---> A ESSAYER pour simplification
-    // ret = setsockopt(_serverSocket, SOL_SOCKET, SO_REUSEADDR, on, sizeof(on));
     if (ret < 0){
         std::cerr << "[-] setsockopt() failed" << std::endl;
         close(_serverSocket);
@@ -173,7 +171,6 @@ void    Server::_initFileDescriptorsStruct(void){
 *******************************************************************************/
 void    Server::_addtoStruct(int fd) {
     _fds[_nfds].fd = fd;
-    // _fds[_nfds].events = POLLIN | POLLOUT;
     _fds[_nfds].events = POLLIN;
     _fds[_nfds].revents = 0;
     _nfds++;
@@ -194,7 +191,6 @@ void    Server::_handleEvents(void) {
     for (i = 0; i < _nfds; i++){
         if(_fds[i].revents == 0)
             continue;
-    // verifier si c'est vraiment necessaire parce que ca bloque IRSSI
         if(_fds[i].revents != POLLIN){
             _end_server = true;
             break;
@@ -379,8 +375,7 @@ void    Server::quitServer(void) {
     }
     _fds[0].fd = -1;
     _serverSocket = -1;
-    // if (serverSocket>0)
-        close(serverSocket);
+    close(serverSocket);
     _end_server = true;
     return;
 }
