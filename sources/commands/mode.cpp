@@ -17,12 +17,12 @@ struct Mode{
 	int							argNr;
 };
 
-void	addChanMode(char toSet, Mode &mode){
+void	addChanMode(char toSet, Mode &mode, std::string &username){
 	std::string cmd_name = "MODE";
 	switch (toSet){
 		case 'k':
 			if (mode.modeArg.empty())
-				mode.user->addRepliesToBuffer(ERR_NEEDMOREPARAMS(cmd_name));
+				mode.user->addRepliesToBuffer(ERR_NEEDMOREPARAMS(username, cmd_name));
 			else if (mode.argNr < 3){
 				mode.chan->setKey(mode.modeArg[mode.argNr]);
 				mode.outString += toSet;
@@ -45,7 +45,7 @@ void	addChanMode(char toSet, Mode &mode){
 			return ;
 		case 'o':
 			if (mode.modeArg.empty())
-				mode.user->addRepliesToBuffer(ERR_NEEDMOREPARAMS(cmd_name));
+				mode.user->addRepliesToBuffer(ERR_NEEDMOREPARAMS(username, cmd_name));
 			else if (mode.argNr < 3){
 				if (!mode.chan->onChannel(mode.modeArg[mode.argNr]))
 					mode.user->addRepliesToBuffer(ERR_USERNOTINCHANNEL(mode.user->getNickname(), mode.chan->getName()));
@@ -66,7 +66,7 @@ void	addChanMode(char toSet, Mode &mode){
 	}
 }
 
-void	eraseChanMode(char toSet, Mode &mode){
+void	eraseChanMode(char toSet, Mode &mode, std::string &username){
 	std::string cmd_name = "MODE";
 	switch (toSet){
 		case 'k':
@@ -75,7 +75,7 @@ void	eraseChanMode(char toSet, Mode &mode){
 			return ;
 		case 'b':
 			if (mode.modeArg.empty())
-				mode.user->addRepliesToBuffer(ERR_NEEDMOREPARAMS(cmd_name));
+				mode.user->addRepliesToBuffer(ERR_NEEDMOREPARAMS(username, cmd_name));
 			else if (mode.argNr < 3){
 				mode.chan->unbanUser(mode.modeArg[mode.argNr]);
 				mode.outString += toSet;
@@ -85,7 +85,7 @@ void	eraseChanMode(char toSet, Mode &mode){
 			return ;
 		case 'o':
 			if (mode.modeArg.empty())
-				mode.user->addRepliesToBuffer(ERR_NEEDMOREPARAMS(cmd_name));
+				mode.user->addRepliesToBuffer(ERR_NEEDMOREPARAMS(username, cmd_name));
 			else if (mode.argNr < 3){
 				mode.chan->removeChop(mode.modeArg[mode.argNr]);
 				mode.outString += toSet;
@@ -102,7 +102,7 @@ void	eraseChanMode(char toSet, Mode &mode){
 	}	
 }
 
-void	parseChanModeString(Mode &mode){
+void	parseChanModeString(Mode &mode, std::string &username){
 	std::string::iterator	it 	= mode.modeString.begin();
 	std::string::iterator	ite = mode.modeString.end();
 
@@ -114,12 +114,12 @@ void	parseChanModeString(Mode &mode){
 		switch (*(it++)){
 			case '+':
 				while (!(*it == '+' || *it == '-' || it == ite)){
-					addChanMode(*it, mode);
+					addChanMode(*it, mode, username);
 					it++;
 				}
 			case '-':
 				while (!(*it == '+' || *it == '-' || it == ite)){
-					eraseChanMode(*it, mode);
+					eraseChanMode(*it, mode, username);
 					it++;
 				}
 		}
@@ -208,16 +208,17 @@ void	channelMode(User &user, Server &server){
 	Channel		*chan = findChannel(TARGET, server);
 
 	if (chan == NULL)
-		user.addRepliesToBuffer(ERR_NOSUCHCHANNEL(TARGET));
+		user.addRepliesToBuffer(ERR_NOSUCHCHANNEL(user.getUsername(), TARGET));
 	else if (!chan->isChop(user.getNickMask()))
-		user.addRepliesToBuffer(ERR_CHANPRIVSNEEDED(chan->getName()));
+		user.addRepliesToBuffer(ERR_CHANPRIVSNEEDED(user.getUsername(),chan->getName()));
 	else if (server.getArgs().size() < 2)
 		user.addRepliesToBuffer(RPL_CHANNELMODEIS(chan->getName(), chan->getModes()));
 	else{
 		Mode	mode;
+		std::string username = user.getNickname();
 
 		fillModeStruct(mode, chan, server, &user);
-		parseChanModeString(mode);
+		parseChanModeString(mode, username);
 
 		std::string message(mode.outString);
 		for (size_t i = 0; i < mode.outArg.size(); i++)
@@ -235,7 +236,7 @@ void	userMode(User &user, Server &server){
 	if (found == NULL)
 		user.addRepliesToBuffer(ERR_NOSUCHNICK(user.getNickname()));
 	else if (user.getNickname() != found->getNickname())
-		user.addRepliesToBuffer(ERR_USERSDONTMATCH);
+		user.addRepliesToBuffer(ERR_USERSDONTMATCH(user.getUsername()));
 	else if (server.getArgs().size() < 2)
 		user.addRepliesToBuffer(RPL_UMODEIS(user.getNickname(), user.getModes()));
 	else{
@@ -249,10 +250,11 @@ void	userMode(User &user, Server &server){
 }
 
 void MODE(User &user, Server &server){
+
 	if (!user.isRegistered())
 		return ;
 	if (server.getArgs().empty()){
-		user.addRepliesToBuffer(ERR_NEEDMOREPARAMS(server.getCommand()));
+		user.addRepliesToBuffer(ERR_NEEDMOREPARAMS(user.getNickname(), server.getCommand()));
 		return ;		
 	}
 	if (TARGET[0] == '#' || TARGET[0] == '&')

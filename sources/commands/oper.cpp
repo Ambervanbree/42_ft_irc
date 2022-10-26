@@ -9,7 +9,7 @@ void	OPER(User &user, Server &server)
 	if (!user.isRegistered())
 		return;
 	if (server._command.args.size() < 2)
-		user.addRepliesToBuffer(ERR_NEEDMOREPARAMS(server.getCommand()));
+		user.addRepliesToBuffer(ERR_NEEDMOREPARAMS(user.getNickname(), server.getCommand()));
 	else if (server._command.args[0].compare(server.getOperUsername()))
 		user.addRepliesToBuffer(ERR_NOOPERHOST(user.getNickname()));
 	else if (server._command.args[1].compare(server.getOperPassword()))

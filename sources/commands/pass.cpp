@@ -8,7 +8,7 @@ void PASS(User &user, Server &server)
 {
 	if (user.isPassChecked()){
 		if (user.isRegistered())
-			user.addRepliesToBuffer(ERR_ALREADYREGISTERED);
+			user.addRepliesToBuffer(ERR_ALREADYTREGISTERED(user.getNickname()));
 	}
 	else if (server._command.args.size() >= 1) {
 		if (server.getArgs()[0].compare(server.getPassword())){

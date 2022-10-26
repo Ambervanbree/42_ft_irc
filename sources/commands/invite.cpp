@@ -11,7 +11,7 @@ void	sendInvite(User &inviter, Server &server){
 
 	if (invitee != NULL){
 		invitee->addRepliesToBuffer(INVITE_message(inviter.getNickname(), CHANNEL, invitee->getNickname()));
-		inviter.addRepliesToBuffer(RPL_INVITING(CHANNEL, invitee->getNickname()));
+		inviter.addRepliesToBuffer(RPL_INVITING(inviter.getNickname(), CHANNEL, invitee->getNickname()));
 	}
 	return ;
 }
@@ -20,7 +20,7 @@ void INVITE(User &user, Server &server){
 	if (!user.isRegistered())
 		return ;
 	if (server.getArgs().size() < 2){
-		user.addRepliesToBuffer(ERR_NEEDMOREPARAMS(server.getCommand()));
+		user.addRepliesToBuffer(ERR_NEEDMOREPARAMS(user.getNickname(), server.getCommand()));
 		return ;
 	}
 	Channel	*chan = findChannel(CHANNEL, server);
@@ -29,7 +29,7 @@ void INVITE(User &user, Server &server){
 		if (!chan->onChannel(user)){
 			std::string toSend;
 			toSend = CHANNEL[0];
-			user.addRepliesToBuffer(ERR_NOTONCHANNEL(toSend));
+			user.addRepliesToBuffer(ERR_NOTONCHANNEL(user.getNickname(), toSend));
 			return ;
 		}
 		if (chan->onChannel(INVITEE)){

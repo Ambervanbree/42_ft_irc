@@ -12,7 +12,7 @@ void	KILL(User &user, Server &server) {
   if (!isOperator(user.getNickname(), server))
     user.addRepliesToBuffer(ERR_NOPRIVILEGES(user.getNickname()));
 	else if (server.getArgs().size() != 1)
-    user.addRepliesToBuffer(ERR_NEEDMOREPARAMS(server.getCommand()));
+    user.addRepliesToBuffer(ERR_NEEDMOREPARAMS(user.getNickname(), server.getCommand()));
   else {
     std::string designatedVictim = server.getArgs()[0];
     User *victim = findUser(designatedVictim, server);
@@ -24,6 +24,15 @@ void	KILL(User &user, Server &server) {
       server.quitMessage(hostMask, message);
       victim->addRepliesToBuffer(ERROR_message(message));
       server.closeOneConnection((*victim));
+    	//std::string message = "killed by " + user.getNickname() + " - reason ";
+		//if (server.getTrailer().size() <= 1)
+		//	message += ":No reason given";
+	//	else
+		//	message += server.getTrailer();
+      //	std::string hostMask = victim->getNickMask();
+      //	server.quitMessage(hostMask, message);
+      //	victim->addRepliesToBuffer(ERROR_message(message));
+      //	server.closeOneConnection((*victim));
     }
   }
 }
