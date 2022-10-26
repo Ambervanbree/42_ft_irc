@@ -273,8 +273,6 @@ int    Server::_acceptNewConnections(void) {
             _end_server = true;
         }
     }
-    else
-        std::cout << "[+] New incoming connection - " << newFileDescriptor << std::endl;
     return newFileDescriptor;
 }
 
@@ -342,7 +340,6 @@ void    Server::closeOneConnection(User &user) {
     close(_fds[i].fd);
     _fds[i].fd = -1;
     _updateFdsStructure();
-    std::cout << "[+] connection closed " << std::endl;
 }
 
 /******************************************************************************/

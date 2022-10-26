@@ -8,12 +8,9 @@ Channel::Channel(std::string name, User &user) : _name(name) {
 	initModes();
 	_users.insert(&user);
 	addChop(user.getNickMask());
-	std::cout << "[+] Channel " << name << " created" << std::endl;
 };
 
-Channel::~Channel() {
-	std::cout << "[+] Channel " << _name << " deleted" << std::endl;
-};
+Channel::~Channel() {};
 
 void			Channel::initModes(){
 	_modes['k'] = false; 	//	set/remove the channel key (password)

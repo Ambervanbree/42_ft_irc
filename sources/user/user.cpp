@@ -5,7 +5,6 @@ User::User(const int &socket)
 	_isPassChecked(false), _isRegistered(false), _signon(getTime()), 
 	_lastAction(_signon), clientSocket(socket) {
 	initModes();
-	std::cout << "[+] A user is born" << std::endl;
 }
 
 User::~User() {};
@@ -68,9 +67,9 @@ void				User::setMode(char mode){
 void				User::unsetMode(char mode){
 	_modes[mode] = false;
 }
-void				User::setNickname(const std::string &nick) { _nickName = nick; std::cout << "[+] _nickName is now set to: " << _nickName << std::endl;}
-void				User::setUsername(const std::string &user) { _userName = user; std::cout << "[+] _userName is now set to: " << _userName << std::endl;}
-void				User::setRealname(const std::string &realname) { _realName =  realname; std::cout << "[+] _realName is now set to: " << _realName << std::endl;}
+void				User::setNickname(const std::string &nick) { _nickName = nick; }
+void				User::setUsername(const std::string &user) { _userName = user; }
+void				User::setRealname(const std::string &realname) { _realName =  realname; }
 int 				User::setHostName(int newFileDescriptor) {
     memset(&_clientAddr, 0, sizeof(_clientAddr));
 	socklen_t addr_size = sizeof(struct sockaddr_in);
@@ -88,7 +87,7 @@ int 				User::setHostName(int newFileDescriptor) {
 void	User::setSocket(const int &socket) { clientSocket = socket; }
 void	User::newAction(void) {_lastAction = getTime(); }
 
-void	User::setPassChecked(void) { _isPassChecked = true; std::cout << "[+] pass successfully checked" << std::endl;}
+void	User::setPassChecked(void) { _isPassChecked = true; }
 void	User::setRegistered(void) { _isRegistered = true; }
 
 /*Handling buffer*/
