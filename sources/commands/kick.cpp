@@ -9,9 +9,9 @@
 
 void	sendKickMessage(Channel &chan, Server &server, User &kicker){
 	if (COMMENT.size() <= 1)
-		chan.sendChannelMessage(kicker, KICK_message(kicker.getNickname(), TOKICK, chan.getName()));
+		chan.sendChannelMessage(kicker, KICK_message(TOKICK, chan.getName()));
 	else
-		chan.sendChannelMessage(kicker, KICK_message_2(kicker.getNickname(), TOKICK, chan.getName(), COMMENT));
+		chan.sendChannelMessage(kicker, KICK_message_2(TOKICK, chan.getName(), COMMENT));
 }
 
 void	kickUserPerChannel(Server &server, User &user, std::vector<std::string> channels, std::vector<std::string> toKick){
