@@ -66,7 +66,7 @@ void	addChanMode(char toSet, Mode &mode, std::string &username){
 			std::string newMode;
 			newMode += toSet;
 			mode.user->addRepliesToBuffer(ERR_UNKNOWNMODE(newMode));
-			mode.user->addRepliesToBuffer(RPL_CHANNELMODEIS(mode.chan->getName(), mode.chan->getModes()));
+			mode.user->addRepliesToBuffer(RPL_CHANNELMODEIS(username, mode.chan->getName(), mode.chan->getModes()));
 			return ;
 	}
 }
@@ -106,7 +106,7 @@ void	eraseChanMode(char toSet, Mode &mode, std::string &username){
 			std::string newMode;
 			newMode += toSet;
 			mode.user->addRepliesToBuffer(ERR_UNKNOWNMODE(newMode));
-			mode.user->addRepliesToBuffer(RPL_CHANNELMODEIS(mode.chan->getName(), mode.chan->getModes()));
+			mode.user->addRepliesToBuffer(RPL_CHANNELMODEIS(username, mode.chan->getName(), mode.chan->getModes()));
 			return ;
 	}	
 }
@@ -220,7 +220,7 @@ void	channelMode(User &user, Server &server){
 	if (chan == NULL)
 		user.addRepliesToBuffer(ERR_NOSUCHCHANNEL(user.getUsername(), TARGET));
 	else if (server.getArgs().size() < 2)
-		user.addRepliesToBuffer(RPL_CHANNELMODEIS(chan->getName(), chan->getModes()));
+		user.addRepliesToBuffer(RPL_CHANNELMODEIS(user.getNickname(), chan->getName(), chan->getModes()));
 	else if (!chan->isChop(user.getNickMask()))
 		user.addRepliesToBuffer(ERR_CHANPRIVSNEEDED(user.getUsername(),chan->getName()));
 	else{
