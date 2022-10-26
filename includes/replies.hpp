@@ -67,10 +67,10 @@
 
 /* Command messages */
 
-# define JOIN_message(prefix, chan)					    prefix + " JOIN " + chan + "\r\n"
+# define JOIN_message(chan)					   			" JOIN " + chan + "\r\n"
 # define PART_message(chan)								" PART " + chan + " :has left the channel\r\n"
 # define PART_message_2(chan, message)					" PART " + chan + " " + message + "\r\n"
-# define MODE_message(prefix, args)						prefix + " MODE " + args + "\r\n"
+# define MODE_message(args)								" MODE " + args + "\r\n"
 # define MODE_message_2(chan, args)						" MODE " + args + "\r\n"
 # define TOPIC_message(chan, topic)						" TOPIC " + chan + " :" + topic + "\r\n"
 # define INVITE_message(inviter, chan, invitee)			":" + inviter + " INVITE " + invitee + " " + chan + "\r\n"

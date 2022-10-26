@@ -9,6 +9,7 @@
 struct Mode{
 	Channel						*chan;
 	User						*user;
+	Server						*server;
 	std::string					nickMask;
 	std::string					modeString;
 	std::string					outString;
@@ -50,13 +51,17 @@ void	addChanMode(char toSet, Mode &mode, std::string &username){
 				if (!mode.chan->onChannel(mode.modeArg[mode.argNr]))
 					mode.user->addRepliesToBuffer(ERR_USERNOTINCHANNEL(mode.user->getNickname(), mode.chan->getName()));
 				else{
-					mode.chan->addChop(mode.modeArg[mode.argNr]);
+					User *newChop = findUser(mode.modeArg[mode.argNr], *mode.server);
+					if (newChop == NULL)
+						mode.user->addRepliesToBuffer(ERR_NOSUCHNICK(mode.modeArg[mode.argNr]));
+					else
+						mode.chan->addChop(newChop->getNickMask());
 					mode.outString += toSet;
 					mode.outArg.push_back((mode.modeArg[mode.argNr]));
 					mode.argNr++;					
 				}
 			}
-			return ;			
+			return ;
 		default:
 			std::string newMode;
 			newMode += toSet;
@@ -189,6 +194,7 @@ void	parseUserModeString(Mode &mode, Server &server){
 
 void	fillModeStruct(Mode &mode, Channel *channel, Server &server, User *user){
 	mode.chan			= channel;
+	mode.server			= &server;
 	mode.user			= user;
 	mode.modeString 	= MODESTRING;
 	mode.argNr			= 0;
@@ -209,10 +215,10 @@ void	channelMode(User &user, Server &server){
 
 	if (chan == NULL)
 		user.addRepliesToBuffer(ERR_NOSUCHCHANNEL(user.getUsername(), TARGET));
-	else if (!chan->isChop(user.getNickMask()))
-		user.addRepliesToBuffer(ERR_CHANPRIVSNEEDED(user.getUsername(),chan->getName()));
 	else if (server.getArgs().size() < 2)
 		user.addRepliesToBuffer(RPL_CHANNELMODEIS(chan->getName(), chan->getModes()));
+	else if (!chan->isChop(user.getNickMask()))
+		user.addRepliesToBuffer(ERR_CHANPRIVSNEEDED(user.getUsername(),chan->getName()));
 	else{
 		Mode	mode;
 		std::string username = user.getNickname();
