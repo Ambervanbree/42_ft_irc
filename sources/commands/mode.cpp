@@ -92,7 +92,11 @@ void	eraseChanMode(char toSet, Mode &mode, std::string &username){
 			if (mode.modeArg.empty())
 				mode.user->addRepliesToBuffer(ERR_NEEDMOREPARAMS(username, cmd_name));
 			else if (mode.argNr < 3){
-				mode.chan->removeChop(mode.modeArg[mode.argNr]);
+				User *newChop = findUser(mode.modeArg[mode.argNr], *mode.server);
+				if (newChop == NULL)
+					mode.user->addRepliesToBuffer(ERR_NOSUCHNICK(mode.modeArg[mode.argNr]));
+				else
+					mode.chan->removeChop(newChop->getNickMask());
 				mode.outString += toSet;
 				mode.outArg.push_back((mode.modeArg[mode.argNr]));
 				mode.argNr++;

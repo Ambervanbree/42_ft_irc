@@ -196,7 +196,6 @@ void			Channel::setTopic(std::string newTopic){
 }
 
 void			Channel::addChop(std::string newChop){
-	std::cout << "Adding " << newChop << " to oper list\n";
 	_chop.insert(newChop);
 	_modes['o'] = true;
 }
