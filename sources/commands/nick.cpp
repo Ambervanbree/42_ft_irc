@@ -43,7 +43,9 @@ void NICK(User &user, Server &server)
 		user.addRepliesToBuffer(ERR_ERRONEUSNICKNAME(nick));
 	else if (existingNick(nick, server))
 		user.addRepliesToBuffer(ERR_NICKNAMEINUSE(nick));
-	else
+	else {
+		server.nickMessage(user.getPrefix(), nick);
 		user.setNickname(nick);
+	}
 	return;
 }
