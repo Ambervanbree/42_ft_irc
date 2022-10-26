@@ -53,7 +53,7 @@ void DIE(User &user, Server &server);
 
 Channel*	findChannel(std::string &channelName, Server &server);
 User*		findUser(std::string &userName, Server &server);
-bool        isOperator(const std::string &username, Server &server);
+bool        isOperator(const std::string &nickname, Server &server);
 void 		removeUserFromChannel(Channel *channel, User &user, Server &server);
 void 		partFromAllChannels(User &user, Server &server);
 std::string	createCommandMessage(Server &server);

@@ -31,7 +31,7 @@
 // maximum command size
 # define MAX_BUFFER     510
 // timeout in milliseconds (600000 = 10 minutes)
-# define POLL_TIMEOUT   600000
+# define POLL_TIMEOUT   6000000
 // time of inactivity before ping in seconds
 # define TIME_TO_PING   60
 // maximum time of inactivity in seconds
@@ -73,6 +73,7 @@ private:
 
 private:
     std::string         _password;
+    std::string         _operUsername;
     std::string         _operPassword;
     int                 _port;
     int                 _serverSocket;
@@ -138,6 +139,7 @@ public:
 	void interpretCommand(std::string &message, User &user); /*Change to Private at the end of project*/
 
     std::string				&getPassword(void);
+    std::string             &getOperUsername(void);
     std::string             &getOperPassword(void);
 
 	std::string 			&getPrefix(void);

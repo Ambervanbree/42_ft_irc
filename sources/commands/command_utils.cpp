@@ -51,12 +51,12 @@ void		channelWelcomeMessage(Channel &chan, User &user){
 	chan.sendNames(user);
 }
 
-bool  	  isOperator(const std::string &username, Server &server) {
+bool  	  isOperator(const std::string &nickname, Server &server) {
     std::list<std::string>::iterator it = server.operators.begin();
     std::list<std::string>::iterator ite = server.operators.end();
 
     for (;it != ite; it++) {
-        if (username.compare(*it) == 0)
+        if (nickname.compare(*it) == 0)
             return 1;
     }
     return 0;

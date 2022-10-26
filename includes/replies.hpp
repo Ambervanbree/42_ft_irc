@@ -53,7 +53,7 @@
 # define ERR_NOTONCHANNEL(nick, channel)	    "442 " + nick + " " + channel + " :You're not on that channel\r\n"
 # define ERR_USERONCHANNEL(nick, channel)		"443 " + nick + " " + channel + " :is already on channel\r\n"
 # define ERR_NEEDMOREPARAMS(nick, cmd_name)		"461 " + nick + " " + cmd_name + " :Not enough parameters\r\n"
-# define ERR_ALREADYTREGISTERED(nick)	        "462 " + nick + " :Unauthorized command (already registered)\r\n"
+# define ERR_ALREADYREGISTERED(nick)	        "462 " + nick + " :Unauthorized command (already registered)\r\n"
 # define ERR_PASSWDMISMATCH(nick)				"464 " + nick + " :Password incorrect\r\n"
 # define ERR_UNKNOWNMODE(flag)			        "472 " + flag + " :is unknown mode char to me\r\n"
 # define ERR_BANNEDFROMCHAN(channel)		    "474 " + channel + " :Cannot join channel (+b)\r\n"
@@ -62,6 +62,8 @@
 # define ERR_NOPRIVILEGES(nick)                 "481 " + nick + " :Permission Denied- You're not an IRC operator\r\n"
 # define ERR_CHANPRIVSNEEDED(nick, channel)	    "482 " + nick + " " + channel + " :You're not channel operator\r\n"
 # define ERR_NOOPERHOST(nick)     				"491 " + nick + " :No O-lines for your host\r\n"
+# define ERR_NOORIGIN                           "409 :No origin specified\r\n"
+
 # define ERR_UMODEUNKNOWMFLAG               	"501 :Unknown MODE flag\r\n"
 # define ERR_USERSDONTMATCH(nick)				"502 " + nick + " :Cannot change mode for other users\r\n"
 
