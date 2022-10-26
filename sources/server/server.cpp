@@ -388,13 +388,6 @@ void    Server::quitServer(void) {
     return;
 }
 
-/******************************************************************************/
-/*  errorMessage()
-    to one user : "ERROR: <reason>"
-*******************************************************************************/
-//void    Server::errorMessage(User &recipient, std::string reason) {
-//    sendMessage(recipient, "ERROR: " + reason);
-//}
 
 /******************************************************************************/
 /*  quitMessage()

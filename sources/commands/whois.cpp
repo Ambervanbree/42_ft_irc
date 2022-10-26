@@ -26,7 +26,7 @@ void WHOIS(User &user, Server &server){
 	std::string nick;
 
 	if (server.getArgs().size() == 0){
-		user.addRepliesToBuffer(ERR_NONICKNAMEGIVEN);
+		user.addRepliesToBuffer(ERR_NONICKNAMEGIVEN(user.getNickname()));
 		return ;
 	}
 	else if (server.getArgs().size() == 2){
