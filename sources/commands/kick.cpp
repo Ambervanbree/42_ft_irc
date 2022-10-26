@@ -27,8 +27,8 @@ void	kickPerChannel(User &user, Server &server, Channel *chan, std::string toKic
 		if (userToKick == NULL)
 			user.addRepliesToBuffer(ERR_NOSUCHNICK(toKick));
 		else{
-			removeUserFromChannel(chan, *userToKick, server);
 			sendKickMessage(*chan, server, user);
+			removeUserFromChannel(chan, *userToKick, server);
 		}
 	}
 }
