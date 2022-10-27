@@ -185,7 +185,6 @@ void    Server::_addtoStruct(int fd) {
 void    Server::_handleEvents(void) {       
     int     i;
 	int 	ret = 0;
-    int     current_nfds = _nfds;
     std::list<User>::iterator it = users.begin();
     std::list<User>::iterator temp;
 
