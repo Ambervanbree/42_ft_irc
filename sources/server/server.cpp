@@ -204,8 +204,8 @@ void    Server::_handleEvents(void) {
                 if (_fds[i].fd == (*temp).clientSocket) {
                     (*temp).newAction();
                     _clientSocketEvent(i, (*temp));
-                }
-                checkActivity(*temp);
+					break;
+				}
             }
 			for (it = users.begin(); it != users.end(); it++){
 				if ((*it).replies.size())
@@ -213,6 +213,8 @@ void    Server::_handleEvents(void) {
 				if (ret < 0)
 					closeOneConnection((*it));
 			}
+			for (it = users.begin(); it != users.end(); it++)
+				checkActivity(*it);
         }
     }
 }
