@@ -207,14 +207,21 @@ void    Server::_handleEvents(void) {
 					break;
 				}
             }
-			for (it = users.begin(); it != users.end(); it++){
-				if ((*it).replies.size())
-        			ret = _sendMessage(*it);
+            it = users.begin();
+            while (it != users.end()) {
+                temp = it;
+                it++;
+				if ((*temp).replies.size())
+        			ret = _sendMessage(*temp);
 				if (ret < 0)
-					closeOneConnection((*it));
+					closeOneConnection((*temp));
 			}
-			for (it = users.begin(); it != users.end(); it++)
-				checkActivity(*it);
+            it = users.begin();
+            while (it != users.end()) {
+                temp = it;
+                it++;
+				checkActivity(*temp);
+            }
         }
     }
 }
