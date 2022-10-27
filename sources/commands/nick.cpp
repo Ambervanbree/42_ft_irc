@@ -47,6 +47,29 @@ void NICK(User &user, Server &server)
 			nick = "x";
 		}
 		server.nickMessage(user.getPrefix(), nick);
+		std::map<std::string, Channel *>::iterator it = server._channels.begin();
+
+		for (; it != server._channels.end(); it++) {
+			if (it->second->isChop(user.getNickMask())){
+				it->second->removeChop(user.getNickMask());
+				it->second->addChop(nick + "!" + user.getUsername() + "@" + user.getHostname());
+			}
+			if (it->second->isBanned(user.getNickname())){
+				it->second->unbanUser(user.getNickname());
+				it->second->banUser(nick);
+			}
+		}
+		if (user.isOperator()) {
+			std::list<std::string>::iterator it = server.operators.begin();
+			for (; it != server.operators.end(); it++)
+			{
+				if ((*it).compare(user.getNickname()) == 0){
+					server.operators.erase(it);
+					break;
+				}
+			}
+			server.operators.push_back(nick);
+		}
 		user.setNickname(nick);
 	}
 	return;

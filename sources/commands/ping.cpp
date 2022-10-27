@@ -2,7 +2,7 @@
 #include "server.hpp"
 
 // Command: PING
-// Parameters: <server1> [ <server2> ]
+// Parameters: <server1>
 
 void	PING(User &user, Server &server)
 {

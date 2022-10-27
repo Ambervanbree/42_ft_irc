@@ -185,6 +185,7 @@ void    Server::_addtoStruct(int fd) {
 void    Server::_handleEvents(void) {       
     int     i;
 	int 	ret = 0;
+    int     current_nfds = _nfds;
     std::list<User>::iterator it = users.begin();
     std::list<User>::iterator temp;
 
@@ -199,13 +200,12 @@ void    Server::_handleEvents(void) {
             _serverSocketEvent();
         else {
             while (it != users.end()) {
-                if (_fds[i].fd == (*it).clientSocket) {
-                    (*it).newAction();
-                    _clientSocketEvent(i, (*it));
-                    break;
-                }
                 temp = it;
                 it++;
+                if (_fds[i].fd == (*temp).clientSocket) {
+                    (*temp).newAction();
+                    _clientSocketEvent(i, (*temp));
+                }
                 checkActivity(*temp);
             }
 			for (it = users.begin(); it != users.end(); it++){
@@ -244,13 +244,11 @@ void    Server::_serverSocketEvent(void) {
     int newFileDescriptor = 0;
 
     newFileDescriptor = _acceptNewConnections();
-    if (_makeSocketNonBlocking(newFileDescriptor)) {
-        _addtoStruct(newFileDescriptor);
-        User newUser(newFileDescriptor);
-        if (!newUser.setHostName(newFileDescriptor))
-            _end_server = true;
-        users.push_back(newUser);
-    }
+    _addtoStruct(newFileDescriptor);
+    User newUser(newFileDescriptor);
+    if (!newUser.setHostName(newFileDescriptor))
+        _end_server = true;
+    users.push_back(newUser);
 }
 
 int    Server::_acceptNewConnections(void) {
