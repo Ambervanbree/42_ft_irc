@@ -11,10 +11,8 @@ void PASS(User &user, Server &server)
 			user.addRepliesToBuffer(ERR_ALREADYREGISTERED(user.getNickname()));
 	}
 	else if (server._command.args.size() >= 1) {
-		if (server.getArgs()[0].compare(server.getPassword())){
+		if (server.getArgs()[0].compare(server.getPassword()))
 			user.addRepliesToBuffer(ERR_PASSWDMISMATCH(user.getNickname()));
-			server.closeOneConnection(user);
-		}
 		else
 			user.setPassChecked();
 	}
